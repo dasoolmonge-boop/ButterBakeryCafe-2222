@@ -14,7 +14,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Наши стили -->
+    <!-- Общие стили -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,12 +23,12 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo-container">
-                    <img src="/Лого.jpg" alt="ButterBakeryCafe" class="logo-image">
+                    <img src="/Лого.jpg" alt="ButterBakeryCafe">
                     <h1 class="logo">ButterBakeryCafe</h1>
                 </div>
                 <div style="display: flex; align-items: center;">
                     <a href="/admin" id="adminLink" style="display: none; margin-right: 10px;" title="Админ-панель">
-                        <i class="fas fa-crown" style="color: #1A1A1A; font-size: 20px;"></i>
+                        <i class="fas fa-crown" style="color: #FFFFFF; font-size: 20px;"></i>
                     </a>
                     <div class="cart-icon" id="cartIcon">
                         <i class="fas fa-shopping-cart"></i>
@@ -41,7 +41,7 @@
         <!-- Основной контент -->
         <main class="main-content">
             <!-- Категории -->
-            <div class="categories" id="categoriesContainer">
+            <div class="tabs" id="categoriesContainer">
                 <div class="loading">Загрузка категорий...</div>
             </div>
 
@@ -54,11 +54,11 @@
         <!-- Панель корзины -->
         <div class="cart-panel" id="cartPanel">
             <div class="cart-header">
-                <h2>🛒 Корзина</h2>
-                <button class="close-cart" id="closeCart">&times;</button>
+                <h2>Корзина</h2>
+                <button class="close-modal" id="closeCart">&times;</button>
             </div>
             <div class="cart-items" id="cartItems">
-                <!-- Товары в корзине -->
+                <!-- Товары в корзине будут добавляться через JavaScript -->
             </div>
             <div class="cart-footer">
                 <div class="cart-total">
@@ -73,7 +73,7 @@
         <div class="modal" id="checkoutModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>📝 Оформление заказа</h2>
+                    <h2>Оформление заказа</h2>
                     <button class="close-modal" id="closeModal">&times;</button>
                 </div>
                 <form id="orderForm" class="order-form">
@@ -109,10 +109,10 @@
                     </div>
 
                     <div class="order-summary" id="orderSummary">
-                        <!-- Краткое содержание заказа -->
+                        <!-- Краткое содержание заказа будет добавлено через JavaScript -->
                     </div>
 
-                    <button type="submit" class="submit-order">Подтвердить заказ</button>
+                    <button type="submit" class="submit-btn">Подтвердить заказ</button>
                 </form>
             </div>
         </div>
@@ -126,5 +126,3 @@
     <script src="cart.js"></script>
 </body>
 </html>
-
-
