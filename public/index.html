@@ -108,11 +108,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="deliveryDate">Дата доставки *</label>
-                            <input type="text" id="deliveryDate" required placeholder="Выберите дату" readonly>
+                            <input type="text" id="deliveryDate" required placeholder="Завтра">
                         </div>
                         <div class="form-group">
                             <label for="deliveryTime">Время *</label>
-                            <input type="text" id="deliveryTime" required placeholder="Выберите время" readonly>
+                            <input type="text" id="deliveryTime" required placeholder="12:00-14:00">
                         </div>
                     </div>
 
@@ -130,70 +130,6 @@
             </div>
         </div>
 
-        <!-- Модальное окно выбора даты (календарь) -->
-        <div class="modal" id="datePickerModal">
-            <div class="modal-content bottom-sheet">
-                <div class="modal-header">
-                    <h2>Выберите дату</h2>
-                    <button class="close-modal" onclick="closeDatePicker()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="date-picker-content">
-                    <div class="month-selector">
-                        <button class="month-nav" onclick="changeMonth(-1)">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <span class="current-month" id="currentMonth">Март 2026</span>
-                        <button class="month-nav" onclick="changeMonth(1)">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="weekdays">
-                        <span>ПН</span>
-                        <span>ВТ</span>
-                        <span>СР</span>
-                        <span>ЧТ</span>
-                        <span>ПТ</span>
-                        <span>СБ</span>
-                        <span>ВС</span>
-                    </div>
-                    
-                    <div class="calendar-grid" id="calendarGrid">
-                        <!-- Дни будут генерироваться через JavaScript -->
-                    </div>
-                    
-                    <div class="date-actions">
-                        <button class="date-btn reset" onclick="resetDate()">Сбросить</button>
-                        <button class="date-btn confirm" onclick="confirmDate()">Готово</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Модальное окно выбора времени -->
-        <div class="modal" id="timePickerModal">
-            <div class="modal-content bottom-sheet">
-                <div class="modal-header">
-                    <h2>Выберите время</h2>
-                    <button class="close-modal" onclick="closeTimePicker()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="time-picker-content">
-                    <div class="time-slots" id="timeSlots">
-                        <!-- Слоты времени будут генерироваться через JavaScript -->
-                    </div>
-                    
-                    <div class="time-actions">
-                        <button class="time-btn reset" onclick="resetTime()">Сбросить</button>
-                        <button class="time-btn confirm" onclick="confirmTime()">Готово</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Уведомления -->
         <div class="toast-container" id="toastContainer"></div>
     </div>
@@ -201,6 +137,5 @@
     <!-- Скрипты -->
     <script src="script.js"></script>
     <script src="cart.js"></script>
-    <script src="datepicker.js"></script>
 </body>
 </html>
