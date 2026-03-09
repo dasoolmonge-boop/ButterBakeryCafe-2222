@@ -11,7 +11,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Google Fonts - Inter (аналог Yandex Sans) -->
+    <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Общие стили -->
@@ -19,14 +19,14 @@
 </head>
 <body>
     <div class="app">
-        <!-- Шапка в стиле Яндекс -->
+        <!-- Шапка -->
         <header class="header">
             <div class="header-content">
                 <div class="header-left">
                     <button class="back-btn" onclick="history.back()">
                         <i class="fas fa-arrow-left"></i>
                     </button>
-                    <img src="/Лого.jpg" alt="ButterBakeryCafe" style="height: 32px;">
+                    <div class="header-title">ButterBakeryCafe</div>
                 </div>
                 <div class="header-right">
                     <a href="/admin" id="adminLink" style="display: none;">
@@ -45,8 +45,8 @@
         </div>
 
         <!-- Сетка товаров - 2 карточки в ряд -->
-        <div class="products-grid" id="cakesGrid">
-            <div class="loading">Загрузка...</div>
+        <div class="cakes-grid" id="cakesGrid">
+            <div class="loading">Загрузка товаров...</div>
         </div>
 
         <!-- Плавающая кнопка корзины -->
@@ -139,4 +139,3 @@
     <script src="cart.js"></script>
 </body>
 </html>
-
