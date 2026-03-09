@@ -11,8 +11,8 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Chart.js для статистики -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -22,12 +22,15 @@
 </head>
 <body>
     <div class="admin-container">
-        <div class="admin-header">
-            <div class="logo-container">
-                <img src="/Лого.jpg" alt="ButterBakeryCafe">
-                <h1>ButterBakeryCafe</h1>
-            </div>
-            <button onclick="window.location.href='/'">
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <h1>ButterBakeryCafe</h1>
+            <div class="subtitle">Админ панель</div>
+        </div>
+
+        <!-- Кнопка навигации в магазин -->
+        <div style="margin-bottom: 24px;">
+            <button class="action-btn" onclick="window.location.href='/'">
                 <i class="fas fa-store"></i> В магазин
             </button>
         </div>
@@ -51,47 +54,52 @@
             </button>
         </div>
 
-        <!-- Секция: Управление тортами -->
+        <!-- ============================================ -->
+        <!-- СЕКЦИЯ: УПРАВЛЕНИЕ ТОРТАМИ -->
+        <!-- ============================================ -->
         <div id="cakes-section" class="admin-section active">
-            <h2>➕ Добавить новый торт</h2>
-            <form id="addCakeForm" class="add-cake-form" onsubmit="addCake(event)">
-                <div class="form-row">
+            <h2 class="section-title">➕ Добавить новый торт</h2>
+            
+            <!-- Форма добавления торта -->
+            <form id="addCakeForm" class="form-container" onsubmit="addCake(event)">
+                <div class="form-grid">
                     <div class="form-group">
-                        <label>Название торта *</label>
-                        <input type="text" id="cakeName" required>
+                        <label for="cakeName">Название торта *</label>
+                        <input type="text" id="cakeName" required placeholder="Например: Медовик">
                     </div>
+                    
                     <div class="form-group">
-                        <label>Цена (₽) *</label>
-                        <input type="number" id="cakePrice" required min="1">
+                        <label for="cakePrice">Цена (₽) *</label>
+                        <input type="number" id="cakePrice" required min="1" placeholder="2500">
                     </div>
-                </div>
-
-                <div class="form-row">
+                    
                     <div class="form-group">
-                        <label>Вес (кг) *</label>
-                        <input type="number" id="cakeWeight" required min="0.1" step="0.1">
+                        <label for="cakeWeight">Вес (кг) *</label>
+                        <input type="number" id="cakeWeight" required min="0.1" step="0.1" placeholder="1.5">
                     </div>
+                    
                     <div class="form-group">
-                        <label>Категория *</label>
+                        <label for="cakeCategory">Категория *</label>
                         <select id="cakeCategory" required>
                             <option value="">Выберите категорию</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group full-width">
                     <label>Фото торта *</label>
                     <div class="photo-upload" onclick="document.getElementById('cakePhotoInput').click()">
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Нажмите для выбора фото</p>
+                        <p>Нажмите или перетащите фото</p>
+                        <span class="hint">PNG, JPG до 10 MB</span>
                         <input type="file" id="cakePhotoInput" accept="image/*" onchange="previewPhoto(this, 'cakePhotoPreview')">
                         <img id="cakePhotoPreview" class="photo-preview">
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Описание *</label>
-                    <textarea id="cakeDescription" required rows="3"></textarea>
+                <div class="form-group full-width">
+                    <label for="cakeDescription">Описание *</label>
+                    <textarea id="cakeDescription" required rows="3" placeholder="Состав, особенности, вкус..."></textarea>
                 </div>
 
                 <button type="submit" class="submit-btn">
@@ -99,79 +107,97 @@
                 </button>
             </form>
 
-            <h2>📋 Список тортов</h2>
+            <h2 class="section-title">📋 Список тортов</h2>
             <div class="cakes-grid" id="adminCakesGrid">
                 <div class="loading">Загрузка...</div>
             </div>
         </div>
 
-        <!-- Секция: Управление категориями -->
+        <!-- ============================================ -->
+        <!-- СЕКЦИЯ: УПРАВЛЕНИЕ КАТЕГОРИЯМИ -->
+        <!-- ============================================ -->
         <div id="categories-section" class="admin-section">
-            <h2>➕ Добавить категорию</h2>
-            <form id="addCategoryForm" class="add-cake-form" onsubmit="addCategory(event)">
-                <div class="form-group">
-                    <label>Название категории *</label>
-                    <input type="text" id="categoryName" required>
+            <h2 class="section-title">➕ Добавить категорию</h2>
+            
+            <!-- Форма добавления категории -->
+            <form id="addCategoryForm" class="form-container" onsubmit="addCategory(event)">
+                <div class="form-group full-width">
+                    <label for="categoryName">Название категории *</label>
+                    <input type="text" id="categoryName" required placeholder="Например: Классические">
                 </div>
-                <div class="form-group">
-                    <label>Описание</label>
-                    <textarea id="categoryDescription" rows="2"></textarea>
+                
+                <div class="form-group full-width">
+                    <label for="categoryDescription">Описание</label>
+                    <textarea id="categoryDescription" rows="2" placeholder="Описание категории..."></textarea>
                 </div>
+
                 <button type="submit" class="submit-btn">
                     <i class="fas fa-plus"></i> Добавить категорию
                 </button>
             </form>
 
-            <h2>📋 Список категорий</h2>
+            <h2 class="section-title">📋 Список категорий</h2>
             <div class="categories-grid" id="adminCategoriesGrid">
                 <div class="loading">Загрузка...</div>
             </div>
         </div>
 
-        <!-- Секция: Управление пользователями -->
+        <!-- ============================================ -->
+        <!-- СЕКЦИЯ: УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ -->
+        <!-- ============================================ -->
         <div id="users-section" class="admin-section">
-            <h2>➕ Добавить сотрудника</h2>
-            <form id="addUserForm" class="add-cake-form" onsubmit="addUser(event)">
-                <div class="form-group">
-                    <label>Telegram ID *</label>
-                    <input type="number" id="userTelegramId" required>
-                </div>
-                <div class="form-group">
-                    <label>Username (без @)</label>
-                    <input type="text" id="userUsername">
-                </div>
-                <div class="form-group">
-                    <label>Имя *</label>
-                    <input type="text" id="userFirstName" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group half">
-                        <label>Роль *</label>
+            <h2 class="section-title">➕ Добавить сотрудника</h2>
+            
+            <!-- Форма добавления сотрудника -->
+            <form id="addUserForm" class="form-container" onsubmit="addUser(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="userTelegramId">Telegram ID *</label>
+                        <input type="number" id="userTelegramId" required placeholder="123456789">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userUsername">Username (без @)</label>
+                        <input type="text" id="userUsername" placeholder="username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userFirstName">Имя *</label>
+                        <input type="text" id="userFirstName" required placeholder="Иван">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userRole">Роль *</label>
                         <select id="userRole" required>
                             <option value="admin">Администратор</option>
                             <option value="courier">Курьер</option>
                         </select>
                     </div>
-                    <div class="form-group half">
-                        <label>Телефон</label>
-                        <input type="text" id="userPhone">
+                    
+                    <div class="form-group full-width">
+                        <label for="userPhone">Телефон</label>
+                        <input type="text" id="userPhone" placeholder="+7 (999) 999-99-99">
                     </div>
                 </div>
+
                 <button type="submit" class="submit-btn">
                     <i class="fas fa-plus"></i> Добавить сотрудника
                 </button>
             </form>
 
-            <h2>👥 Сотрудники</h2>
+            <h2 class="section-title">👥 Сотрудники</h2>
             <div class="users-grid" id="adminUsersGrid">
                 <div class="loading">Загрузка...</div>
             </div>
         </div>
 
-        <!-- Секция: Управление заказами -->
+        <!-- ============================================ -->
+        <!-- СЕКЦИЯ: УПРАВЛЕНИЕ ЗАКАЗАМИ -->
+        <!-- ============================================ -->
         <div id="orders-section" class="admin-section">
-            <h2>📦 Управление заказами</h2>
+            <h2 class="section-title">📦 Управление заказами</h2>
 
+            <!-- Вкладки заказов -->
             <div class="orders-tabs">
                 <button class="order-tab active" onclick="switchOrdersTab('active')">
                     <i class="fas fa-clock"></i> Активные
@@ -183,18 +209,26 @@
                 </button>
             </div>
 
+            <!-- Активные заказы -->
             <div id="active-orders" class="orders-tab-content active">
-                <div id="activeOrdersList"></div>
+                <div id="activeOrdersList" class="orders-grid">
+                    <div class="loading">Загрузка заказов...</div>
+                </div>
             </div>
 
+            <!-- История заказов -->
             <div id="history-orders" class="orders-tab-content">
-                <div id="historyOrdersList"></div>
+                <div id="historyOrdersList" class="orders-grid">
+                    <div class="loading">Загрузка истории...</div>
+                </div>
             </div>
         </div>
 
-        <!-- Секция: Статистика -->
+        <!-- ============================================ -->
+        <!-- СЕКЦИЯ: СТАТИСТИКА -->
+        <!-- ============================================ -->
         <div id="stats-section" class="admin-section">
-            <h2>📊 Статистика</h2>
+            <h2 class="section-title">📊 Статистика</h2>
 
             <div class="stats-grid">
                 <div class="stat-card">
@@ -229,35 +263,45 @@
         </div>
     </div>
 
-    <!-- Модальные окна -->
+    <!-- ============================================ -->
+    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <!-- ============================================ -->
+
+    <!-- Модальное окно редактирования торта -->
     <div class="modal" id="editCakeModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>✏️ Редактировать торт</h2>
-                <button class="close-modal" onclick="closeEditModal()">&times;</button>
+                <button class="close-modal" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <form id="editCakeForm" onsubmit="saveCakeEdit(event)">
                 <input type="hidden" id="editCakeId">
+
                 <div class="form-group">
-                    <label>Название торта</label>
+                    <label for="editCakeName">Название торта</label>
                     <input type="text" id="editCakeName" required>
                 </div>
-                <div class="form-row">
-                    <div class="form-group half">
-                        <label>Цена (₽)</label>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="editCakePrice">Цена (₽)</label>
                         <input type="number" id="editCakePrice" required min="1">
                     </div>
-                    <div class="form-group half">
-                        <label>Вес (кг)</label>
+                    <div class="form-group">
+                        <label for="editCakeWeight">Вес (кг)</label>
                         <input type="number" id="editCakeWeight" required min="0.1" step="0.1">
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label>Категория</label>
+                    <label for="editCakeCategory">Категория</label>
                     <select id="editCakeCategory" required>
                         <option value="">Выберите категорию</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label>Фото торта</label>
                     <div class="photo-upload" onclick="document.getElementById('editCakePhotoInput').click()">
@@ -268,74 +312,94 @@
                     </div>
                     <input type="hidden" id="editCakePhoto">
                 </div>
+
                 <div class="form-group">
-                    <label>Описание</label>
+                    <label for="editCakeDescription">Описание</label>
                     <textarea id="editCakeDescription" required rows="3"></textarea>
                 </div>
+
                 <button type="submit" class="submit-btn">Сохранить изменения</button>
             </form>
         </div>
     </div>
 
+    <!-- Модальное окно редактирования категории -->
     <div class="modal" id="editCategoryModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>✏️ Редактировать категорию</h2>
-                <button class="close-modal" onclick="closeEditCategoryModal()">&times;</button>
+                <button class="close-modal" onclick="closeEditCategoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <form id="editCategoryForm" onsubmit="saveCategoryEdit(event)">
                 <input type="hidden" id="editCategoryId">
+
                 <div class="form-group">
-                    <label>Название категории</label>
+                    <label for="editCategoryName">Название категории</label>
                     <input type="text" id="editCategoryName" required>
                 </div>
+
                 <div class="form-group">
-                    <label>Описание</label>
+                    <label for="editCategoryDescription">Описание</label>
                     <textarea id="editCategoryDescription" rows="3"></textarea>
                 </div>
+
                 <button type="submit" class="submit-btn">Сохранить изменения</button>
             </form>
         </div>
     </div>
 
+    <!-- Модальное окно редактирования пользователя -->
     <div class="modal" id="editUserModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>✏️ Редактировать сотрудника</h2>
-                <button class="close-modal" onclick="closeEditUserModal()">&times;</button>
+                <button class="close-modal" onclick="closeEditUserModal()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <form id="editUserForm" onsubmit="saveUserEdit(event)">
                 <input type="hidden" id="editUserId">
+
                 <div class="form-group">
-                    <label>Telegram ID</label>
+                    <label for="editUserTelegramId">Telegram ID</label>
                     <input type="number" id="editUserTelegramId" required readonly>
                 </div>
+
                 <div class="form-group">
-                    <label>Username</label>
+                    <label for="editUserUsername">Username</label>
                     <input type="text" id="editUserUsername">
                 </div>
+
                 <div class="form-group">
-                    <label>Имя</label>
+                    <label for="editUserFirstName">Имя</label>
                     <input type="text" id="editUserFirstName" required>
                 </div>
-                <div class="form-row">
-                    <div class="form-group half">
-                        <label>Роль</label>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="editUserRole">Роль</label>
                         <select id="editUserRole" required>
                             <option value="admin">Администратор</option>
                             <option value="courier">Курьер</option>
                         </select>
                     </div>
-                    <div class="form-group half">
-                        <label>Телефон</label>
+                    <div class="form-group">
+                        <label for="editUserPhone">Телефон</label>
                         <input type="text" id="editUserPhone">
                     </div>
                 </div>
+
                 <button type="submit" class="submit-btn">Сохранить изменения</button>
             </form>
         </div>
     </div>
 
+    <!-- Уведомления -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Скрипты -->
     <script src="admin.js"></script>
 </body>
 </html>
