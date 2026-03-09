@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ButterBakeryCafe - Админ панель</title>
+
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Chart.js для статистики -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --tg-bg: var(--tg-theme-bg-color, #1A1A1A);
+            --tg-text: var(--tg-theme-text-color, #FFFFFF);
+            --tg-hint: var(--tg-theme-hint-color, #B0B0B0);
+            --tg-link: var(--tg-theme-link-color, #D4A373);
+            --tg-button: var(--tg-theme-button-color, #D4A373);
+            --tg-button-text: var(--tg-theme-button-text-color, #1A1A1A);
+            --tg-secondary-bg: var(--tg-theme-secondary-bg-color, #2D2D2D);
+
+            --success: #4caf50;
+            --error: #f44336;
+            --warning: #ff9800;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --border-color: #404040;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--tg-bg);
+            color: var(--tg-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 40px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--tg-button);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .admin-header h1 {
+            font-size: 24px;
+            color: var(--tg-text);
+        }
+
+        .admin-header button {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .admin-header button:active {
+            opacity: 0.8;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .admin-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .admin-tab {
+            padding: 12px 24px;
+            background: var(--tg-secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--tg-hint);
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-tab i {
+            font-size: 16px;
+        }
+
+        .admin-tab:hover {
+            opacity: 0.8;
+        }
+
+        .admin-tab.active {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+            border-color: var(--tg-button);
+        }
+
+        .admin-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        /* Вкладки заказов */
+        .orders-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .order-tab {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: var(--tg-hint);
+            cursor: pointer;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .order-tab.active {
+            color: var(--tg-button);
+        }
+
+        .order-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--tg-button);
+        }
+
+        .order-tab .count {
+            background: var(--tg-secondary-bg);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 8px;
+            color: var(--tg-text);
+        }
+
+        /* Стили для карточек тортов */
+        .cakes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .cake-card {
+            background: var(--tg-secondary-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+            animation: fadeIn 0.3s ease;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .cake-card:active {
+            transform: scale(0.98);
+        }
+
+        .cake-card.admin-card {
+            border: 2px solid transparent;
+        }
+
+        .cake-card.admin-card.unavailable {
+            opacity: 0.5;
+            border-color: var(--error);
+        }
+
+        .cake-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background: linear-gradient(45deg, #3d3d3d, #353535);
+        }
+
+        .cake-info {
+            padding: 12px;
+        }
+
+        .cake-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 16px;
+            color: var(--tg-text);
+        }
+
+        .cake-price {
+            font-weight: 700;
+            color: var(--tg-button);
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .cake-weight {
+            font-size: 13px;
+            color: var(--tg-hint);
+            margin-bottom: 8px;
+        }
+
+        .cake-description {
+            font-size: 13px;
+            color: var(--tg-hint);
+            margin: 8px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .cake-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 5;
+        }
+
+        .cake-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--tg-secondary-bg);
+            color: var(--tg-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+
+        .cake-action-btn:active {
+            transform: scale(0.9);
+        }
+
+        .cake-action-btn.edit {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+        }
+
+        .cake-action-btn.delete {
+            background: var(--error);
+            color: white;
+        }
+
+        .cake-action-btn.toggle {
+            background: var(--warning);
+            color: white;
+        }
+
+        .cake-status {
+            margin-top: 8px;
+            font-size: 12px;
+            padding: 4px 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            display: inline-block;
+            color: var(--tg-hint);
+        }
+
+        /* Форма добавления торта */
+        .add-cake-form {
+            background: var(--tg-secondary-bg);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--tg-hint);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--tg-bg);
+            color: var(--tg-text);
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--tg-button);
+        }
+
+        /* Стили для загрузки фото */
+        .photo-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--tg-bg);
+        }
+
+        .photo-upload:hover {
+            border-color: var(--tg-button);
+        }
+
+        .photo-upload input[type="file"] {
+            display: none;
+        }
+
+        .photo-upload i {
+            font-size: 32px;
+            color: var(--tg-button);
+            margin-bottom: 10px;
+        }
+
+        .photo-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .photo-preview.show {
+            display: block;
+        }
+
+        .submit-btn {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+
+        .submit-btn:active {
+            opacity: 0.8;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Стили для заказов */
+        .orders-grid {
+            display: grid;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .order-card {
+            background: var(--tg-secondary-bg);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .order-id {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--tg-button);
+        }
+
+        .order-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .order-info div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            word-break: break-word;
+            color: var(--tg-hint);
+        }
+
+        .order-info i {
+            width: 20px;
+            color: var(--tg-button);
+            flex-shrink: 0;
+        }
+
+        .order-cakes {
+            background: var(--tg-bg);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px 0;
+        }
+
+        .order-cake-item {
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .order-cake-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-total {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--tg-button);
+            margin: 8px 0;
+            text-align: right;
+        }
+
+        .order-date {
+            font-size: 12px;
+            color: var(--tg-hint);
+            text-align: right;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s;
+            background: var(--tg-secondary-bg);
+            color: var(--tg-text);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .action-btn.processing-btn {
+            background: var(--warning);
+            color: white;
+        }
+
+        .action-btn.complete-btn {
+            background: var(--success);
+            color: white;
+        }
+
+        .action-btn.cancel-btn {
+            background: var(--error);
+            color: white;
+        }
+
+        .action-btn.restore-btn {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+        }
+
+        .action-btn.assign-btn {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+        }
+
+        /* Статусы заказов */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: var(--warning);
+            color: white;
+        }
+
+        .status-processing {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+        }
+
+        .status-completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-cancelled {
+            background: var(--error);
+            color: white;
+        }
+
+        .status-assigned {
+            background: #9c27b0;
+            color: white;
+        }
+
+        /* Стили для категорий */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .category-card {
+            background: var(--tg-secondary-bg);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .category-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--tg-text);
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .category-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--tg-bg);
+            color: var(--tg-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .category-action-btn.edit {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+        }
+
+        .category-action-btn.delete {
+            background: var(--error);
+            color: white;
+        }
+
+        .category-description {
+            color: var(--tg-hint);
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* Стили для пользователей */
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .user-card {
+            background: var(--tg-secondary-bg);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .user-role-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .user-role-badge.admin {
+            background: var(--tg-button);
+            color: var(--tg-button-text);
+        }
+
+        .user-role-badge.courier {
+            background: #9c27b0;
+            color: white;
+        }
+
+        .user-info {
+            margin: 10px 0;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--tg-text);
+        }
+
+        .user-detail {
+            font-size: 13px;
+            color: var(--tg-hint);
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .user-shift-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 12px 0;
+            padding: 8px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--tg-button);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Статистика */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--tg-secondary-bg);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--tg-button);
+            margin: 10px 0;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            color: var(--tg-hint);
+            font-size: 14px;
+        }
+
+        .chart-container {
+            background: var(--tg-secondary-bg);
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+            height: 300px;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--tg-bg);
+            border-radius: 24px;
+            max-width: 100%;
+            width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--tg-secondary-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: var(--tg-hint);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Уведомления */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            background: var(--tg-secondary-bg);
+            color: var(--tg-text);
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideUp 0.3s ease;
+            border-left: 4px solid var(--tg-button);
+            max-width: 90%;
+            width: 400px;
+            border: 1px solid var(--border-color);
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--error);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        /* Загрузка */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--tg-hint);
+            grid-column: 1 / -1;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-left: 8px;
+            border: 2px solid var(--tg-hint);
+            border-top-color: var(--tg-button);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Пустое состояние */
+        .empty-cart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: var(--tg-hint);
+            text-align: center;
+            background: var(--tg-secondary-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 16px;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .admin-header button {
+                width: 100%;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .cakes-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cakes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-tab {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-tab {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+
+            .toast {
+                width: 95%;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>👑 ButterBakeryCafe</h1>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.location.href='/'">
+                    <i class="fas fa-store"></i> В магазин
+                </button>
+                <button onclick="window.location.href='/'">
+                    <i class="fas fa-arrow-left"></i> На главную
+                </button>
+            </div>
+        </div>
+
+        <!-- Основные вкладки -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchTab('cakes')">
+                <i class="fas fa-cake"></i> Торты
+            </button>
+            <button class="admin-tab" onclick="switchTab('categories')">
+                <i class="fas fa-tags"></i> Категории
+            </button>
+            <button class="admin-tab" onclick="switchTab('users')">
+                <i class="fas fa-users"></i> Пользователи
+            </button>
+            <button class="admin-tab" onclick="switchTab('orders')">
+                <i class="fas fa-shopping-cart"></i> Заказы
+            </button>
+            <button class="admin-tab" onclick="switchTab('stats')">
+                <i class="fas fa-chart-bar"></i> Статистика
+            </button>
+        </div>
+
+        <!-- Секция: Управление тортами -->
+        <div id="cakes-section" class="admin-section active">
+            <h2>➕ Добавить новый торт</h2>
+            <form id="addCakeForm" class="add-cake-form" onsubmit="addCake(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Название торта *</label>
+                        <input type="text" id="cakeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Цена (₽) *</label>
+                        <input type="number" id="cakePrice" required min="1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Вес (кг) *</label>
+                        <input type="number" id="cakeWeight" required min="0.1" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Категория *</label>
+                        <select id="cakeCategory" required>
+                            <option value="">Выберите категорию</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Фото торта *</label>
+                    <div class="photo-upload" onclick="document.getElementById('cakePhotoInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Нажмите для выбора фото</p>
+                        <input type="file" id="cakePhotoInput" accept="image/*" onchange="previewPhoto(this, 'cakePhotoPreview')">
+                        <img id="cakePhotoPreview" class="photo-preview">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Описание *</label>
+                    <textarea id="cakeDescription" required rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus"></i> Добавить торт
+                </button>
+            </form>
+
+            <h2>📋 Список тортов</h2>
+            <div class="cakes-grid" id="adminCakesGrid">
+                <div class="loading">Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- Секция: Управление категориями -->
+        <div id="categories-section" class="admin-section">
+            <h2>➕ Добавить категорию</h2>
+            <form id="addCategoryForm" class="add-cake-form" onsubmit="addCategory(event)">
+                <div class="form-group">
+                    <label>Название категории *</label>
+                    <input type="text" id="categoryName" required>
+                </div>
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="categoryDescription" rows="2"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus"></i> Добавить категорию
+                </button>
+            </form>
+
+            <h2>📋 Список категорий</h2>
+            <div class="categories-grid" id="adminCategoriesGrid">
+                <div class="loading">Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- Секция: Управление пользователями (админы и курьеры) -->
+        <div id="users-section" class="admin-section">
+            <h2>➕ Добавить сотрудника</h2>
+            <form id="addUserForm" class="add-cake-form" onsubmit="addUser(event)">
+                <div class="form-group">
+                    <label>Telegram ID *</label>
+                    <input type="number" id="userTelegramId" required>
+                </div>
+                <div class="form-group">
+                    <label>Username (без @)</label>
+                    <input type="text" id="userUsername">
+                </div>
+                <div class="form-group">
+                    <label>Имя *</label>
+                    <input type="text" id="userFirstName" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Роль *</label>
+                        <select id="userRole" required>
+                            <option value="admin">Администратор</option>
+                            <option value="courier">Курьер</option>
+                        </select>
+                    </div>
+                    <div class="form-group half">
+                        <label>Телефон</label>
+                        <input type="text" id="userPhone">
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus"></i> Добавить сотрудника
+                </button>
+            </form>
+
+            <h2>👥 Сотрудники</h2>
+            <div class="users-grid" id="adminUsersGrid">
+                <div class="loading">Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- Секция: Управление заказами -->
+        <div id="orders-section" class="admin-section">
+            <h2>📦 Управление заказами</h2>
+
+            <!-- Вкладки заказов -->
+            <div class="orders-tabs">
+                <button class="order-tab active" onclick="switchOrdersTab('active')">
+                    <i class="fas fa-clock"></i> Активные
+                    <span class="count" id="activeOrdersCount">0</span>
+                </button>
+                <button class="order-tab" onclick="switchOrdersTab('history')">
+                    <i class="fas fa-history"></i> История
+                    <span class="count" id="historyOrdersCount">0</span>
+                </button>
+            </div>
+
+            <!-- Активные заказы -->
+            <div id="active-orders" class="orders-tab-content active">
+                <div id="activeOrdersList"></div>
+            </div>
+
+            <!-- История заказов -->
+            <div id="history-orders" class="orders-tab-content">
+                <div id="historyOrdersList"></div>
+            </div>
+        </div>
+
+        <!-- Секция: Статистика -->
+        <div id="stats-section" class="admin-section">
+            <h2>📊 Статистика</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalOrders">0</div>
+                    <div class="stat-label">Всего заказов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeOrders">0</div>
+                    <div class="stat-label">Активных</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completedOrders">0</div>
+                    <div class="stat-label">Выполнено</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRevenue">0 ₽</div>
+                    <div class="stat-label">Выручка</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgOrder">0 ₽</div>
+                    <div class="stat-label">Средний чек</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="popularCake">-</div>
+                    <div class="stat-label">Популярный торт</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="ordersChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования торта -->
+    <div class="modal" id="editCakeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Редактировать торт</h2>
+                <button class="close-modal" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editCakeForm" onsubmit="saveCakeEdit(event)">
+                <input type="hidden" id="editCakeId">
+
+                <div class="form-group">
+                    <label>Название торта</label>
+                    <input type="text" id="editCakeName" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Цена (₽)</label>
+                        <input type="number" id="editCakePrice" required min="1">
+                    </div>
+                    <div class="form-group half">
+                        <label>Вес (кг)</label>
+                        <input type="number" id="editCakeWeight" required min="0.1" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select id="editCakeCategory" required>
+                        <option value="">Выберите категорию</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Фото торта</label>
+                    <div class="photo-upload" onclick="document.getElementById('editCakePhotoInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Нажмите для замены фото</p>
+                        <input type="file" id="editCakePhotoInput" accept="image/*" onchange="previewPhoto(this, 'editCakePhotoPreview')">
+                        <img id="editCakePhotoPreview" class="photo-preview">
+                    </div>
+                    <input type="hidden" id="editCakePhoto">
+                </div>
+
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="editCakeDescription" required rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования категории -->
+    <div class="modal" id="editCategoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Редактировать категорию</h2>
+                <button class="close-modal" onclick="closeEditCategoryModal()">&times;</button>
+            </div>
+            <form id="editCategoryForm" onsubmit="saveCategoryEdit(event)">
+                <input type="hidden" id="editCategoryId">
+
+                <div class="form-group">
+                    <label>Название категории</label>
+                    <input type="text" id="editCategoryName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="editCategoryDescription" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования пользователя -->
+    <div class="modal" id="editUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Редактировать сотрудника</h2>
+                <button class="close-modal" onclick="closeEditUserModal()">&times;</button>
+            </div>
+            <form id="editUserForm" onsubmit="saveUserEdit(event)">
+                <input type="hidden" id="editUserId">
+
+                <div class="form-group">
+                    <label>Telegram ID</label>
+                    <input type="number" id="editUserTelegramId" required readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="editUserUsername">
+                </div>
+
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" id="editUserFirstName" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Роль</label>
+                        <select id="editUserRole" required>
+                            <option value="admin">Администратор</option>
+                            <option value="courier">Курьер</option>
+                        </select>
+                    </div>
+                    <div class="form-group half">
+                        <label>Телефон</label>
+                        <input type="text" id="editUserPhone">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,678 @@
+:root {
+    --tg-bg: #1A1A1A;
+    --tg-text: #FFFFFF;
+    --tg-hint: #B0B0B0;
+    --tg-link: #D4A373;
+    --tg-button: #D4A373;
+    --tg-button-text: #1A1A1A;
+    --tg-secondary-bg: #2D2D2D;
+
+    --success: #4caf50;
+    --error: #f44336;
+    --warning: #ff9800;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --border-color: #404040;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--tg-bg);
+    color: var(--tg-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: hidden;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.app {
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--tg-bg);
+    position: relative;
+    padding-bottom: 20px;
+}
+
+/* Header */
+.header {
+    background: var(--tg-secondary-bg);
+    padding: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--tg-text);
+}
+
+.cart-icon {
+    position: relative;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 24px;
+    color: var(--tg-text);
+}
+
+.cart-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--tg-button);
+    color: var(--tg-button-text);
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+
+/* Categories */
+.categories {
+    display: flex;
+    gap: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.categories::-webkit-scrollbar {
+    display: none;
+}
+
+.category {
+    background: var(--tg-secondary-bg);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--tg-hint);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.category.active {
+    background: var(--tg-button);
+    color: var(--tg-button-text);
+    border-color: var(--tg-button);
+}
+
+/* Cakes Grid - 2 столбца */
+.cakes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 16px;
+    padding-bottom: 80px;
+}
+
+.cake-card {
+    background: var(--tg-secondary-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+    animation: fadeIn 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.cake-card:active {
+    transform: scale(0.98);
+}
+
+.cake-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: linear-gradient(45deg, #3d3d3d, #353535);
+}
+
+.cake-info {
+    padding: 12px;
+}
+
+.cake-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 15px;
+    line-height: 1.3;
+    color: var(--tg-text);
+}
+
+.cake-weight {
+    font-size: 12px;
+    color: var(--tg-hint);
+    margin-bottom: 8px;
+}
+
+.cake-description {
+    font-size: 12px;
+    color: var(--tg-hint);
+    margin: 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.cake-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.cake-price {
+    font-weight: 700;
+    color: var(--tg-button);
+    font-size: 16px;
+}
+
+.add-to-cart {
+    background: var(--tg-button);
+    color: var(--tg-button-text);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.add-to-cart:active {
+    transform: scale(0.9);
+}
+
+.add-to-cart.added {
+    background: var(--success);
+}
+
+/* Cart Panel */
+.cart-panel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    max-width: 400px;
+    height: 100vh;
+    background: var(--tg-bg);
+    box-shadow: var(--shadow);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border-color);
+}
+
+.cart-panel.open {
+    right: 0;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: var(--tg-secondary-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.close-cart {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--tg-hint);
+    cursor: pointer;
+}
+
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    padding-bottom: 100px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--tg-secondary-bg);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    animation: slideIn 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.cart-item-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--tg-text);
+}
+
+.cart-item-price {
+    color: var(--tg-button);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.remove-item {
+    background: none;
+    border: none;
+    color: var(--error);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.cart-footer {
+    padding: 16px;
+    background: var(--tg-secondary-bg);
+    border-top: 1px solid var(--border-color);
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--tg-text);
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--tg-button);
+    color: var(--tg-button-text);
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.checkout-btn:active {
+    opacity: 0.8;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--tg-bg);
+    border-radius: 24px;
+    max-width: 100%;
+    width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease;
+    margin: auto;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--tg-secondary-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--tg-hint);
+    cursor: pointer;
+}
+
+/* Order Form */
+.order-form {
+    padding: 20px;
+    padding-bottom: 100px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-group.half {
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--tg-hint);
+    font-size: 14px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--tg-secondary-bg);
+    color: var(--tg-text);
+    font-size: 16px;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--tg-button);
+}
+
+input.error, textarea.error {
+    border-color: var(--error);
+}
+
+.order-summary {
+    background: var(--tg-secondary-bg);
+    padding: 16px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border-color);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--tg-hint);
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--tg-text);
+}
+
+.submit-order {
+    width: 100%;
+    padding: 16px;
+    background: var(--tg-button);
+    color: var(--tg-button-text);
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: sticky;
+    bottom: 20px;
+    z-index: 5;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.submit-order:active {
+    transform: scale(0.98);
+}
+
+.submit-order:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    width: 90%;
+    max-width: 400px;
+}
+
+.toast {
+    background: var(--tg-secondary-bg);
+    color: var(--tg-text);
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideUp 0.3s ease;
+    border-left: 4px solid var(--tg-button);
+    border: 1px solid var(--border-color);
+}
+
+.toast.success {
+    border-left-color: var(--success);
+}
+
+.toast.error {
+    border-left-color: var(--error);
+}
+
+.toast.warning {
+    border-left-color: var(--warning);
+}
+
+/* Loading */
+.loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: var(--tg-hint);
+}
+
+.loading::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    border: 2px solid var(--tg-hint);
+    border-top-color: var(--tg-button);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Empty cart */
+.empty-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: var(--tg-hint);
+    text-align: center;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .cakes-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .cake-name {
+        font-size: 14px;
+    }
+
+    .cake-price {
+        font-size: 15px;
+    }
+
+    .add-to-cart {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .modal-content {
+        width: 100%;
+        max-height: 95vh;
+    }
+
+    .order-form {
+        padding: 16px;
+        padding-bottom: 90px;
+    }
+
+    .submit-order {
+        bottom: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .cakes-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .cake-info {
+        padding: 8px;
+    }
+
+    .cake-name {
+        font-size: 13px;
+    }
+
+    .cake-price {
+        font-size: 14px;
+    }
+}

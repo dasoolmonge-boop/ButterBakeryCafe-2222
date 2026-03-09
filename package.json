@@ -1,0 +1,14 @@
+{
+  "name": "butter-bakery-cafe",
+  "version": "1.0.0",
+  "description": "Мини-приложение для кондитерской Butter Bakery Cafe",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

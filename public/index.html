@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ButterBakeryCafe</title>
+
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Наши стили -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Шапка -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">🍰 ButterBakeryCafe</h1>
+                <div style="display: flex; align-items: center;">
+                    <a href="/admin" id="adminLink" style="display: none; margin-right: 10px;" title="Админ-панель">
+                        <i class="fas fa-crown" style="color: #D4A373; font-size: 20px;"></i>
+                    </a>
+                    <div class="cart-icon" id="cartIcon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge" id="cartBadge">0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Категории -->
+            <div class="categories" id="categoriesContainer">
+                <div class="loading">Загрузка категорий...</div>
+            </div>
+
+            <!-- Сетка тортов -->
+            <div class="cakes-grid" id="cakesGrid">
+                <div class="loading">Загрузка тортов...</div>
+            </div>
+        </main>
+
+        <!-- Панель корзины -->
+        <div class="cart-panel" id="cartPanel">
+            <div class="cart-header">
+                <h2>🛒 Корзина</h2>
+                <button class="close-cart" id="closeCart">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Товары в корзине -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Итого:</span>
+                    <span id="cartTotalPrice">0 ₽</span>
+                </div>
+                <button class="checkout-btn" id="checkoutBtn">Оформить заказ</button>
+            </div>
+        </div>
+
+        <!-- Модальное окно оформления заказа -->
+        <div class="modal" id="checkoutModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📝 Оформление заказа</h2>
+                    <button class="close-modal" id="closeModal">&times;</button>
+                </div>
+                <form id="orderForm" class="order-form">
+                    <div class="form-group">
+                        <label for="name">Ваше имя *</label>
+                        <input type="text" id="name" required minlength="2" placeholder="Иван Иванов">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Телефон *</label>
+                        <input type="tel" id="phone" required placeholder="+7 923 456-78-90">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Адрес доставки *</label>
+                        <input type="text" id="address" required placeholder="ул. Кочетова, 25, кв. 42">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="deliveryDate">Дата доставки *</label>
+                            <input type="text" id="deliveryDate" required placeholder="25.12.2024">
+                        </div>
+                        <div class="form-group half">
+                            <label for="deliveryTime">Время *</label>
+                            <input type="text" id="deliveryTime" required placeholder="14:00">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wish">Пожелания к торту</label>
+                        <textarea id="wish" rows="3" placeholder="Надпись, декор, особые пожелания..."></textarea>
+                    </div>
+
+                    <div class="order-summary" id="orderSummary">
+                        <!-- Краткое содержание заказа -->
+                    </div>
+
+                    <button type="submit" class="submit-order">Подтвердить заказ</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Уведомления -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+</body>
+</html>
