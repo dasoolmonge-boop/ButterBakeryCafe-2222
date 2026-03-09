@@ -1247,3 +1247,117 @@ input:checked + .toggle-slider:before {
         padding-bottom: var(--space-xs);
     }
 }
+/* ============================================ */
+/* ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ ПОЛЬЗОВАТЕЛЬСКОЙ ЧАСТИ */
+/* ============================================ */
+
+.order-form {
+    padding: var(--space-md);
+}
+
+.order-summary {
+    background: var(--bg);
+    padding: var(--space-md);
+    border-radius: 16px;
+    margin: var(--space-md) 0;
+    border: 1px solid var(--border);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-xs);
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.submit-order {
+    width: 100%;
+    padding: 14px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: var(--space-md);
+}
+
+.submit-order:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================ */
+/* КАРТОЧКА ТОВАРА (ДЕТАЛИЗАЦИЯ) */
+/* ============================================ */
+
+.cake-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-xs);
+}
+
+.cake-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.add-to-cart {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.add-to-cart:hover {
+    background: var(--accent-hover);
+    transform: scale(1.1);
+}
+
+.add-to-cart.added {
+    background: var(--success);
+}
+
+/* Адаптивность для очень маленьких экранов */
+@media (max-width: 360px) {
+    .cakes-grid {
+        gap: 8px;
+    }
+    
+    .cake-info {
+        padding: 10px;
+    }
+    
+    .cake-name {
+        font-size: 14px;
+    }
+    
+    .cake-price {
+        font-size: 14px;
+    }
+}
+
