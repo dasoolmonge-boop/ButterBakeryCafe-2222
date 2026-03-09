@@ -8,6 +8,7 @@ const url = require('url');
 const PORT = process.env.PORT || 3000;
 const BOT_TOKEN = "8739833609:AAHVM4_5VwvirZaI1fPe53roNzwsyWy--1Y";
 const SITE_DOMAIN = "butterbakerycafe.bothost.ru";
+const ADMIN_ID = 1066867845; // ID главного администратора
 
 // MIME типы для статических файлов
 const mimeTypes = {
@@ -41,19 +42,54 @@ function initDB() {
                 { id: 2, name: "Праздничные", description: "Для особых случаев" }
             ],
             cakes: [
-                { id: 1, name: 'Медовик', price: 2500, weight: 1.5, description: 'Классический медовый торт с нежным кремом', photo: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400', available: true, categoryId: 1 },
-                { id: 2, name: 'Наполеон', price: 2800, weight: 1.8, description: 'Хрустящие коржи с заварным кремом', photo: 'https://images.unsplash.com/photo-1464305795233-6e7c1d10f1d8?w=400', available: true, categoryId: 1 },
-                { id: 3, name: 'Красный бархат', price: 3200, weight: 2.0, description: 'Красные коржи с сливочно-сырным кремом', photo: 'https://images.unsplash.com/photo-1586788224331-947f68671cf1?w=400', available: true, categoryId: 2 }
+                { 
+                    id: 1, 
+                    name: 'Медовик', 
+                    price: 2500, 
+                    weight: 1.5, 
+                    description: 'Классический медовый торт с нежным кремом', 
+                    photo: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400', 
+                    available: true, 
+                    categoryId: 1 
+                },
+                { 
+                    id: 2, 
+                    name: 'Наполеон', 
+                    price: 2800, 
+                    weight: 1.8, 
+                    description: 'Хрустящие коржи с заварным кремом', 
+                    photo: 'https://images.unsplash.com/photo-1464305795233-6e7c1d10f1d8?w=400', 
+                    available: true, 
+                    categoryId: 1 
+                },
+                { 
+                    id: 3, 
+                    name: 'Красный бархат', 
+                    price: 3200, 
+                    weight: 2.0, 
+                    description: 'Красные коржи с сливочно-сырным кремом', 
+                    photo: 'https://images.unsplash.com/photo-1586788224331-947f68671cf1?w=400', 
+                    available: true, 
+                    categoryId: 2 
+                }
             ],
             users: [
-                { id: 1, telegramId: 1066867845, username: "admin", firstName: "Главный администратор", role: "admin", onShift: false, phone: "", createdAt: new Date().toISOString() },
-                { id: 2, telegramId: 1066867846, username: "courier_ivan", firstName: "Иван", role: "courier", onShift: false, phone: "+79991234567", createdAt: new Date().toISOString() }
+                { 
+                    id: 1, 
+                    telegramId: 1066867845, 
+                    username: "admin", 
+                    firstName: "Главный администратор", 
+                    role: "admin", 
+                    onShift: false, 
+                    phone: "", 
+                    createdAt: new Date().toISOString() 
+                }
             ],
             orders: [],
             nextCakeId: 4,
             nextOrderId: 1,
             nextCategoryId: 3,
-            nextUserId: 3
+            nextUserId: 2
         };
         fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
     }
@@ -176,27 +212,28 @@ async function getOrCreateUser(telegramId, userData) {
     return user;
 }
 
-// Фрагмент из app.js с изменённым названием в уведомлениях
-
 // Отправка уведомлений о новом заказе
 function notifyNewOrder(orderData, users) {
     const adminOnShift = getAdminOnShift(users);
     const admins = getAllAdmins(users);
 
     const cakesList = orderData.cart.map(item =>
-        `🍰 ${item.name} - ${item.price} ₽ (${item.quantity} шт.)`
+        `🍰 ${item.name} - ${item.price} ₽ (${item.weight} кг)`
     ).join('\n');
 
     const orderMessage =
-        `📩 **НОВЫЙ ЗАКАЗ #${orderData.id}**\n\n` +
-        `🍰 **Состав:**\n${cakesList}\n` +
+        `📩 **НОВЫЙ ЗАКАЗ**\n\n` +
+        `🍰 **Торты:**\n${cakesList}\n` +
         `💰 **Итого:** ${orderData.totalPrice} ₽\n\n` +
         `👤 **Имя:** ${orderData.name}\n` +
+        `🆔 **Username:** ${orderData.username ? '@' + orderData.username : 'нет'}\n` +
         `📱 **Телефон:** ${orderData.phone}\n` +
-        `📍 **Адрес:** ${orderData.address}\n` +
-        `📅 **Доставка:** ${orderData.deliveryDate} ${orderData.deliveryTime}\n` +
-        `📝 **Пожелания:** ${orderData.wish || 'Без пожеланий'}\n\n` +
-        `👑 [Управление заказами](https://${SITE_DOMAIN}/admin)`;
+        `📅 **Дата доставки:** ${orderData.deliveryDate}\n` +
+        `⏰ **Время доставки:** ${orderData.deliveryTime}\n` +
+        `📝 **Пожелания:** ${orderData.wish || 'Без пожеланий'}\n` +
+        `🆔 **User ID:** ${orderData.userId}\n` +
+        `📅 **Дата заказа:** ${new Date().toLocaleString('ru-RU')}\n\n` +
+        `👑 **Управление заказами:** https://${SITE_DOMAIN}/admin`;
 
     // Отправляем админу на смене или всем админам
     if (adminOnShift) {
@@ -207,15 +244,49 @@ function notifyNewOrder(orderData, users) {
 
     // Отправляем подтверждение покупателю
     const customerMessage =
-        `✅ **Ваш заказ #${orderData.id} принят!**\n\n` +
+        `✅ **Ваш заказ принят!**\n\n` +
         `Спасибо за заказ в *ButterBakeryCafe* ❤️\n\n` +
-        `🍰 **Состав:**\n${cakesList}\n` +
+        `🍰 **Торты:**\n${cakesList}\n` +
         `💰 **Сумма:** ${orderData.totalPrice} ₽\n` +
-        `📍 **Адрес доставки:** ${orderData.address}\n` +
-        `📅 **Дата:** ${orderData.deliveryDate} в ${orderData.deliveryTime}\n\n` +
+        `📅 **Дата доставки:** ${orderData.deliveryDate}\n` +
+        `⏰ **Время доставки:** ${orderData.deliveryTime}\n` +
+        `📍 **Адрес:** ${orderData.address}\n\n` +
         `Мы свяжемся с вами для подтверждения.`;
 
     sendTelegramMessage(orderData.userId, customerMessage);
+}
+
+// Уведомление о назначении курьера
+function notifyOrderAssigned(order, courier, users) {
+    const adminOnShift = getAdminOnShift(users);
+
+    // Курьеру
+    const courierMessage =
+        `🚚 **Вам назначен заказ #${order.id}**\n\n` +
+        `👤 **Клиент:** ${order.name}\n` +
+        `📱 **Телефон:** ${order.phone}\n` +
+        `📍 **Адрес:** ${order.address}\n` +
+        `📅 **Доставка:** ${order.deliveryDate} ${order.deliveryTime}\n` +
+        `📝 **Пожелания:** ${order.wish || 'Без пожеланий'}`;
+
+    sendTelegramMessage(courier.telegramId, courierMessage);
+
+    // Клиенту
+    const customerMessage =
+        `🚚 **Ваш заказ #${order.id} передан курьеру!**\n\n` +
+        `Курьер уже в пути. Ожидайте доставку в ближайшее время.`;
+
+    sendTelegramMessage(order.userId, customerMessage);
+
+    // Администратору на смене
+    if (adminOnShift) {
+        const adminMessage =
+            `📋 **Заказ #${order.id} назначен курьеру**\n\n` +
+            `🚴‍♂️ **Курьер:** ${courier.firstName} (@${courier.username})\n` +
+            `📱 **Телефон курьера:** ${courier.phone || 'не указан'}`;
+
+        sendTelegramMessage(adminOnShift.telegramId, adminMessage);
+    }
 }
 
 // Уведомление о доставке
@@ -256,7 +327,7 @@ const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
 
-    // Функция для проверки авторизации (упрощенная, для реального проекта лучше добавить проверку)
+    // Функция для проверки авторизации (упрощенная)
     const isAdminRequest = (req) => {
         // В реальном проекте здесь должна быть проверка подписи Telegram
         return true; // Для теста разрешаем все
@@ -1126,4 +1197,6 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Mini App сервер запущен на порту ${PORT}`);
     console.log(`📱 Главная страница: http://localhost:${PORT}`);
     console.log(`👑 Админ-панель: http://localhost:${PORT}/admin`);
+    console.log(`💾 Данные сохраняются в: ${DB_FILE}`);
+    console.log(`📸 Загрузки сохраняются в: ${UPLOAD_DIR}`);
 });
