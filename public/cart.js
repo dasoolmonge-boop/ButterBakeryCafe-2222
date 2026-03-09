@@ -72,10 +72,10 @@ const cart = {
 
         if (this.items.length === 0) {
             cartItems.innerHTML = `
-                <div class="empty-cart">
-                    <i class="fas fa-shopping-cart" style="font-size: 48px; opacity: 0.3;"></i>
-                    <p style="margin-top: 16px; color: var(--tg-hint);">Корзина пуста</p>
-                    <p style="margin-top: 8px; font-size: 14px; color: var(--tg-hint);">Добавьте торты из каталога</p>
+                <div class="empty-state">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Корзина пуста</p>
+                    <span>Добавьте товары из каталога</span>
                 </div>
             `;
             tg.MainButton.hide();
@@ -97,6 +97,7 @@ const cart = {
 
         document.getElementById('cartTotalPrice').textContent = `${totalPrice} ₽`;
 
+        // Показываем кнопку Telegram только если нужно
         if (this.items.length > 0 &&
             !document.getElementById('cartPanel').classList.contains('open') &&
             !document.getElementById('checkoutModal').classList.contains('open')) {
@@ -168,6 +169,7 @@ function openCheckoutModal() {
 
     summary.innerHTML = summaryHtml;
 
+    // Автозаполнение данных пользователя Telegram
     if (user.first_name) {
         document.getElementById('name').value = user.first_name || '';
     }
@@ -197,7 +199,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     const submitBtn = e.target.querySelector('.submit-order');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Отправка...';
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
 
     const orderData = {
         name,
@@ -249,7 +251,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
         }
     } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Подтвердить заказ';
+        submitBtn.innerHTML = 'Подтвердить заказ';
     }
 });
 
@@ -285,7 +287,7 @@ document.getElementById('closeCart').addEventListener('click', () => {
     }
 });
 
-// Простое форматирование телефона
+// Форматирование телефона
 document.getElementById('phone').addEventListener('input', (e) => {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 0) {
