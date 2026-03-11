@@ -752,22 +752,19 @@ function closeEditUserModal() {
 // Загрузка заказов
 async function loadOrders() {
     try {
-        // Загружаем все заказы одной пачкой для подсчета
-        const allOrdersResponse = await fetch('/api/admin/orders');
-        const allOrders = await allOrdersResponse.json();
-        
-        // Фильтруем активные и историю
-        const activeOrders = allOrders.filter(o => o.status === 'active' || o.status === 'assigned_to_courier');
-        const historyOrders = allOrders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
+        const [activeResponse, historyResponse, couriersResponse] = await Promise.all([
+            fetch('/api/admin/orders/active'),
+            fetch('/api/admin/orders/history'),
+            fetch('/api/admin/couriers/on-shift')
+        ]);
+
+        const activeOrders = await activeResponse.json();
+        const historyOrders = await historyResponse.json();
+        const couriersOnShift = await couriersResponse.json();
 
         document.getElementById('activeOrdersCount').textContent = activeOrders.length;
         document.getElementById('historyOrdersCount').textContent = historyOrders.length;
 
-        // Загружаем курьеров на смене для активных заказов
-        const couriersResponse = await fetch('/api/admin/couriers/on-shift');
-        const couriersOnShift = await couriersResponse.json();
-
-        // Отображаем нужную вкладку
         if (currentOrdersTab === 'active') {
             renderOrders(activeOrders, 'activeOrdersList', couriersOnShift);
         } else {
@@ -775,7 +772,6 @@ async function loadOrders() {
         }
     } catch (error) {
         console.error('Ошибка загрузки заказов:', error);
-        showToast('Ошибка загрузки заказов', 'error');
     }
 }
 
@@ -788,10 +784,9 @@ function renderOrders(orders, containerId, couriersOnShift = []) {
         return;
     }
 
-    // Сортируем по дате (сначала новые)
     orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    let html = '';
+    let html = '<div class="orders-grid">';
 
     orders.forEach(order => {
         const statusText = getStatusText(order.status);
@@ -808,7 +803,7 @@ function renderOrders(orders, containerId, couriersOnShift = []) {
                     <div><i class="fas fa-phone"></i> ${order.phone}</div>
                     <div><i class="fas fa-map-marker-alt"></i> ${order.address}</div>
                     <div><i class="fas fa-calendar"></i> ${order.deliveryDate} ${order.deliveryTime}</div>
-                    <div><i class="fas fa-comment"></i> ${order.wish || 'Без пожеланий'}</div>
+                    <div><i class="fas fa-comment"></i> ${order.wish}</div>
                     <div class="order-cakes">
                         ${order.cart.map(item => `
                             <div class="order-cake-item">
@@ -825,16 +820,12 @@ function renderOrders(orders, containerId, couriersOnShift = []) {
         `;
     });
 
+    html += '</div>';
     container.innerHTML = html;
 }
 
 // Отрисовка действий для заказа в зависимости от статуса
 function renderOrderActions(order, couriersOnShift) {
-    // Для истории (доставленные и отмененные) не показываем кнопки действий
-    if (order.status === 'delivered' || order.status === 'cancelled') {
-        return '';
-    }
-
     if (order.status === 'active') {
         return `
             <div class="order-actions">
@@ -867,7 +858,7 @@ function renderOrderActions(order, couriersOnShift) {
         `;
     }
 
-    return '';
+    return ''; // Для delivered и других финальных статусов без действий
 }
 
 // Назначение курьера на заказ
