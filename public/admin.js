@@ -6,6 +6,8 @@ tg.expand();
 
 let currentUser = tg.initDataUnsafe.user || {};
 let isAdmin = false;
+let ordersUpdateInterval = null;
+let lastActiveOrdersCount = 0;
 
 // Проверка прав администратора
 async function checkAdmin() {
@@ -33,13 +35,76 @@ async function checkAdmin() {
             loadActiveOrders();
             loadHistoryOrders();
             loadStats();
+            
+            // Запускаем автоматическое обновление активных заказов каждые 3 секунды
+            startAutoRefresh();
         }
     } catch (error) {
         console.error('Ошибка проверки прав:', error);
     }
 }
 
-// Переключение основных вкладок
+// Запуск автоматического обновления
+function startAutoRefresh() {
+    if (ordersUpdateInterval) {
+        clearInterval(ordersUpdateInterval);
+    }
+    
+    ordersUpdateInterval = setInterval(() => {
+        // Проверяем, открыта ли сейчас вкладка с активными заказами
+        const activeOrdersSection = document.getElementById('active-orders-section');
+        if (activeOrdersSection && activeOrdersSection.classList.contains('active')) {
+            refreshActiveOrders();
+        }
+    }, 3000); // Обновление каждые 3 секунды
+}
+
+// Принудительное обновление активных заказов
+async function refreshActiveOrders() {
+    try {
+        const [activeResponse, couriersResponse] = await Promise.all([
+            fetch('/api/admin/orders/active'),
+            fetch('/api/admin/couriers/on-shift')
+        ]);
+
+        const activeOrders = await activeResponse.json();
+        const couriersOnShift = await couriersResponse.json();
+        
+        // Проверяем, появились ли новые заказы
+        if (activeOrders.length > lastActiveOrdersCount) {
+            // Показываем уведомление
+            showToast(`🆕 Новый заказ! Всего активных: ${activeOrders.length}`, 'success');
+            
+            // Виброотклик
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.notificationOccurred('success');
+            }
+            
+            // Обновляем счетчик в заголовке вкладки
+            const countElement = document.getElementById('activeOrdersCountHeader');
+            if (countElement) {
+                countElement.textContent = activeOrders.length;
+                countElement.style.animation = 'pulse 0.5s ease';
+                setTimeout(() => {
+                    countElement.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        lastActiveOrdersCount = activeOrders.length;
+        
+        // Обновляем счетчик в любом случае
+        document.getElementById('activeOrdersCountHeader').textContent = activeOrders.length;
+        
+        // Обновляем отображение заказов
+        renderOrders(activeOrders, 'activeOrdersList', couriersOnShift, true);
+        
+    } catch (error) {
+        console.error('Ошибка обновления активных заказов:', error);
+    }
+}
+
+// Переключение основных вкладок (обновленная)
 function switchTab(tab) {
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
@@ -61,7 +126,11 @@ function switchTab(tab) {
     }
     if (tab === 'categories') loadCategories();
     if (tab === 'users') loadUsers();
-    if (tab === 'active-orders') loadActiveOrders();
+    if (tab === 'active-orders') {
+        loadActiveOrders();
+        // Сбрасываем счетчик новых заказов при переходе на вкладку
+        lastActiveOrdersCount = 0;
+    }
     if (tab === 'history-orders') loadHistoryOrders();
     if (tab === 'stats') loadStats();
 }
@@ -758,6 +827,9 @@ async function loadActiveOrders() {
 
         // Обновляем счетчик в заголовке
         document.getElementById('activeOrdersCountHeader').textContent = activeOrders.length;
+        
+        // Запоминаем количество для проверки новых заказов
+        lastActiveOrdersCount = activeOrders.length;
 
         renderOrders(activeOrders, 'activeOrdersList', couriersOnShift, true);
     } catch (error) {
@@ -791,6 +863,8 @@ async function loadHistoryOrders() {
 // Отрисовка заказов
 function renderOrders(orders, containerId, couriersOnShift = [], showActions = true) {
     const container = document.getElementById(containerId);
+
+    if (!container) return;
 
     if (orders.length === 0) {
         container.innerHTML = '<div class="empty-cart">Нет заказов</div>';
@@ -1101,3 +1175,10 @@ function showToast(message, type) {
 
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', checkAdmin);
+
+// Очищаем интервал при уходе со страницы
+window.addEventListener('beforeunload', function() {
+    if (ordersUpdateInterval) {
+        clearInterval(ordersUpdateInterval);
+    }
+});
