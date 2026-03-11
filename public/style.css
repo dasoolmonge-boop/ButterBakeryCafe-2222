@@ -1804,10 +1804,12 @@ input:checked + .toggle-slider:before {
         font-size: 16px;
     }
     
-    .selected-time {
+     .selected-time {
         font-size: 28px;
     }
-    /* ============================================ */
+}
+
+/* ============================================ */
 /* ЛОГОТИП В ШАПКЕ */
 /* ============================================ */
 
@@ -1834,6 +1836,5 @@ input:checked + .toggle-slider:before {
     .header-logo {
         height: 30px;
     }
-}
 }
 
