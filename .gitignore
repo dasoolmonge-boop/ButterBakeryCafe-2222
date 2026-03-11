@@ -3,9 +3,10 @@
 .env.local
 .env.production
 
-# Database
+# Database and uploads - ВСЕ пользовательские данные
 /data/
 db.json
+public/uploads/
 
 # Logs
 logs/
