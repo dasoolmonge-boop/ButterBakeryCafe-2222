@@ -2,7 +2,8 @@
 
 let currentDate = new Date();
 let selectedDate = null;
-let selectedTime = null;
+let selectedHour = null;
+let selectedMinute = null;
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
 
@@ -15,11 +16,9 @@ const months = [
     'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
 ];
 
-// Доступное время (можно настроить под свой график)
-const availableTimeSlots = [
-    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
-    '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
-];
+// ============================================
+// ФУНКЦИИ ДЛЯ ДАТЫ
+// ============================================
 
 // Открыть календарь
 function openDatePicker() {
@@ -30,17 +29,6 @@ function openDatePicker() {
 // Закрыть календарь
 function closeDatePicker() {
     document.getElementById('datePickerModal').classList.remove('open');
-}
-
-// Открыть выбор времени
-function openTimePicker() {
-    renderTimeSlots();
-    document.getElementById('timePickerModal').classList.add('open');
-}
-
-// Закрыть выбор времени
-function closeTimePicker() {
-    document.getElementById('timePickerModal').classList.remove('open');
 }
 
 // Переключить месяц
@@ -157,87 +145,154 @@ function resetDate() {
     closeDatePicker();
 }
 
-// Рендер слотов времени
-function renderTimeSlots() {
-    const timeSlots = document.getElementById('timeSlots');
-    
-    let html = '';
-    availableTimeSlots.forEach(time => {
-        const isSelected = selectedTime === time;
-        const selectedClass = isSelected ? 'selected' : '';
-        
-        html += `<div class="time-slot ${selectedClass}" onclick="selectTime('${time}')">${time}</div>`;
-    });
-    
-    timeSlots.innerHTML = html;
+// ============================================
+// ФУНКЦИИ ДЛЯ ВРЕМЕНИ (TIME PICKER)
+// ============================================
+
+// Открыть выбор времени
+function openTimePicker() {
+    renderTimeSelector();
+    updateSelectedTimeDisplay();
+    document.getElementById('timePickerModal').classList.add('open');
 }
 
-// Выбрать время
-function selectTime(time) {
-    // Убираем выделение со всех слотов
-    document.querySelectorAll('.time-slot').forEach(el => {
+// Закрыть выбор времени
+function closeTimePicker() {
+    document.getElementById('timePickerModal').classList.remove('open');
+}
+
+// Рендер выбора часов и минут
+function renderTimeSelector() {
+    renderHours();
+    renderMinutes();
+}
+
+// Рендер часов (00-23)
+function renderHours() {
+    const hourSelector = document.getElementById('hourSelector');
+    let html = '';
+    
+    for (let hour = 0; hour < 24; hour++) {
+        const hourStr = hour.toString().padStart(2, '0');
+        const isSelected = selectedHour === hour;
+        const selectedClass = isSelected ? 'selected' : '';
+        
+        html += `<div class="time-unit ${selectedClass}" onclick="selectHour(${hour})">${hourStr}</div>`;
+    }
+    
+    hourSelector.innerHTML = html;
+}
+
+// Рендер минут (00, 15, 30, 45 - интервалы)
+function renderMinutes() {
+    const minuteSelector = document.getElementById('minuteSelector');
+    const minutes = ['00', '15', '30', '45'];
+    let html = '';
+    
+    minutes.forEach((minute, index) => {
+        const minuteNum = index * 15;
+        const isSelected = selectedMinute === minuteNum;
+        const selectedClass = isSelected ? 'selected' : '';
+        
+        html += `<div class="time-unit ${selectedClass}" onclick="selectMinute(${minuteNum})">${minute}</div>`;
+    });
+    
+    minuteSelector.innerHTML = html;
+}
+
+// Выбрать час
+function selectHour(hour) {
+    selectedHour = hour;
+    
+    // Убираем выделение со всех часов
+    document.querySelectorAll('#hourSelector .time-unit').forEach(el => {
         el.classList.remove('selected');
     });
     
-    // Выделяем выбранный слот
+    // Выделяем выбранный час
     event.target.classList.add('selected');
     
-    // Сохраняем выбранное время
-    selectedTime = time;
+    updateSelectedTimeDisplay();
+}
+
+// Выбрать минуты
+function selectMinute(minute) {
+    selectedMinute = minute;
+    
+    // Убираем выделение со всех минут
+    document.querySelectorAll('#minuteSelector .time-unit').forEach(el => {
+        el.classList.remove('selected');
+    });
+    
+    // Выделяем выбранные минуты
+    event.target.classList.add('selected');
+    
+    updateSelectedTimeDisplay();
+}
+
+// Обновить отображение выбранного времени
+function updateSelectedTimeDisplay() {
+    const display = document.getElementById('selectedTimeDisplay');
+    
+    if (selectedHour !== null && selectedMinute !== null) {
+        const hourStr = selectedHour.toString().padStart(2, '0');
+        const minuteStr = selectedMinute.toString().padStart(2, '0');
+        display.textContent = `${hourStr}:${minuteStr}`;
+    } else if (selectedHour !== null) {
+        const hourStr = selectedHour.toString().padStart(2, '0');
+        display.textContent = `${hourStr}:--`;
+    } else if (selectedMinute !== null) {
+        const minuteStr = selectedMinute.toString().padStart(2, '0');
+        display.textContent = `--:${minuteStr}`;
+    } else {
+        display.textContent = '--:--';
+    }
 }
 
 // Подтвердить выбор времени
 function confirmTime() {
-    if (selectedTime) {
-        document.getElementById('deliveryTime').value = selectedTime;
+    if (selectedHour !== null && selectedMinute !== null) {
+        const hourStr = selectedHour.toString().padStart(2, '0');
+        const minuteStr = selectedMinute.toString().padStart(2, '0');
+        document.getElementById('deliveryTime').value = `${hourStr}:${minuteStr}`;
         closeTimePicker();
     } else {
-        showToast('Выберите время', 'warning');
+        showToast('Выберите часы и минуты', 'warning');
     }
 }
 
 // Сбросить время
 function resetTime() {
-    selectedTime = null;
+    selectedHour = null;
+    selectedMinute = null;
     document.getElementById('deliveryTime').value = '';
     
-    // Убираем выделение со всех слотов
-    document.querySelectorAll('.time-slot').forEach(el => {
+    // Убираем выделение со всех элементов
+    document.querySelectorAll('#hourSelector .time-unit').forEach(el => {
+        el.classList.remove('selected');
+    });
+    document.querySelectorAll('#minuteSelector .time-unit').forEach(el => {
         el.classList.remove('selected');
     });
     
+    updateSelectedTimeDisplay();
     closeTimePicker();
 }
 
-// Инициализация
+// ============================================
+// ИНИЦИАЛИЗАЦИЯ
+// ============================================
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Делаем поля даты и времени кликабельными
+    // Добавляем обработчики для полей даты и времени
     const dateInput = document.getElementById('deliveryDate');
     const timeInput = document.getElementById('deliveryTime');
     
     if (dateInput) {
-        dateInput.readOnly = true;
-        dateInput.classList.add('input-with-icon');
         dateInput.addEventListener('click', openDatePicker);
-        
-        // Добавляем иконку календаря
-        const wrapper = document.createElement('div');
-        wrapper.className = 'input-with-icon';
-        dateInput.parentNode.insertBefore(wrapper, dateInput);
-        wrapper.appendChild(dateInput);
-        wrapper.innerHTML += '<i class="fas fa-calendar"></i>';
     }
     
     if (timeInput) {
-        timeInput.readOnly = true;
-        timeInput.classList.add('input-with-icon');
         timeInput.addEventListener('click', openTimePicker);
-        
-        // Добавляем иконку часов
-        const wrapper = document.createElement('div');
-        wrapper.className = 'input-with-icon';
-        timeInput.parentNode.insertBefore(wrapper, timeInput);
-        wrapper.appendChild(timeInput);
-        wrapper.innerHTML += '<i class="fas fa-clock"></i>';
     }
 });
