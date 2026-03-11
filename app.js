@@ -5,10 +5,58 @@ const path = require('path');
 const https = require('https');
 const url = require('url');
 
+// Загружаем переменные окружения из .env файла (для локальной разработки)
+try {
+    require('dotenv').config();
+} catch (e) {
+    console.log('dotenv не установлен, используем системные переменные окружения');
+}
+
 const PORT = process.env.PORT || 3000;
-const BOT_TOKEN = "8739833609:AAHVM4_5VwvirZaI1fPe53roNzwsyWy--1Y";
-const SITE_DOMAIN = "butterbakerycafe.bothost.ru";
-const ADMIN_ID = 1066867845; // ID главного администратора
+
+// Важные переменные окружения - БЕЗОПАСНОСТЬ!
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const SITE_DOMAIN = process.env.SITE_DOMAIN || 'butterbakerycafe.bothost.ru';
+const ADMIN_ID = process.env.ADMIN_ID ? parseInt(process.env.ADMIN_ID) : 1066867845; // ID главного администратора (по умолчанию)
+
+// Проверяем наличие обязательных переменных
+if (!BOT_TOKEN) {
+    console.error('❌ Ошибка: Не задан BOT_TOKEN в переменных окружения!');
+    console.error('Пожалуйста, создайте файл .env или установите переменную окружения BOT_TOKEN');
+    process.exit(1);
+}
+
+// Определяем окружение (production или development)
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
+// Путь к папке с данными (для production используем /app/data, для разработки - текущую папку)
+const DATA_DIR = IS_PRODUCTION ? '/app/data' : __dirname;
+
+// Путь к файлу базы данных
+const DB_FILE = path.join(DATA_DIR, 'db.json');
+const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
+
+// Создаем папки, если их нет
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    console.log(`📁 Создана папка для данных: ${DATA_DIR}`);
+}
+
+if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
+
+// Проверяем права на запись в папку данных
+try {
+    fs.accessSync(DATA_DIR, fs.constants.W_OK);
+    console.log(`✅ Папка ${DATA_DIR} доступна для записи`);
+} catch (err) {
+    console.error(`❌ Нет прав на запись в ${DATA_DIR}!`, err.message);
+    if (IS_PRODUCTION) {
+        console.error('Критическая ошибка в production режиме!');
+        process.exit(1);
+    }
+}
 
 // MIME типы для статических файлов
 const mimeTypes = {
@@ -24,15 +72,6 @@ const mimeTypes = {
     '.ico': 'image/x-icon'
 };
 
-// Файл для хранения данных
-const DB_FILE = path.join(__dirname, 'db.json');
-const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
-
-// Создаем папку для загрузок, если её нет
-if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
 // Инициализация базы данных
 function initDB() {
     if (!fs.existsSync(DB_FILE)) {
@@ -42,47 +81,47 @@ function initDB() {
                 { id: 2, name: "Праздничные", description: "Для особых случаев" }
             ],
             cakes: [
-                { 
-                    id: 1, 
-                    name: 'Медовик', 
-                    price: 2500, 
-                    weight: 1.5, 
-                    description: 'Классический медовый торт с нежным кремом', 
-                    photo: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400', 
-                    available: true, 
-                    categoryId: 1 
+                {
+                    id: 1,
+                    name: 'Медовик',
+                    price: 2500,
+                    weight: 1.5,
+                    description: 'Классический медовый торт с нежным кремом',
+                    photo: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400',
+                    available: true,
+                    categoryId: 1
                 },
-                { 
-                    id: 2, 
-                    name: 'Наполеон', 
-                    price: 2800, 
-                    weight: 1.8, 
-                    description: 'Хрустящие коржи с заварным кремом', 
-                    photo: 'https://images.unsplash.com/photo-1464305795233-6e7c1d10f1d8?w=400', 
-                    available: true, 
-                    categoryId: 1 
+                {
+                    id: 2,
+                    name: 'Наполеон',
+                    price: 2800,
+                    weight: 1.8,
+                    description: 'Хрустящие коржи с заварным кремом',
+                    photo: 'https://images.unsplash.com/photo-1464305795233-6e7c1d10f1d8?w=400',
+                    available: true,
+                    categoryId: 1
                 },
-                { 
-                    id: 3, 
-                    name: 'Красный бархат', 
-                    price: 3200, 
-                    weight: 2.0, 
-                    description: 'Красные коржи с сливочно-сырным кремом', 
-                    photo: 'https://images.unsplash.com/photo-1586788224331-947f68671cf1?w=400', 
-                    available: true, 
-                    categoryId: 2 
+                {
+                    id: 3,
+                    name: 'Красный бархат',
+                    price: 3200,
+                    weight: 2.0,
+                    description: 'Красные коржи с сливочно-сырным кремом',
+                    photo: 'https://images.unsplash.com/photo-1586788224331-947f68671cf1?w=400',
+                    available: true,
+                    categoryId: 2
                 }
             ],
             users: [
-                { 
-                    id: 1, 
-                    telegramId: 1066867845, 
-                    username: "admin", 
-                    firstName: "Главный администратор", 
-                    role: "admin", 
-                    onShift: false, 
-                    phone: "", 
-                    createdAt: new Date().toISOString() 
+                {
+                    id: 1,
+                    telegramId: ADMIN_ID, // Используем ADMIN_ID из переменных окружения
+                    username: "admin",
+                    firstName: "Главный администратор",
+                    role: "admin",
+                    onShift: false,
+                    phone: "",
+                    createdAt: new Date().toISOString()
                 }
             ],
             orders: [],
@@ -91,7 +130,15 @@ function initDB() {
             nextCategoryId: 3,
             nextUserId: 2
         };
-        fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+        
+        try {
+            fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+            console.log(`✅ База данных создана: ${DB_FILE}`);
+        } catch (error) {
+            console.error('❌ Ошибка создания базы данных:', error);
+        }
+    } else {
+        console.log(`📦 База данных найдена: ${DB_FILE}`);
     }
 }
 
@@ -101,7 +148,7 @@ function readDB() {
         const data = fs.readFileSync(DB_FILE, 'utf8');
         return JSON.parse(data);
     } catch (error) {
-        console.error('Ошибка чтения БД:', error);
+        console.error('❌ Ошибка чтения БД:', error);
         return { categories: [], cakes: [], users: [], orders: [], nextCakeId: 1, nextOrderId: 1, nextCategoryId: 1, nextUserId: 1 };
     }
 }
@@ -112,7 +159,7 @@ function writeDB(data) {
         fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
         return true;
     } catch (error) {
-        console.error('Ошибка записи БД:', error);
+        console.error('❌ Ошибка записи БД:', error);
         return false;
     }
 }
@@ -123,7 +170,12 @@ initDB();
 // Вспомогательная функция для отправки сообщений в Telegram
 function sendTelegramMessage(chatId, text, parseMode = 'Markdown') {
     if (!chatId) {
-        console.log('Нет chatId для отправки сообщения');
+        console.log('❌ Нет chatId для отправки сообщения');
+        return;
+    }
+
+    if (!BOT_TOKEN) {
+        console.error('❌ Нет BOT_TOKEN для отправки сообщений');
         return;
     }
 
@@ -150,18 +202,18 @@ function sendTelegramMessage(chatId, text, parseMode = 'Markdown') {
             try {
                 const response = JSON.parse(data);
                 if (!response.ok) {
-                    console.error('Ошибка Telegram API:', response.description);
+                    console.error('❌ Ошибка Telegram API:', response.description);
                 } else {
-                    console.log(`Сообщение отправлено в чат ${chatId}`);
+                    console.log(`✅ Сообщение отправлено в чат ${chatId}`);
                 }
             } catch (e) {
-                console.error('Ошибка парсинга ответа Telegram:', e);
+                console.error('❌ Ошибка парсинга ответа Telegram:', e);
             }
         });
     });
 
     req.on('error', (error) => {
-        console.error('Ошибка отправки в Telegram:', error);
+        console.error('❌ Ошибка отправки в Telegram:', error);
     });
 
     req.write(postData);
@@ -348,7 +400,7 @@ const server = http.createServer((req, res) => {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ success: true, user }));
             } catch (error) {
-                console.error('Ошибка регистрации пользователя:', error);
+                console.error('❌ Ошибка регистрации пользователя:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -436,7 +488,7 @@ const server = http.createServer((req, res) => {
                 res.end(JSON.stringify({ success: true, orderId: newOrder.id }));
 
             } catch (error) {
-                console.error('Ошибка создания заказа:', error);
+                console.error('❌ Ошибка создания заказа:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -490,7 +542,7 @@ const server = http.createServer((req, res) => {
                     throw new Error('Не удалось извлечь данные файла');
                 }
             } catch (error) {
-                console.error('Ошибка загрузки файла:', error);
+                console.error('❌ Ошибка загрузки файла:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка загрузки файла' }));
             }
@@ -543,7 +595,7 @@ const server = http.createServer((req, res) => {
                 res.writeHead(201, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(newCategory));
             } catch (error) {
-                console.error('Ошибка создания категории:', error);
+                console.error('❌ Ошибка создания категории:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -585,7 +637,7 @@ const server = http.createServer((req, res) => {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(db.categories[categoryIndex]));
             } catch (error) {
-                console.error('Ошибка обновления категории:', error);
+                console.error('❌ Ошибка обновления категории:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -673,7 +725,7 @@ const server = http.createServer((req, res) => {
                 res.writeHead(201, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(newCake));
             } catch (error) {
-                console.error('Ошибка добавления торта:', error);
+                console.error('❌ Ошибка добавления торта:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -720,7 +772,7 @@ const server = http.createServer((req, res) => {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(db.cakes[cakeIndex]));
             } catch (error) {
-                console.error('Ошибка обновления торта:', error);
+                console.error('❌ Ошибка обновления торта:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -896,7 +948,7 @@ const server = http.createServer((req, res) => {
                 res.writeHead(201, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(newUser));
             } catch (error) {
-                console.error('Ошибка создания пользователя:', error);
+                console.error('❌ Ошибка создания пользователя:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -943,7 +995,7 @@ const server = http.createServer((req, res) => {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(db.users[userIndex]));
             } catch (error) {
-                console.error('Ошибка обновления пользователя:', error);
+                console.error('❌ Ошибка обновления пользователя:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -1098,7 +1150,7 @@ const server = http.createServer((req, res) => {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(db.orders[orderIndex]));
             } catch (error) {
-                console.error('Ошибка обновления заказа:', error);
+                console.error('❌ Ошибка обновления заказа:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -1146,7 +1198,7 @@ const server = http.createServer((req, res) => {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(db.orders[orderIndex]));
             } catch (error) {
-                console.error('Ошибка назначения курьера:', error);
+                console.error('❌ Ошибка назначения курьера:', error);
                 res.writeHead(500);
                 res.end(JSON.stringify({ error: 'Ошибка сервера' }));
             }
@@ -1194,9 +1246,12 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n🚀 ==========================================`);
     console.log(`✅ Mini App сервер запущен на порту ${PORT}`);
     console.log(`📱 Главная страница: http://localhost:${PORT}`);
     console.log(`👑 Админ-панель: http://localhost:${PORT}/admin`);
-    console.log(`💾 Данные сохраняются в: ${DB_FILE}`);
+    console.log(`💾 Файл базы данных: ${DB_FILE}`);
     console.log(`📸 Загрузки сохраняются в: ${UPLOAD_DIR}`);
+    console.log(`🌐 Режим: ${IS_PRODUCTION ? 'PRODUCTION' : 'DEVELOPMENT'}`);
+    console.log(`=============================================\n`);
 });
