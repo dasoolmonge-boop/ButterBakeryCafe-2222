@@ -19,21 +19,49 @@
 </head>
 <body>
     <div class="app">
-        <!-- Шапка -->
+        <!-- Шапка с декоративными элементами -->
         <header class="header">
+            <!-- Декоративные элементы -->
+            <div class="header-ornament-left"></div>
+            <div class="header-ornament-right"></div>
+            
+            <div class="header-decoration"></div>
+            <div class="header-scroll"></div>
+            <div class="header-scroll-right"></div>
+            
+            <div class="header-confetti">
+                <i class="fas fa-heart"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-cookie-bite"></i>
+                <i class="fas fa-candy-cane"></i>
+                <i class="fas fa-crown"></i>
+            </div>
+            
+            <div class="sparkle sparkle-1">✨</div>
+            <div class="sparkle sparkle-2">✨</div>
+            <div class="sparkle sparkle-3">✨</div>
+
             <div class="header-content">
                 <div class="header-left">
                     <!-- Встроенный SVG логотип (круассан) -->
                     <svg class="header-logo" width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#BE723E" />
+                                <stop offset="100%" stop-color="#D4A373" />
+                            </linearGradient>
+                        </defs>
                         <path d="M45 25 C35 30, 30 40, 30 50 C30 60, 35 70, 45 75 C55 70, 60 60, 60 50 C60 40, 55 30, 45 25" 
-                              fill="#BE723E" stroke="#A45F32" stroke-width="3"/>
+                              fill="url(#logoGradient)" stroke="#A45F32" stroke-width="3"/>
                         <path d="M45 35 L35 45 L45 55 L55 45 L45 35" fill="#F8F5F0" stroke="#A45F32" stroke-width="2"/>
                         <path d="M38 42 L42 38 L48 42 L52 38" stroke="#A45F32" stroke-width="2" fill="none"/>
                         <circle cx="42" cy="48" r="2" fill="#A45F32"/>
                         <circle cx="48" cy="48" r="2" fill="#A45F32"/>
                     </svg>
                 </div>
-                <div class="header-title">ButterBakeryCafe</div>
+                <div class="header-title-wrapper">
+                    <div class="header-title">ButterBakeryCafe</div>
+                </div>
                 <div class="header-right">
                     <a href="/admin" id="adminLink" style="display: none;">
                         <button class="admin-btn">
