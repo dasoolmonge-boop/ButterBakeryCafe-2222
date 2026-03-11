@@ -2041,3 +2041,99 @@ input:checked + .toggle-slider:before {
         width: 100% !important;
     }
 }
+/* ============================================ */
+/* УЛУЧШЕННЫЕ ВКЛАДКИ АДМИН-ПАНЕЛИ (2 СТОЛБИКА) */
+/* ============================================ */
+
+/* Контейнер вкладок - теперь сетка 2x3 */
+.admin-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* Два столбика равной ширины */
+    gap: 10px !important;
+    margin-bottom: var(--space-xl) !important;
+    padding: 0 !important;
+    overflow: visible !important; /* Убираем скролл */
+    flex-wrap: nowrap !important; /* Отключаем перенос */
+}
+
+/* Стили для каждой вкладки */
+.admin-tab {
+    width: 100% !important; /* На всю ширину ячейки */
+    padding: 12px 8px !important; /* Немного увеличил отступы */
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px !important; /* Чуть меньше скругление для компактности */
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Уменьшаем отступы на очень маленьких экранах */
+@media (max-width: 360px) {
+    .admin-tab {
+        padding: 10px 4px !important;
+        font-size: 13px !important;
+    }
+    
+    .admin-tab i {
+        font-size: 14px !important;
+    }
+}
+
+/* Стили для счетчиков на вкладках */
+.admin-tab .count {
+    background: var(--surface-hover);
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-size: 11px;
+    margin-left: 4px;
+    color: var(--text-secondary);
+    min-width: 20px;
+    display: inline-block;
+}
+
+/* Активная вкладка */
+.admin-tab.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.admin-tab.active .count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* Эффект при наведении */
+.admin-tab:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* Иконки во вкладках */
+.admin-tab i {
+    font-size: 16px;
+}
+
+/* Адаптивность для совсем маленьких экранов */
+@media (max-width: 320px) {
+    .admin-tabs {
+        gap: 6px !important;
+    }
+    
+    .admin-tab {
+        padding: 8px 2px !important;
+        font-size: 12px !important;
+    }
+}
