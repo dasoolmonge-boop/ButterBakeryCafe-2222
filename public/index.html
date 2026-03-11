@@ -23,17 +23,15 @@
         <header class="header">
             <div class="header-content">
                 <div class="header-left">
-                    <button class="back-btn" onclick="history.back()">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
+                    <!-- Логотип вместо кнопки назад -->
+                    <img src="/uploads/logo.png" alt="Butter Bakery Cafe" class="header-logo">
                     <div class="header-title">ButterBakeryCafe</div>
                 </div>
                 <div class="header-right">
                     <a href="/admin" id="adminLink" style="display: none;">
                         <i class="fas fa-crown header-icon"></i>
                     </a>
-                    <i class="fas fa-search header-icon"></i>
-                    <i class="fas fa-heart header-icon"></i>
+                    <!-- Иконки лупы и сердечка удалены -->
                 </div>
             </div>
         </header>
@@ -155,7 +153,7 @@
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
-                    
+
                     <div class="weekdays">
                         <span>ПН</span>
                         <span>ВТ</span>
@@ -165,11 +163,11 @@
                         <span>СБ</span>
                         <span>ВС</span>
                     </div>
-                    
+
                     <div class="calendar-grid" id="calendarGrid">
                         <!-- Дни будут генерироваться через JavaScript -->
                     </div>
-                    
+
                     <div class="date-actions">
                         <button class="date-btn reset" type="button" onclick="resetDate()">Сбросить</button>
                         <button class="date-btn confirm" type="button" onclick="confirmDate()">Готово</button>
@@ -195,7 +193,7 @@
                             <!-- Часы будут сгенерированы JS -->
                         </div>
                     </div>
-                    
+
                     <!-- Минуты -->
                     <div class="time-section">
                         <label>Минуты</label>
@@ -203,11 +201,11 @@
                             <!-- Минуты будут сгенерированы JS -->
                         </div>
                     </div>
-                    
+
                     <div class="selected-time" id="selectedTimeDisplay">
                         <!-- Выбранное время будет отображаться здесь -->
                     </div>
-                    
+
                     <div class="time-actions">
                         <button class="time-btn reset" type="button" onclick="resetTime()">Сбросить</button>
                         <button class="time-btn confirm" type="button" onclick="confirmTime()">Готово</button>
