@@ -20,6 +20,13 @@ const cart = {
         this.saveToStorage();
 
         showToast(`${cake.name} добавлен в корзину`, 'success');
+        
+        // Автоматически открываем корзину при добавлении первого товара
+        if (this.items.length === 1) {
+            setTimeout(() => {
+                document.getElementById('cartPanel').classList.add('open');
+            }, 300);
+        }
     },
 
     // Удалить товар
@@ -73,12 +80,11 @@ const cart = {
         if (this.items.length === 0) {
             cartItems.innerHTML = `
                 <div class="empty-state">
-                    <i class="fas fa-shopping-cart"></i>
-                    <p>Корзина пуста</p>
-                    <span>Добавьте товары из каталога</span>
+                    <i class="fas fa-shopping-cart" style="font-size: 48px; opacity: 0.3; margin-bottom: 16px;"></i>
+                    <p style="color: var(--text-secondary);">Корзина пуста</p>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-top: 8px;">Добавьте торты из каталога</p>
                 </div>
             `;
-            tg.MainButton.hide();
         } else {
             cartItems.innerHTML = this.items.map(item => `
                 <div class="cart-item" data-id="${item.id}">
@@ -87,6 +93,7 @@ const cart = {
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.name}</div>
                         <div class="cart-item-price">${item.price} ₽ × ${item.quantity}</div>
+                        <div class="cart-item-subtotal">${item.price * item.quantity} ₽</div>
                     </div>
                     <button class="remove-item" onclick="cart.removeItem(${item.id})">
                         <i class="fas fa-trash"></i>
@@ -96,17 +103,18 @@ const cart = {
         }
 
         document.getElementById('cartTotalPrice').textContent = `${totalPrice} ₽`;
-
-        // Показываем кнопку Telegram только если нужно
-        if (this.items.length > 0 &&
-            !document.getElementById('cartPanel').classList.contains('open') &&
-            !document.getElementById('checkoutModal').classList.contains('open')) {
-            tg.MainButton.setText(`ОФОРМИТЬ ЗАКАЗ (${totalPrice} ₽)`);
-            tg.MainButton.show();
-            tg.MainButton.offClick();
-            tg.MainButton.onClick(() => openCheckoutModal());
-        } else {
-            tg.MainButton.hide();
+        
+        // Обновляем состояние кнопки оформления заказа
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        if (checkoutBtn) {
+            checkoutBtn.disabled = this.items.length === 0;
+            if (this.items.length === 0) {
+                checkoutBtn.style.opacity = '0.5';
+                checkoutBtn.style.pointerEvents = 'none';
+            } else {
+                checkoutBtn.style.opacity = '1';
+                checkoutBtn.style.pointerEvents = 'auto';
+            }
         }
     },
 
@@ -116,7 +124,6 @@ const cart = {
         this.updateBadge();
         this.render();
         this.saveToStorage();
-        tg.MainButton.hide();
     },
 
     // Сохранить в localStorage
@@ -145,10 +152,13 @@ cart.loadFromStorage();
 
 // Функция открытия модального окна оформления заказа
 function openCheckoutModal() {
+    if (cart.items.length === 0) {
+        showToast('Корзина пуста', 'warning');
+        return;
+    }
+    
     const modal = document.getElementById('checkoutModal');
     const summary = document.getElementById('orderSummary');
-
-    tg.MainButton.hide();
 
     let summaryHtml = '<div class="summary-items">';
     cart.items.forEach(item => {
@@ -169,7 +179,6 @@ function openCheckoutModal() {
 
     summary.innerHTML = summaryHtml;
 
-    // Автозаполнение данных пользователя Telegram
     if (user.first_name) {
         document.getElementById('name').value = user.first_name || '';
     }
@@ -199,7 +208,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     const submitBtn = e.target.querySelector('.submit-order');
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+    submitBtn.textContent = 'Отправка...';
 
     const orderData = {
         name,
@@ -229,16 +238,12 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
             showToast('✅ Заказ успешно оформлен!', 'success');
             cart.clear();
             document.getElementById('checkoutModal').classList.remove('open');
+            document.getElementById('cartPanel').classList.remove('open');
             e.target.reset();
 
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.notificationOccurred('success');
             }
-
-            tg.MainButton.setText('ЗАКРЫТЬ');
-            tg.MainButton.offClick();
-            tg.MainButton.onClick(() => tg.close());
-            tg.MainButton.show();
         } else {
             throw new Error('Ошибка при отправке');
         }
@@ -251,64 +256,60 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
         }
     } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Подтвердить заказ';
+        submitBtn.textContent = 'Подтвердить заказ';
     }
 });
 
 // Закрытие модального окна
 document.getElementById('closeModal').addEventListener('click', () => {
     document.getElementById('checkoutModal').classList.remove('open');
-    if (cart.items.length > 0 && !document.getElementById('cartPanel').classList.contains('open')) {
-        tg.MainButton.show();
-    }
 });
 
 document.getElementById('checkoutModal').addEventListener('click', (e) => {
     if (e.target === document.getElementById('checkoutModal')) {
         e.target.classList.remove('open');
-        if (cart.items.length > 0 && !document.getElementById('cartPanel').classList.contains('open')) {
-            tg.MainButton.show();
-        }
     }
 });
 
 // Обработка открытия корзины
 document.getElementById('cartIcon').addEventListener('click', () => {
     document.getElementById('cartPanel').classList.add('open');
-    tg.MainButton.hide();
     cart.render();
 });
 
 // Закрытие корзины
 document.getElementById('closeCart').addEventListener('click', () => {
     document.getElementById('cartPanel').classList.remove('open');
-    if (cart.items.length > 0 && !document.getElementById('checkoutModal').classList.contains('open')) {
-        tg.MainButton.show();
-    }
 });
 
-// Форматирование телефона
+// Кнопка оформления заказа в корзине
+document.getElementById('checkoutBtn').addEventListener('click', openCheckoutModal);
+
+// Простое форматирование телефона
 document.getElementById('phone').addEventListener('input', (e) => {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 0) {
         if (value.startsWith('7') || value.startsWith('8')) {
-            if (value.length > 0) {
-                let formatted = value;
-                if (value.startsWith('7')) {
-                    formatted = '+7';
-                    if (value.length > 1) formatted += ' ' + value.substring(1, 4);
-                    if (value.length > 4) formatted += ' ' + value.substring(4, 7);
-                    if (value.length > 7) formatted += '-' + value.substring(7, 9);
-                    if (value.length > 9) formatted += '-' + value.substring(9, 11);
-                } else {
-                    formatted = '8';
-                    if (value.length > 1) formatted += ' ' + value.substring(1, 4);
-                    if (value.length > 4) formatted += ' ' + value.substring(4, 7);
-                    if (value.length > 7) formatted += '-' + value.substring(7, 9);
-                    if (value.length > 9) formatted += '-' + value.substring(9, 11);
-                }
-                e.target.value = formatted;
+            let formatted = value.startsWith('7') ? '+7' : '8';
+            
+            if (value.length > 1) {
+                const code = value.substring(1, 4);
+                formatted += ' ' + code;
             }
+            if (value.length > 4) {
+                const part1 = value.substring(4, 7);
+                formatted += ' ' + part1;
+            }
+            if (value.length > 7) {
+                const part2 = value.substring(7, 9);
+                formatted += '-' + part2;
+            }
+            if (value.length > 9) {
+                const part3 = value.substring(9, 11);
+                formatted += '-' + part3;
+            }
+            
+            e.target.value = formatted;
         }
     }
 });
