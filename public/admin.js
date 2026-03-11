@@ -752,19 +752,22 @@ function closeEditUserModal() {
 // Загрузка заказов
 async function loadOrders() {
     try {
-        const [activeResponse, historyResponse, couriersResponse] = await Promise.all([
-            fetch('/api/admin/orders/active'),
-            fetch('/api/admin/orders/history'),
-            fetch('/api/admin/couriers/on-shift')
-        ]);
-
-        const activeOrders = await activeResponse.json();
-        const historyOrders = await historyResponse.json();
-        const couriersOnShift = await couriersResponse.json();
+        // Загружаем все заказы одной пачкой для подсчета
+        const allOrdersResponse = await fetch('/api/admin/orders');
+        const allOrders = await allOrdersResponse.json();
+        
+        // Фильтруем активные и историю
+        const activeOrders = allOrders.filter(o => o.status === 'active' || o.status === 'assigned_to_courier');
+        const historyOrders = allOrders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
 
         document.getElementById('activeOrdersCount').textContent = activeOrders.length;
         document.getElementById('historyOrdersCount').textContent = historyOrders.length;
 
+        // Загружаем курьеров на смене для активных заказов
+        const couriersResponse = await fetch('/api/admin/couriers/on-shift');
+        const couriersOnShift = await couriersResponse.json();
+
+        // Отображаем нужную вкладку
         if (currentOrdersTab === 'active') {
             renderOrders(activeOrders, 'activeOrdersList', couriersOnShift);
         } else {
@@ -772,6 +775,7 @@ async function loadOrders() {
         }
     } catch (error) {
         console.error('Ошибка загрузки заказов:', error);
+        showToast('Ошибка загрузки заказов', 'error');
     }
 }
 
@@ -784,9 +788,10 @@ function renderOrders(orders, containerId, couriersOnShift = []) {
         return;
     }
 
+    // Сортируем по дате (сначала новые)
     orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    let html = '<div class="orders-grid">';
+    let html = '';
 
     orders.forEach(order => {
         const statusText = getStatusText(order.status);
@@ -803,7 +808,7 @@ function renderOrders(orders, containerId, couriersOnShift = []) {
                     <div><i class="fas fa-phone"></i> ${order.phone}</div>
                     <div><i class="fas fa-map-marker-alt"></i> ${order.address}</div>
                     <div><i class="fas fa-calendar"></i> ${order.deliveryDate} ${order.deliveryTime}</div>
-                    <div><i class="fas fa-comment"></i> ${order.wish}</div>
+                    <div><i class="fas fa-comment"></i> ${order.wish || 'Без пожеланий'}</div>
                     <div class="order-cakes">
                         ${order.cart.map(item => `
                             <div class="order-cake-item">
@@ -820,25 +825,29 @@ function renderOrders(orders, containerId, couriersOnShift = []) {
         `;
     });
 
-    html += '</div>';
     container.innerHTML = html;
 }
 
 // Отрисовка действий для заказа в зависимости от статуса
 function renderOrderActions(order, couriersOnShift) {
+    // Для истории (доставленные и отмененные) не показываем кнопки действий
+    if (order.status === 'delivered' || order.status === 'cancelled') {
+        return '';
+    }
+
     if (order.status === 'active') {
         return `
             <div class="order-actions">
                 ${couriersOnShift.length > 0 ? `
-                    <select id="courierSelect-${order.id}" class="form-group" style="flex: 2; padding: 8px; border-radius: 8px; background: var(--tg-bg); color: var(--tg-text); border: 1px solid var(--border-color);">
+                    <select id="courierSelect-${order.id}" class="form-group" style="flex: 2; padding: 8px; border-radius: 8px; background: var(--surface); color: var(--text-primary); border: 1px solid var(--border);">
                         <option value="">Назначить курьера</option>
                         ${couriersOnShift.map(c => `<option value="${c.id}">${c.firstName} (${c.phone || 'нет телефона'})</option>`).join('')}
                     </select>
-                    <button onclick="assignCourier(${order.id})" class="action-btn assign-btn">
+                    <button onclick="assignCourier(${order.id})" class="action-btn" style="background: var(--accent); color: white;">
                         <i class="fas fa-truck"></i> Назначить
                     </button>
-                ` : '<div style="color: var(--tg-hint);">Нет курьеров на смене</div>'}
-                <button onclick="updateOrderStatus(${order.id}, 'cancelled')" class="action-btn cancel-btn">
+                ` : '<div style="color: var(--text-secondary);">Нет курьеров на смене</div>'}
+                <button onclick="updateOrderStatus(${order.id}, 'cancelled')" class="action-btn" style="color: var(--error);">
                     <i class="fas fa-times"></i> Отменить
                 </button>
             </div>
@@ -848,27 +857,17 @@ function renderOrderActions(order, couriersOnShift) {
     if (order.status === 'assigned_to_courier') {
         return `
             <div class="order-actions">
-                <button onclick="updateOrderStatus(${order.id}, 'delivered')" class="action-btn complete-btn">
+                <button onclick="updateOrderStatus(${order.id}, 'delivered')" class="action-btn" style="background: var(--success); color: white;">
                     <i class="fas fa-check"></i> Доставлен
                 </button>
-                <button onclick="updateOrderStatus(${order.id}, 'cancelled')" class="action-btn cancel-btn">
+                <button onclick="updateOrderStatus(${order.id}, 'cancelled')" class="action-btn" style="color: var(--error);">
                     <i class="fas fa-times"></i> Отменить
                 </button>
             </div>
         `;
     }
 
-    if (order.status === 'cancelled') {
-        return `
-            <div class="order-actions">
-                <button onclick="updateOrderStatus(${order.id}, 'active')" class="action-btn restore-btn">
-                    <i class="fas fa-undo"></i> Восстановить
-                </button>
-            </div>
-        `;
-    }
-
-    return ''; // Для delivered и других финальных статусов без действий
+    return '';
 }
 
 // Назначение курьера на заказ
@@ -1005,8 +1004,8 @@ function createOrdersChart(orders) {
             datasets: [{
                 label: 'Заказы',
                 data: counts,
-                borderColor: '#D4A373',
-                backgroundColor: 'rgba(212, 163, 115, 0.1)',
+                borderColor: '#BE723E',
+                backgroundColor: 'rgba(190, 114, 62, 0.1)',
                 tension: 0.4,
                 fill: true
             }]
@@ -1024,18 +1023,18 @@ function createOrdersChart(orders) {
                     beginAtZero: true,
                     ticks: {
                         stepSize: 1,
-                        color: '#B0B0B0'
+                        color: '#6B6B6B'
                     },
                     grid: {
-                        color: '#404040'
+                        color: '#E5D9D0'
                     }
                 },
                 x: {
                     ticks: {
-                        color: '#B0B0B0'
+                        color: '#6B6B6B'
                     },
                     grid: {
-                        color: '#404040'
+                        color: '#E5D9D0'
                     }
                 }
             }
