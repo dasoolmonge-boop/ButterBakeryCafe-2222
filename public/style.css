@@ -100,24 +100,15 @@ body {
     gap: var(--space-sm);
 }
 
-.back-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    font-size: 20px;
-    cursor: pointer;
-    width: 40px;
+/* Стили для логотипа */
+.header-logo {
     height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.2s;
+    width: auto;
+    object-fit: contain;
 }
 
-.back-btn:hover {
-    background: var(--surface-hover);
-    transform: scale(1.05);
+.header-logo.rounded {
+    border-radius: 50%;
 }
 
 .header-title {
@@ -142,6 +133,27 @@ body {
 .header-icon:hover {
     color: var(--accent);
     transform: scale(1.1);
+}
+
+/* Кнопка назад больше не используется, но стили оставим на всякий случай */
+.back-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 20px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.back-btn:hover {
+    background: var(--surface-hover);
+    transform: scale(1.05);
 }
 
 /* ============================================ */
@@ -1494,52 +1506,6 @@ input:checked + .toggle-slider:before {
 }
 
 /* ============================================ */
-/* АДАПТИВНОСТЬ */
-/* ============================================ */
-
-@media (max-width: 480px) {
-    .app, .admin-container {
-        padding: var(--space-sm) var(--space-sm) 90px;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-group.full-width {
-        grid-column: span 1;
-    }
-
-    .cakes-grid {
-        gap: var(--space-sm);
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .cart-icon {
-        bottom: 16px;
-        right: 16px;
-        width: 52px;
-        height: 52px;
-    }
-
-    .admin-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: var(--space-xs);
-    }
-
-    .cart-item {
-        padding: var(--space-xs);
-    }
-
-    .cart-item-image {
-        width: 50px;
-        height: 50px;
-    }
-    /* ============================================ */
 /* TIME PICKER - ВЫБОР ВРЕМЕНИ */
 /* ============================================ */
 
@@ -1603,7 +1569,7 @@ input:checked + .toggle-slider:before {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 12px rgba(190, 114, 62, 0.3);
 }
 
 .selected-time {
@@ -1654,7 +1620,7 @@ input:checked + .toggle-slider:before {
 .time-btn.confirm:hover {
     background: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 8px 16px rgba(190, 114, 62, 0.3);
 }
 
 /* ============================================ */
@@ -1813,7 +1779,7 @@ input:checked + .toggle-slider:before {
 .date-btn.confirm:hover {
     background: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 8px 16px rgba(190, 114, 62, 0.3);
 }
 
 /* ============================================ */
@@ -1845,7 +1811,7 @@ input:checked + .toggle-slider:before {
 .input-with-icon input:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px rgba(190, 114, 62, 0.1);
 }
 
 .input-with-icon i {
@@ -1871,9 +1837,8 @@ input:checked + .toggle-slider:before {
         height: 50px;
         font-size: 16px;
     }
-    
+
     .selected-time {
         font-size: 28px;
     }
 }
-
