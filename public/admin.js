@@ -8,6 +8,7 @@ let currentUser = tg.initDataUnsafe.user || {};
 let isAdmin = false;
 let ordersUpdateInterval = null;
 let lastActiveOrdersCount = 0;
+let lastHistoryOrdersCount = 0;
 
 // Проверка прав администратора
 async function checkAdmin() {
@@ -36,7 +37,7 @@ async function checkAdmin() {
             loadHistoryOrders();
             loadStats();
             
-            // Запускаем автоматическое обновление активных заказов каждые 3 секунды
+            // Запускаем автоматическое обновление ВСЕХ данных каждые 3 секунды
             startAutoRefresh();
         }
     } catch (error) {
@@ -51,60 +52,103 @@ function startAutoRefresh() {
     }
     
     ordersUpdateInterval = setInterval(() => {
-        // Проверяем, открыта ли сейчас вкладка с активными заказами
-        const activeOrdersSection = document.getElementById('active-orders-section');
-        if (activeOrdersSection && activeOrdersSection.classList.contains('active')) {
-            refreshActiveOrders();
+        // Обновляем заказы независимо от открытой вкладки
+        refreshAllOrders();
+        
+        // Обновляем статистику, если открыта вкладка статистики
+        const statsSection = document.getElementById('stats-section');
+        if (statsSection && statsSection.classList.contains('active')) {
+            loadStats();
+        }
+        
+        // Обновляем пользователей, если открыта вкладка пользователей
+        const usersSection = document.getElementById('users-section');
+        if (usersSection && usersSection.classList.contains('active')) {
+            loadUsers();
+        }
+        
+        // Обновляем торты, если открыта вкладка тортов
+        const cakesSection = document.getElementById('cakes-section');
+        if (cakesSection && cakesSection.classList.contains('active')) {
+            loadCakes();
+        }
+        
+        // Обновляем категории, если открыта вкладка категорий
+        const categoriesSection = document.getElementById('categories-section');
+        if (categoriesSection && categoriesSection.classList.contains('active')) {
+            loadCategories();
         }
     }, 3000); // Обновление каждые 3 секунды
 }
 
-// Принудительное обновление активных заказов
-async function refreshActiveOrders() {
+// Обновление всех заказов
+async function refreshAllOrders() {
     try {
-        const [activeResponse, couriersResponse] = await Promise.all([
-            fetch('/api/admin/orders/active'),
-            fetch('/api/admin/couriers/on-shift')
-        ]);
-
-        const activeOrders = await activeResponse.json();
+        // Загружаем все заказы одним запросом для проверки
+        const allOrdersResponse = await fetch('/api/admin/orders');
+        const allOrders = await allOrdersResponse.json();
+        
+        // Фильтруем активные и историю
+        const activeOrders = allOrders.filter(o => o.status === 'active' || o.status === 'assigned_to_courier');
+        const historyOrders = allOrders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
+        
+        // Загружаем курьеров на смене
+        const couriersResponse = await fetch('/api/admin/couriers/on-shift');
         const couriersOnShift = await couriersResponse.json();
         
-        // Проверяем, появились ли новые заказы
+        // Проверяем, появились ли новые активные заказы
         if (activeOrders.length > lastActiveOrdersCount) {
-            // Показываем уведомление
             showToast(`🆕 Новый заказ! Всего активных: ${activeOrders.length}`, 'success');
             
-            // Виброотклик
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.notificationOccurred('success');
             }
             
-            // Обновляем счетчик в заголовке вкладки
-            const countElement = document.getElementById('activeOrdersCountHeader');
-            if (countElement) {
-                countElement.textContent = activeOrders.length;
-                countElement.style.animation = 'pulse 0.5s ease';
-                setTimeout(() => {
-                    countElement.style.animation = '';
-                }, 500);
-            }
+            // Анимируем счетчик на вкладке
+            animateCounter('activeOrdersCountHeader');
+        }
+        
+        // Проверяем, изменилась ли история
+        if (historyOrders.length !== lastHistoryOrdersCount) {
+            animateCounter('historyOrdersCountHeader');
         }
         
         lastActiveOrdersCount = activeOrders.length;
+        lastHistoryOrdersCount = historyOrders.length;
         
-        // Обновляем счетчик в любом случае
+        // Обновляем счетчики в заголовках вкладок
         document.getElementById('activeOrdersCountHeader').textContent = activeOrders.length;
+        document.getElementById('historyOrdersCountHeader').textContent = historyOrders.length;
         
-        // Обновляем отображение заказов
-        renderOrders(activeOrders, 'activeOrdersList', couriersOnShift, true);
+        // Обновляем отображение в зависимости от открытой вкладки
+        const activeSection = document.getElementById('active-orders-section');
+        const historySection = document.getElementById('history-orders-section');
+        
+        if (activeSection && activeSection.classList.contains('active')) {
+            renderOrders(activeOrders, 'activeOrdersList', couriersOnShift, true);
+        }
+        
+        if (historySection && historySection.classList.contains('active')) {
+            renderOrders(historyOrders, 'historyOrdersList', [], false);
+        }
         
     } catch (error) {
-        console.error('Ошибка обновления активных заказов:', error);
+        console.error('Ошибка обновления заказов:', error);
     }
 }
 
-// Переключение основных вкладок (обновленная)
+// Анимация счетчика
+function animateCounter(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.style.animation = 'pulse 0.5s ease';
+        setTimeout(() => {
+            element.style.animation = '';
+        }, 500);
+    }
+}
+
+// Переключение основных вкладок
 function switchTab(tab) {
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
@@ -112,14 +156,13 @@ function switchTab(tab) {
     document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
     
     let sectionId = tab;
-    // Преобразуем названия вкладок в ID секций
     if (tab === 'active-orders') sectionId = 'active-orders-section';
     else if (tab === 'history-orders') sectionId = 'history-orders-section';
     else sectionId = tab + '-section';
     
     document.getElementById(sectionId).classList.add('active');
 
-    // Загружаем данные в зависимости от вкладки
+    // Загружаем данные при переключении
     if (tab === 'cakes') {
         loadCategories();
         loadCakes();
@@ -128,8 +171,6 @@ function switchTab(tab) {
     if (tab === 'users') loadUsers();
     if (tab === 'active-orders') {
         loadActiveOrders();
-        // Сбрасываем счетчик новых заказов при переходе на вкладку
-        lastActiveOrdersCount = 0;
     }
     if (tab === 'history-orders') loadHistoryOrders();
     if (tab === 'stats') loadStats();
@@ -825,10 +866,7 @@ async function loadActiveOrders() {
         const activeOrders = await activeResponse.json();
         const couriersOnShift = await couriersResponse.json();
 
-        // Обновляем счетчик в заголовке
         document.getElementById('activeOrdersCountHeader').textContent = activeOrders.length;
-        
-        // Запоминаем количество для проверки новых заказов
         lastActiveOrdersCount = activeOrders.length;
 
         renderOrders(activeOrders, 'activeOrdersList', couriersOnShift, true);
@@ -847,8 +885,8 @@ async function loadHistoryOrders() {
         const historyResponse = await fetch('/api/admin/orders/history');
         const historyOrders = await historyResponse.json();
 
-        // Обновляем счетчик в заголовке
         document.getElementById('historyOrdersCountHeader').textContent = historyOrders.length;
+        lastHistoryOrdersCount = historyOrders.length;
 
         renderOrders(historyOrders, 'historyOrdersList', [], false);
     } catch (error) {
@@ -871,7 +909,6 @@ function renderOrders(orders, containerId, couriersOnShift = [], showActions = t
         return;
     }
 
-    // Сортируем по дате (сначала новые)
     orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     let html = '<div class="orders-grid">';
@@ -912,7 +949,7 @@ function renderOrders(orders, containerId, couriersOnShift = [], showActions = t
     container.innerHTML = html;
 }
 
-// Отрисовка действий для заказа в зависимости от статуса
+// Отрисовка действий для заказа
 function renderOrderActions(order, couriersOnShift) {
     if (order.status === 'active') {
         return `
@@ -968,9 +1005,7 @@ async function assignCourier(orderId) {
 
         if (response.ok) {
             showToast('Курьер назначен', 'success');
-            // Обновляем обе секции заказов
-            loadActiveOrders();
-            loadHistoryOrders();
+            await refreshAllOrders(); // Обновляем все заказы
 
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred('medium');
@@ -993,9 +1028,7 @@ async function updateOrderStatus(orderId, status) {
 
         if (response.ok) {
             showToast(`Статус заказа обновлен`, 'success');
-            // Обновляем обе секции заказов
-            loadActiveOrders();
-            loadHistoryOrders();
+            await refreshAllOrders(); // Обновляем все заказы
             loadStats();
 
             if (tg.HapticFeedback) {
@@ -1182,3 +1215,14 @@ window.addEventListener('beforeunload', function() {
         clearInterval(ordersUpdateInterval);
     }
 });
+
+// Добавляем стиль для анимации пульсации (если его нет в CSS)
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); background-color: var(--accent); color: white; }
+        100% { transform: scale(1); }
+    }
+`;
+document.head.appendChild(style);
