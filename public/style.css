@@ -12,7 +12,7 @@
     --border: #2C2C2E;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.4);
-
+    
     --success: #34C759;
     --error: #FF3B30;
     --warning: #FF9F0A;
@@ -1779,31 +1779,31 @@ input:checked + .toggle-slider:before {
     .cakes-grid {
         gap: 8px;
     }
-
+    
     .cake-info {
         padding: 10px;
     }
-
+    
     .cake-name {
         font-size: 14px;
     }
-
+    
     .cake-price {
         font-size: 14px;
     }
-
+    
     .add-to-cart {
         width: 32px;
         height: 32px;
         font-size: 16px;
     }
-
+    
     .time-unit {
         min-width: 50px;
         height: 50px;
         font-size: 16px;
     }
-
+    
     .selected-time {
         font-size: 28px;
     }
