@@ -18,6 +18,9 @@ const cart = {
         this.updateBadge();
         this.render();
         this.saveToStorage();
+        
+        // Обновляем счетчик на карточке товара
+        this.updateProductCounter(cake.id);
 
         showToast(`${cake.name} добавлен в корзину`, 'success');
         
@@ -36,6 +39,9 @@ const cart = {
             const cake = this.items[index];
             this.items.splice(index, 1);
             showToast(`${cake.name} удален из корзины`, 'warning');
+            
+            // Обновляем счетчик на карточке товара
+            this.updateProductCounter(cakeId, true);
         }
 
         this.updateBadge();
@@ -51,12 +57,43 @@ const cart = {
                 this.removeItem(cakeId);
             } else {
                 item.quantity = quantity;
+                this.updateProductCounter(cakeId);
             }
         }
 
         this.updateBadge();
         this.render();
         this.saveToStorage();
+    },
+
+    // Обновить счетчик на карточке товара
+    updateProductCounter(cakeId, isRemoved = false) {
+        const counter = document.getElementById(`counter-${cakeId}`);
+        const addBtn = document.querySelector(`.add-to-cart[data-id="${cakeId}"]`);
+        
+        if (!counter) return;
+        
+        if (isRemoved) {
+            counter.style.display = 'none';
+            if (addBtn) {
+                addBtn.classList.remove('has-items');
+            }
+            return;
+        }
+        
+        const item = this.items.find(item => item.id === cakeId);
+        if (item && item.quantity > 0) {
+            counter.textContent = item.quantity;
+            counter.style.display = 'flex';
+            if (addBtn) {
+                addBtn.classList.add('has-items');
+            }
+        } else {
+            counter.style.display = 'none';
+            if (addBtn) {
+                addBtn.classList.remove('has-items');
+            }
+        }
     },
 
     // Получить общую сумму
@@ -120,6 +157,11 @@ const cart = {
 
     // Очистить корзину
     clear() {
+        // Скрываем все счетчики перед очисткой
+        this.items.forEach(item => {
+            this.updateProductCounter(item.id, true);
+        });
+        
         this.items = [];
         this.updateBadge();
         this.render();
@@ -139,6 +181,13 @@ const cart = {
                 this.items = JSON.parse(saved);
                 this.updateBadge();
                 this.render();
+                
+                // Обновляем все счетчики после загрузки
+                setTimeout(() => {
+                    this.items.forEach(item => {
+                        this.updateProductCounter(item.id);
+                    });
+                }, 500);
             } catch (e) {
                 console.error('Ошибка загрузки корзины:', e);
                 this.items = [];
