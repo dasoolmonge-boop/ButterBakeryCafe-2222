@@ -102,15 +102,9 @@ body {
 
 /* Стили для логотипа */
 .header-logo {
-    width: 40px;
     height: 40px;
-    margin-right: var(--space-sm);
-    flex-shrink: 0;
-}
-
-.header-logo svg {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    object-fit: contain;
 }
 
 .header-logo.rounded {
@@ -141,7 +135,7 @@ body {
     transform: scale(1.1);
 }
 
-/* Кнопка назад */
+/* Кнопка назад больше не используется, но стили оставим на всякий случай */
 .back-btn {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -953,13 +947,6 @@ input:checked + .toggle-slider:before {
     margin: var(--space-sm) 0;
 }
 
-.order-date {
-    font-size: 11px;
-    color: var(--text-secondary);
-    text-align: right;
-    margin-top: var(--space-xs);
-}
-
 .status-badge {
     padding: 4px 12px;
     border-radius: 100px;
@@ -972,7 +959,7 @@ input:checked + .toggle-slider:before {
     color: white;
 }
 
-.status-assigned {
+.status-processing {
     background: var(--accent);
     color: white;
 }
@@ -985,23 +972,6 @@ input:checked + .toggle-slider:before {
 .status-cancelled {
     background: var(--error);
     color: white;
-}
-
-.order-actions {
-    display: flex;
-    gap: var(--space-sm);
-    margin-top: var(--space-md);
-    flex-wrap: wrap;
-}
-
-.order-actions select {
-    flex: 1;
-    min-width: 150px;
-    padding: 8px;
-    border-radius: 8px;
-    background: var(--surface);
-    color: var(--text-primary);
-    border: 1px solid var(--border);
 }
 
 /* ============================================ */
@@ -1186,13 +1156,6 @@ input:checked + .toggle-slider:before {
     color: var(--accent);
     font-size: 14px;
     font-weight: 600;
-}
-
-.cart-item-subtotal {
-    font-size: 13px;
-    color: var(--text-primary);
-    font-weight: 600;
-    margin-top: 2px;
 }
 
 .remove-item {
@@ -1867,91 +1830,8 @@ input:checked + .toggle-slider:before {
     color: var(--accent);
 }
 
-/* ============================================ */
-/* СЧЕТЧИК НА КАРТОЧКЕ ТОВАРА */
-/* ============================================ */
-
-.cart-counter {
-    position: relative;
-    display: inline-block;
-}
-
-.counter-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--accent);
-    color: white;
-    font-size: 11px;
-    font-weight: 600;
-    min-width: 18px;
-    height: 18px;
-    border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 4px;
-    border: 2px solid var(--surface);
-    z-index: 2;
-}
-
-.add-to-cart.has-items {
-    background: var(--success);
-    color: white;
-    border-color: var(--success);
-    opacity: 0.9;
-}
-
-.add-to-cart.has-items:hover {
-    background: var(--success);
-    opacity: 1;
-}
-
-/* Адаптивность для мобильных устройств */
+/* Адаптивность для Time Picker */
 @media (max-width: 480px) {
-    .app, .admin-container {
-        padding: var(--space-sm) var(--space-sm) 90px;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-group.full-width {
-        grid-column: span 1;
-    }
-
-    .cakes-grid {
-        gap: var(--space-sm);
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .cart-icon {
-        bottom: 16px;
-        right: 16px;
-        width: 52px;
-        height: 52px;
-    }
-
-    .admin-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: var(--space-xs);
-    }
-
-    .cart-item {
-        padding: var(--space-xs);
-    }
-
-    .cart-item-image {
-        width: 50px;
-        height: 50px;
-    }
-
-    /* Адаптивность для Time Picker */
     .time-unit {
         min-width: 50px;
         height: 50px;
