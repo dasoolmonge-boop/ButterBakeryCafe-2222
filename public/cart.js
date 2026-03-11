@@ -21,12 +21,12 @@ const cart = {
 
         showToast(`${cake.name} добавлен в корзину`, 'success');
         
-        // Автоматически открываем корзину при добавлении первого товара
-        if (this.items.length === 1) {
-            setTimeout(() => {
-                document.getElementById('cartPanel').classList.add('open');
-            }, 300);
-        }
+        // 🔴 УДАЛЕНО: автоматическое открытие корзины
+        // if (this.items.length === 1) {
+        //     setTimeout(() => {
+        //         document.getElementById('cartPanel').classList.add('open');
+        //     }, 300);
+        // }
     },
 
     // Удалить товар
@@ -103,7 +103,7 @@ const cart = {
         }
 
         document.getElementById('cartTotalPrice').textContent = `${totalPrice} ₽`;
-        
+
         // Обновляем состояние кнопки оформления заказа
         const checkoutBtn = document.getElementById('checkoutBtn');
         if (checkoutBtn) {
@@ -156,7 +156,7 @@ function openCheckoutModal() {
         showToast('Корзина пуста', 'warning');
         return;
     }
-    
+
     const modal = document.getElementById('checkoutModal');
     const summary = document.getElementById('orderSummary');
 
@@ -291,7 +291,7 @@ document.getElementById('phone').addEventListener('input', (e) => {
     if (value.length > 0) {
         if (value.startsWith('7') || value.startsWith('8')) {
             let formatted = value.startsWith('7') ? '+7' : '8';
-            
+
             if (value.length > 1) {
                 const code = value.substring(1, 4);
                 formatted += ' ' + code;
@@ -308,7 +308,7 @@ document.getElementById('phone').addEventListener('input', (e) => {
                 const part3 = value.substring(9, 11);
                 formatted += '-' + part3;
             }
-            
+
             e.target.value = formatted;
         }
     }
