@@ -104,8 +104,6 @@ body {
 .header-logo {
     width: 40px;
     height: 40px;
-    width: auto;
-    object-fit: contain;
     margin-right: var(--space-sm);
     flex-shrink: 0;
 }
@@ -143,7 +141,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Кнопка назад больше не используется, но стили оставим на всякий случай */
 /* Кнопка назад */
 .back-btn {
     background: var(--surface);
@@ -844,12 +841,6 @@ input:checked + .toggle-slider:before {
     margin-bottom: var(--space-lg);
     border-bottom: 1px solid var(--border);
     padding-bottom: var(--space-sm);
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.orders-tabs::-webkit-scrollbar {
-    display: none;
 }
 
 .order-tab {
@@ -862,7 +853,6 @@ input:checked + .toggle-slider:before {
     cursor: pointer;
     position: relative;
     transition: all 0.2s;
-    white-space: nowrap;
 }
 
 .order-tab:hover {
@@ -897,8 +887,6 @@ input:checked + .toggle-slider:before {
 .orders-grid {
     display: grid;
     gap: var(--space-md);
-    width: 100%;
-    max-width: 100%;
 }
 
 .order-card {
@@ -907,10 +895,6 @@ input:checked + .toggle-slider:before {
     padding: var(--space-md);
     border: 1px solid var(--border);
     transition: all 0.2s;
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
 }
 
 .order-card:hover {
@@ -924,46 +908,26 @@ input:checked + .toggle-slider:before {
     margin-bottom: var(--space-sm);
     padding-bottom: var(--space-sm);
     border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-    gap: var(--space-xs);
 }
 
 .order-id {
     font-weight: 600;
     font-size: 15px;
     color: var(--text-primary);
-    word-break: break-word;
-}
-
-.order-info {
-    width: 100%;
-    overflow: hidden;
 }
 
 .order-info div {
     display: flex;
     align-items: center;
-    align-items: flex-start;
     gap: var(--space-xs);
     font-size: 13px;
     color: var(--text-secondary);
     margin-bottom: 6px;
-    width: 100%;
-    word-break: break-word;
-    overflow-wrap: break-word;
 }
 
 .order-info i {
     width: 16px;
     color: var(--accent);
-    flex-shrink: 0;
-    margin-top: 2px;
-}
-
-.order-info span {
-    word-break: break-word;
-    overflow-wrap: break-word;
-    flex: 1;
 }
 
 .order-cakes {
@@ -971,9 +935,6 @@ input:checked + .toggle-slider:before {
     padding: var(--space-sm);
     border-radius: 12px;
     margin: var(--space-sm) 0;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
 }
 
 .order-cake-item {
@@ -982,19 +943,6 @@ input:checked + .toggle-slider:before {
     padding: 4px 0;
     font-size: 13px;
     color: var(--text-secondary);
-    width: 100%;
-    gap: var(--space-xs);
-}
-
-.order-cake-item span:first-child {
-    word-break: break-word;
-    overflow-wrap: break-word;
-    flex: 1;
-}
-
-.order-cake-item span:last-child {
-    white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .order-total {
@@ -1003,7 +951,6 @@ input:checked + .toggle-slider:before {
     color: var(--text-primary);
     text-align: right;
     margin: var(--space-sm) 0;
-    word-break: break-word;
 }
 
 .order-date {
@@ -1011,33 +958,6 @@ input:checked + .toggle-slider:before {
     color: var(--text-secondary);
     text-align: right;
     margin-top: var(--space-xs);
-    word-break: break-word;
-}
-
-.order-actions {
-    display: flex;
-    gap: var(--space-sm);
-    margin-top: var(--space-md);
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-.order-actions select {
-    flex: 1;
-    min-width: 150px;
-    padding: 10px;
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text-primary);
-    border: 1px solid var(--border);
-    font-size: 13px;
-    max-width: 100%;
-}
-
-.order-actions .action-btn {
-    flex: 0 1 auto;
-    padding: 10px 16px;
-    white-space: nowrap;
 }
 
 .status-badge {
@@ -1045,8 +965,6 @@ input:checked + .toggle-slider:before {
     border-radius: 100px;
     font-size: 11px;
     font-weight: 600;
-    white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .status-active {
@@ -1054,7 +972,6 @@ input:checked + .toggle-slider:before {
     color: white;
 }
 
-.status-processing {
 .status-assigned {
     background: var(--accent);
     color: white;
@@ -1068,6 +985,23 @@ input:checked + .toggle-slider:before {
 .status-cancelled {
     background: var(--error);
     color: white;
+}
+
+.order-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.order-actions select {
+    flex: 1;
+    min-width: 150px;
+    padding: 8px;
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
 }
 
 /* ============================================ */
@@ -1933,7 +1867,46 @@ input:checked + .toggle-slider:before {
     color: var(--accent);
 }
 
-/* Адаптивность для Time Picker */
+/* ============================================ */
+/* СЧЕТЧИК НА КАРТОЧКЕ ТОВАРА */
+/* ============================================ */
+
+.cart-counter {
+    position: relative;
+    display: inline-block;
+}
+
+.counter-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--surface);
+    z-index: 2;
+}
+
+.add-to-cart.has-items {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+    opacity: 0.9;
+}
+
+.add-to-cart.has-items:hover {
+    background: var(--success);
+    opacity: 1;
+}
+
 /* Адаптивность для мобильных устройств */
 @media (max-width: 480px) {
     .app, .admin-container {
@@ -1978,35 +1951,6 @@ input:checked + .toggle-slider:before {
         height: 50px;
     }
 
-    /* Адаптивность для заказов */
-    .order-actions {
-        flex-direction: column;
-    }
-    
-    .order-actions select {
-        width: 100%;
-        min-width: 100%;
-    }
-    
-    .order-actions .action-btn {
-        width: 100%;
-    }
-    
-    .order-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .order-cake-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-    }
-    
-    .order-cake-item span:last-child {
-        align-self: flex-end;
-    }
-
     /* Адаптивность для Time Picker */
     .time-unit {
         min-width: 50px;
@@ -2017,17 +1961,4 @@ input:checked + .toggle-slider:before {
     .selected-time {
         font-size: 28px;
     }
-}
-/* Добавьте в конец файла style.css */
-
-.header-logo {
-    width: 40px;
-    height: 40px;
-    margin-right: var(--space-sm);
-    flex-shrink: 0;
-}
-
-.header-logo svg {
-    width: 100%;
-    height: 100%;
 }
