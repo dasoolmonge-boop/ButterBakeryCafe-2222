@@ -1842,3 +1842,288 @@ input:checked + .toggle-slider:before {
         font-size: 28px;
     }
 }
+/* ============================================ */
+/* УЛУЧШЕННЫЕ СТИЛИ ДЛЯ КНОПОК И СЕЛЕКТОВ В ЗАКАЗАХ */
+/* ============================================ */
+
+.order-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.order-actions select {
+    flex: 2;
+    min-width: 180px;
+    padding: 12px 16px;  /* Увеличили padding */
+    border-radius: 12px;  /* Скругление как у других кнопок */
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    font-size: 14px;      /* Увеличили шрифт */
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 48px;         /* Фиксированная высота как у кнопок */
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.order-actions select:hover {
+    border-color: var(--accent);
+    background-color: var(--surface-hover);
+}
+
+.order-actions select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(190, 114, 62, 0.1);
+}
+
+.order-actions .action-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 20px;   /* Увеличили padding */
+    font-size: 14px;       /* Увеличили шрифт */
+    font-weight: 600;
+    height: 48px;          /* Фиксированная высота */
+    border-radius: 12px;   /* Скругление как у других кнопок */
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.order-actions .action-btn i {
+    font-size: 16px;
+}
+
+.order-actions .action-btn[style*="background: var(--accent)"] {
+    background: var(--accent);
+    color: white;
+}
+
+.order-actions .action-btn[style*="background: var(--accent)"]:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(190, 114, 62, 0.3);
+}
+
+.order-actions .action-btn[style*="color: var(--error)"] {
+    background: var(--surface);
+    color: var(--error);
+    border: 1px solid var(--border);
+}
+
+.order-actions .action-btn[style*="color: var(--error)"]:hover {
+    background: var(--error);
+    color: white;
+    border-color: var(--error);
+    transform: translateY(-2px);
+}
+
+.order-actions .action-btn[style*="background: var(--success)"] {
+    background: var(--success);
+    color: white;
+}
+
+.order-actions .action-btn[style*="background: var(--success)"]:hover {
+    background: var(--success);
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+/* Стили для сообщения "Нет курьеров на смене" */
+.order-actions div[style*="color: var(--text-secondary)"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    text-align: center;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================ */
+/* УЛУЧШЕННЫЕ СТИЛИ ДЛЯ ВЫБОРА КАТЕГОРИИ В АДМИНКЕ */
+/* ============================================ */
+
+#cakeCategory, 
+#editCakeCategory,
+#userRole,
+#editUserRole {
+    width: 100%;
+    padding: 14px 16px;     /* Увеличили padding */
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;     /* Скругление как у других кнопок */
+    color: var(--text-primary);
+    font-size: 15px;         /* Увеличили шрифт */
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    cursor: pointer;
+    height: 52px;            /* Фиксированная высота */
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 18px;
+    padding-right: 45px;
+}
+
+#cakeCategory:hover, 
+#editCakeCategory:hover,
+#userRole:hover,
+#editUserRole:hover {
+    border-color: var(--accent);
+    background-color: var(--surface-hover);
+}
+
+#cakeCategory:focus, 
+#editCakeCategory:focus,
+#userRole:focus,
+#editUserRole:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(190, 114, 62, 0.1);
+}
+
+/* Стили для опций в селектах */
+#cakeCategory option, 
+#editCakeCategory option,
+#userRole option,
+#editUserRole option {
+    background: var(--bg);
+    color: var(--text-primary);
+    padding: 12px;
+    font-size: 15px;
+}
+
+/* ============================================ */
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ */
+/* ============================================ */
+
+@media (max-width: 480px) {
+    .order-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .order-actions select,
+    .order-actions .action-btn,
+    .order-actions div[style*="color: var(--text-secondary)"] {
+        width: 100%;
+        min-width: 100%;
+    }
+    
+    .order-actions select {
+        background-position: right 12px center;
+    }
+    
+    #cakeCategory, 
+    #editCakeCategory,
+    #userRole,
+    #editUserRole {
+        font-size: 16px; /* Чуть больше на мобильных для удобства */
+        height: 56px;
+    }
+}
+
+/* ============================================ */
+/* СТИЛИ ДЛЯ ДРУГИХ СЕЛЕКТОВ В АДМИНКЕ */
+/* ============================================ */
+
+.form-group select {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    cursor: pointer;
+    height: 52px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 18px;
+    padding-right: 45px;
+}
+
+.form-group select:hover {
+    border-color: var(--accent);
+    background-color: var(--surface-hover);
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(190, 114, 62, 0.1);
+}
+
+/* ============================================ */
+/* СТИЛИ ДЛЯ КНОПОК В КАРТОЧКАХ ПОЛЬЗОВАТЕЛЕЙ */
+/* ============================================ */
+
+.user-card .order-actions {
+    margin-top: var(--space-md);
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.user-card .order-actions .action-btn {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.user-card .order-actions .action-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.user-card .order-actions .action-btn.cancel-btn {
+    color: var(--error);
+}
+
+.user-card .order-actions .action-btn.cancel-btn:hover {
+    background: var(--error);
+    color: white;
+    border-color: var(--error);
+}
+
