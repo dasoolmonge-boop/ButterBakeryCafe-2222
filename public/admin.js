@@ -6,7 +6,6 @@ tg.expand();
 
 let currentUser = tg.initDataUnsafe.user || {};
 let isAdmin = false;
-let currentOrdersTab = 'active';
 
 // Проверка прав администратора
 async function checkAdmin() {
@@ -31,7 +30,8 @@ async function checkAdmin() {
             loadCategories();
             loadCakes();
             loadUsers();
-            loadOrders();
+            loadActiveOrders();
+            loadHistoryOrders();
             loadStats();
         }
     } catch (error) {
@@ -45,29 +45,25 @@ function switchTab(tab) {
     document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
 
     document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
-    document.getElementById(`${tab}-section`).classList.add('active');
+    
+    let sectionId = tab;
+    // Преобразуем названия вкладок в ID секций
+    if (tab === 'active-orders') sectionId = 'active-orders-section';
+    else if (tab === 'history-orders') sectionId = 'history-orders-section';
+    else sectionId = tab + '-section';
+    
+    document.getElementById(sectionId).classList.add('active');
 
+    // Загружаем данные в зависимости от вкладки
     if (tab === 'cakes') {
         loadCategories();
         loadCakes();
     }
     if (tab === 'categories') loadCategories();
     if (tab === 'users') loadUsers();
-    if (tab === 'orders') loadOrders();
+    if (tab === 'active-orders') loadActiveOrders();
+    if (tab === 'history-orders') loadHistoryOrders();
     if (tab === 'stats') loadStats();
-}
-
-// Переключение вкладок заказов
-function switchOrdersTab(tab) {
-    currentOrdersTab = tab;
-
-    document.querySelectorAll('.order-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.orders-tab-content').forEach(c => c.classList.remove('active'));
-
-    document.querySelector(`[onclick="switchOrdersTab('${tab}')"]`).classList.add('active');
-    document.getElementById(`${tab}-orders`).classList.add('active');
-
-    loadOrders();
 }
 
 // Предпросмотр фото
@@ -746,37 +742,54 @@ function closeEditUserModal() {
 }
 
 // ============================================
-// УПРАВЛЕНИЕ ЗАКАЗАМИ
+// УПРАВЛЕНИЕ АКТИВНЫМИ ЗАКАЗАМИ
 // ============================================
 
-// Загрузка заказов
-async function loadOrders() {
+// Загрузка активных заказов
+async function loadActiveOrders() {
     try {
-        const [activeResponse, historyResponse, couriersResponse] = await Promise.all([
+        const [activeResponse, couriersResponse] = await Promise.all([
             fetch('/api/admin/orders/active'),
-            fetch('/api/admin/orders/history'),
             fetch('/api/admin/couriers/on-shift')
         ]);
 
         const activeOrders = await activeResponse.json();
-        const historyOrders = await historyResponse.json();
         const couriersOnShift = await couriersResponse.json();
 
-        document.getElementById('activeOrdersCount').textContent = activeOrders.length;
-        document.getElementById('historyOrdersCount').textContent = historyOrders.length;
+        // Обновляем счетчик в заголовке
+        document.getElementById('activeOrdersCountHeader').textContent = activeOrders.length;
 
-        if (currentOrdersTab === 'active') {
-            renderOrders(activeOrders, 'activeOrdersList', couriersOnShift);
-        } else {
-            renderOrders(historyOrders, 'historyOrdersList', []);
-        }
+        renderOrders(activeOrders, 'activeOrdersList', couriersOnShift, true);
     } catch (error) {
-        console.error('Ошибка загрузки заказов:', error);
+        console.error('Ошибка загрузки активных заказов:', error);
     }
 }
 
+// ============================================
+// УПРАВЛЕНИЕ ИСТОРИЕЙ ЗАКАЗОВ
+// ============================================
+
+// Загрузка истории заказов
+async function loadHistoryOrders() {
+    try {
+        const historyResponse = await fetch('/api/admin/orders/history');
+        const historyOrders = await historyResponse.json();
+
+        // Обновляем счетчик в заголовке
+        document.getElementById('historyOrdersCountHeader').textContent = historyOrders.length;
+
+        renderOrders(historyOrders, 'historyOrdersList', [], false);
+    } catch (error) {
+        console.error('Ошибка загрузки истории заказов:', error);
+    }
+}
+
+// ============================================
+// ОБЩИЕ ФУНКЦИИ ДЛЯ ЗАКАЗОВ
+// ============================================
+
 // Отрисовка заказов
-function renderOrders(orders, containerId, couriersOnShift = []) {
+function renderOrders(orders, containerId, couriersOnShift = [], showActions = true) {
     const container = document.getElementById(containerId);
 
     if (orders.length === 0) {
@@ -784,6 +797,7 @@ function renderOrders(orders, containerId, couriersOnShift = []) {
         return;
     }
 
+    // Сортируем по дате (сначала новые)
     orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     let html = '<div class="orders-grid">';
@@ -815,7 +829,7 @@ function renderOrders(orders, containerId, couriersOnShift = []) {
                     <div class="order-total">Итого: ${order.totalPrice} ₽</div>
                     <div class="order-date">${new Date(order.createdAt).toLocaleString()}</div>
                 </div>
-                ${renderOrderActions(order, couriersOnShift)}
+                ${showActions ? renderOrderActions(order, couriersOnShift) : ''}
             </div>
         `;
     });
@@ -858,7 +872,7 @@ function renderOrderActions(order, couriersOnShift) {
         `;
     }
 
-    return ''; // Для delivered и других финальных статусов без действий
+    return '';
 }
 
 // Назначение курьера на заказ
@@ -880,7 +894,9 @@ async function assignCourier(orderId) {
 
         if (response.ok) {
             showToast('Курьер назначен', 'success');
-            loadOrders();
+            // Обновляем обе секции заказов
+            loadActiveOrders();
+            loadHistoryOrders();
 
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred('medium');
@@ -903,7 +919,9 @@ async function updateOrderStatus(orderId, status) {
 
         if (response.ok) {
             showToast(`Статус заказа обновлен`, 'success');
-            loadOrders();
+            // Обновляем обе секции заказов
+            loadActiveOrders();
+            loadHistoryOrders();
             loadStats();
 
             if (tg.HapticFeedback) {
