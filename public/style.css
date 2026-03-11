@@ -2556,3 +2556,74 @@ select {
     pointer-events: none;
     z-index: 1;
 }
+/* ============================================ */
+/* СТИЛИ ДЛЯ КНОПОК + И - В КОРЗИНЕ */
+/* ============================================ */
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 12px;
+}
+
+.quantity-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
+.quantity-value {
+    font-weight: 600;
+    font-size: 16px;
+    min-width: 24px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.cart-item-subtotal {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 4px;
+}
+
+.cart-item-info {
+    flex: 1;
+    padding: 4px 0;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .quantity-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    .quantity-value {
+        font-size: 18px;
+        min-width: 30px;
+    }
+}
+
