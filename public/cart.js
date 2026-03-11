@@ -108,7 +108,10 @@ const cart = {
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
-                        <div class="cart-item-subtotal">${item.price * item.quantity} ₽</div>
+                        <div class="cart-item-subtotal">
+                            <span class="subtotal-label">Итого:</span>
+                            <span class="subtotal-value">${item.price * item.quantity} ₽</span>
+                        </div>
                     </div>
                     <button class="remove-item" onclick="cart.removeItem(${item.id})">
                         <i class="fas fa-trash"></i>
