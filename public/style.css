@@ -2302,4 +2302,90 @@ select, .form-group select, #cakeCategory, #editCakeCategory, #userRole, #editUs
         height: 56px;
     }
 }
+/* ============================================ */
+/* УЛУЧШЕННЫЕ КНОПКИ И СЕЛЕКТЫ (ТОЛЬКО НУЖНЫЕ ЭЛЕМЕНТЫ) */
+/* ============================================ */
+
+/* Увеличиваем селекты выбора категории */
+#cakeCategory, 
+#editCakeCategory {
+    height: 52px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+}
+
+/* Увеличиваем селекты выбора роли */
+#userRole,
+#editUserRole {
+    height: 52px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+}
+
+/* Увеличиваем селект выбора курьера в заказах */
+.order-actions select {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 10px 16px !important;
+    min-width: 180px !important;
+}
+
+/* Увеличиваем кнопку "Назначить курьера" */
+.order-actions .action-btn[style*="background: var(--accent)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Увеличиваем кнопку "Отменить" рядом с назначением курьера */
+.order-actions .action-btn[style*="color: var(--error)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Увеличиваем кнопки "Доставлен" и "Отменить" в статусе assigned */
+.order-actions .action-btn[style*="background: var(--success)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Увеличиваем сообщение "Нет курьеров на смене" для единообразия */
+.order-actions div[style*="color: var(--text-secondary)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 16px !important;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    #cakeCategory, 
+    #editCakeCategory,
+    #userRole,
+    #editUserRole,
+    .order-actions select,
+    .order-actions .action-btn,
+    .order-actions div[style*="color: var(--text-secondary)"] {
+        height: 56px !important;
+        font-size: 16px !important;
+    }
+    
+    .order-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .order-actions select,
+    .order-actions .action-btn,
+    .order-actions div[style*="color: var(--text-secondary)"] {
+        width: 100% !important;
+    }
+}
+
 
