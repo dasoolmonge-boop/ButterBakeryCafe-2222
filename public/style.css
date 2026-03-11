@@ -2012,3 +2012,43 @@ input:checked + .toggle-slider:before {
         font-size: 28px;
     }
 }
+/* ============================================ */
+/* СЧЕТЧИК НА КАРТОЧКЕ ТОВАРА */
+/* ============================================ */
+
+.cart-counter {
+    position: relative;
+    display: inline-block;
+}
+
+.counter-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--surface);
+    z-index: 2;
+}
+
+.add-to-cart.has-items {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+    opacity: 0.9;
+}
+
+.add-to-cart.has-items:hover {
+    background: var(--success);
+    opacity: 1;
+}
+
