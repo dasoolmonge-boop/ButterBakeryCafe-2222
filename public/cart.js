@@ -18,18 +18,8 @@ const cart = {
         this.updateBadge();
         this.render();
         this.saveToStorage();
-        
-        // Обновляем счетчик на карточке товара
-        this.updateProductCounter(cake.id);
 
         showToast(`${cake.name} добавлен в корзину`, 'success');
-        
-        // Автоматически открываем корзину при добавлении первого товара
-        if (this.items.length === 1) {
-            setTimeout(() => {
-                document.getElementById('cartPanel').classList.add('open');
-            }, 300);
-        }
     },
 
     // Удалить товар
@@ -39,9 +29,6 @@ const cart = {
             const cake = this.items[index];
             this.items.splice(index, 1);
             showToast(`${cake.name} удален из корзины`, 'warning');
-            
-            // Обновляем счетчик на карточке товара
-            this.updateProductCounter(cakeId, true);
         }
 
         this.updateBadge();
@@ -57,43 +44,12 @@ const cart = {
                 this.removeItem(cakeId);
             } else {
                 item.quantity = quantity;
-                this.updateProductCounter(cakeId);
             }
         }
 
         this.updateBadge();
         this.render();
         this.saveToStorage();
-    },
-
-    // Обновить счетчик на карточке товара
-    updateProductCounter(cakeId, isRemoved = false) {
-        const counter = document.getElementById(`counter-${cakeId}`);
-        const addBtn = document.querySelector(`.add-to-cart[data-id="${cakeId}"]`);
-        
-        if (!counter) return;
-        
-        if (isRemoved) {
-            counter.style.display = 'none';
-            if (addBtn) {
-                addBtn.classList.remove('has-items');
-            }
-            return;
-        }
-        
-        const item = this.items.find(item => item.id === cakeId);
-        if (item && item.quantity > 0) {
-            counter.textContent = item.quantity;
-            counter.style.display = 'flex';
-            if (addBtn) {
-                addBtn.classList.add('has-items');
-            }
-        } else {
-            counter.style.display = 'none';
-            if (addBtn) {
-                addBtn.classList.remove('has-items');
-            }
-        }
     },
 
     // Получить общую сумму
@@ -117,9 +73,8 @@ const cart = {
         if (this.items.length === 0) {
             cartItems.innerHTML = `
                 <div class="empty-state">
-                    <i class="fas fa-shopping-cart" style="font-size: 48px; opacity: 0.3; margin-bottom: 16px;"></i>
-                    <p style="color: var(--text-secondary);">Корзина пуста</p>
-                    <p style="font-size: 14px; color: var(--text-secondary); margin-top: 8px;">Добавьте торты из каталога</p>
+                    <i class="fas fa-shopping-cart" style="font-size: 48px; opacity: 0.3;"></i>
+                    <p style="margin-top: 16px; color: var(--text-secondary);">Корзина пуста</p>
                 </div>
             `;
         } else {
@@ -130,7 +85,6 @@ const cart = {
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.name}</div>
                         <div class="cart-item-price">${item.price} ₽ × ${item.quantity}</div>
-                        <div class="cart-item-subtotal">${item.price * item.quantity} ₽</div>
                     </div>
                     <button class="remove-item" onclick="cart.removeItem(${item.id})">
                         <i class="fas fa-trash"></i>
@@ -140,28 +94,10 @@ const cart = {
         }
 
         document.getElementById('cartTotalPrice').textContent = `${totalPrice} ₽`;
-        
-        // Обновляем состояние кнопки оформления заказа
-        const checkoutBtn = document.getElementById('checkoutBtn');
-        if (checkoutBtn) {
-            checkoutBtn.disabled = this.items.length === 0;
-            if (this.items.length === 0) {
-                checkoutBtn.style.opacity = '0.5';
-                checkoutBtn.style.pointerEvents = 'none';
-            } else {
-                checkoutBtn.style.opacity = '1';
-                checkoutBtn.style.pointerEvents = 'auto';
-            }
-        }
     },
 
     // Очистить корзину
     clear() {
-        // Скрываем все счетчики перед очисткой
-        this.items.forEach(item => {
-            this.updateProductCounter(item.id, true);
-        });
-        
         this.items = [];
         this.updateBadge();
         this.render();
@@ -181,13 +117,6 @@ const cart = {
                 this.items = JSON.parse(saved);
                 this.updateBadge();
                 this.render();
-                
-                // Обновляем все счетчики после загрузки
-                setTimeout(() => {
-                    this.items.forEach(item => {
-                        this.updateProductCounter(item.id);
-                    });
-                }, 500);
             } catch (e) {
                 console.error('Ошибка загрузки корзины:', e);
                 this.items = [];
@@ -201,11 +130,6 @@ cart.loadFromStorage();
 
 // Функция открытия модального окна оформления заказа
 function openCheckoutModal() {
-    if (cart.items.length === 0) {
-        showToast('Корзина пуста', 'warning');
-        return;
-    }
-    
     const modal = document.getElementById('checkoutModal');
     const summary = document.getElementById('orderSummary');
 
@@ -287,7 +211,6 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
             showToast('✅ Заказ успешно оформлен!', 'success');
             cart.clear();
             document.getElementById('checkoutModal').classList.remove('open');
-            document.getElementById('cartPanel').classList.remove('open');
             e.target.reset();
 
             if (tg.HapticFeedback) {
@@ -331,34 +254,28 @@ document.getElementById('closeCart').addEventListener('click', () => {
     document.getElementById('cartPanel').classList.remove('open');
 });
 
-// Кнопка оформления заказа в корзине
-document.getElementById('checkoutBtn').addEventListener('click', openCheckoutModal);
-
 // Простое форматирование телефона
 document.getElementById('phone').addEventListener('input', (e) => {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 0) {
         if (value.startsWith('7') || value.startsWith('8')) {
-            let formatted = value.startsWith('7') ? '+7' : '8';
-            
-            if (value.length > 1) {
-                const code = value.substring(1, 4);
-                formatted += ' ' + code;
+            if (value.length > 0) {
+                let formatted = value;
+                if (value.startsWith('7')) {
+                    formatted = '+7';
+                    if (value.length > 1) formatted += ' ' + value.substring(1, 4);
+                    if (value.length > 4) formatted += ' ' + value.substring(4, 7);
+                    if (value.length > 7) formatted += '-' + value.substring(7, 9);
+                    if (value.length > 9) formatted += '-' + value.substring(9, 11);
+                } else {
+                    formatted = '8';
+                    if (value.length > 1) formatted += ' ' + value.substring(1, 4);
+                    if (value.length > 4) formatted += ' ' + value.substring(4, 7);
+                    if (value.length > 7) formatted += '-' + value.substring(7, 9);
+                    if (value.length > 9) formatted += '-' + value.substring(9, 11);
+                }
+                e.target.value = formatted;
             }
-            if (value.length > 4) {
-                const part1 = value.substring(4, 7);
-                formatted += ' ' + part1;
-            }
-            if (value.length > 7) {
-                const part2 = value.substring(7, 9);
-                formatted += '-' + part2;
-            }
-            if (value.length > 9) {
-                const part3 = value.substring(9, 11);
-                formatted += '-' + part3;
-            }
-            
-            e.target.value = formatted;
         }
     }
 });
