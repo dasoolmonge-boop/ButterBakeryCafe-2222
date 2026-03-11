@@ -46,8 +46,13 @@
             <button class="admin-tab" onclick="switchTab('users')">
                 <i class="fas fa-users"></i> Пользователи
             </button>
-            <button class="admin-tab" onclick="switchTab('orders')">
-                <i class="fas fa-shopping-cart"></i> Заказы
+            <button class="admin-tab" onclick="switchTab('active-orders')">
+                <i class="fas fa-clock"></i> Активные заказы
+                <span class="count" id="activeOrdersCountHeader">0</span>
+            </button>
+            <button class="admin-tab" onclick="switchTab('history-orders')">
+                <i class="fas fa-history"></i> История заказов
+                <span class="count" id="historyOrdersCountHeader">0</span>
             </button>
             <button class="admin-tab" onclick="switchTab('stats')">
                 <i class="fas fa-chart-bar"></i> Статистика
@@ -59,7 +64,7 @@
         <!-- ============================================ -->
         <div id="cakes-section" class="admin-section active">
             <h2 class="section-title">➕ Добавить новый торт</h2>
-            
+
             <!-- Форма добавления торта -->
             <form id="addCakeForm" class="form-container" onsubmit="addCake(event)">
                 <div class="form-grid">
@@ -67,17 +72,17 @@
                         <label for="cakeName">Название торта *</label>
                         <input type="text" id="cakeName" required placeholder="Например: Медовик">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="cakePrice">Цена (₽) *</label>
                         <input type="number" id="cakePrice" required min="1" placeholder="2500">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="cakeWeight">Вес (кг) *</label>
                         <input type="number" id="cakeWeight" required min="0.1" step="0.1" placeholder="1.5">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="cakeCategory">Категория *</label>
                         <select id="cakeCategory" required>
@@ -118,14 +123,14 @@
         <!-- ============================================ -->
         <div id="categories-section" class="admin-section">
             <h2 class="section-title">➕ Добавить категорию</h2>
-            
+
             <!-- Форма добавления категории -->
             <form id="addCategoryForm" class="form-container" onsubmit="addCategory(event)">
                 <div class="form-group full-width">
                     <label for="categoryName">Название категории *</label>
                     <input type="text" id="categoryName" required placeholder="Например: Классические">
                 </div>
-                
+
                 <div class="form-group full-width">
                     <label for="categoryDescription">Описание</label>
                     <textarea id="categoryDescription" rows="2" placeholder="Описание категории..."></textarea>
@@ -147,7 +152,7 @@
         <!-- ============================================ -->
         <div id="users-section" class="admin-section">
             <h2 class="section-title">➕ Добавить сотрудника</h2>
-            
+
             <!-- Форма добавления сотрудника -->
             <form id="addUserForm" class="form-container" onsubmit="addUser(event)">
                 <div class="form-grid">
@@ -155,17 +160,17 @@
                         <label for="userTelegramId">Telegram ID *</label>
                         <input type="number" id="userTelegramId" required placeholder="123456789">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="userUsername">Username (без @)</label>
                         <input type="text" id="userUsername" placeholder="username">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="userFirstName">Имя *</label>
                         <input type="text" id="userFirstName" required placeholder="Иван">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="userRole">Роль *</label>
                         <select id="userRole" required>
@@ -173,7 +178,7 @@
                             <option value="courier">Курьер</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group full-width">
                         <label for="userPhone">Телефон</label>
                         <input type="text" id="userPhone" placeholder="+7 (999) 999-99-99">
@@ -192,35 +197,22 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- СЕКЦИЯ: УПРАВЛЕНИЕ ЗАКАЗАМИ -->
+        <!-- СЕКЦИЯ: АКТИВНЫЕ ЗАКАЗЫ -->
         <!-- ============================================ -->
-        <div id="orders-section" class="admin-section">
-            <h2 class="section-title">📦 Управление заказами</h2>
-
-            <!-- Вкладки заказов -->
-            <div class="orders-tabs">
-                <button class="order-tab active" onclick="switchOrdersTab('active')">
-                    <i class="fas fa-clock"></i> Активные
-                    <span class="count" id="activeOrdersCount">0</span>
-                </button>
-                <button class="order-tab" onclick="switchOrdersTab('history')">
-                    <i class="fas fa-history"></i> История
-                    <span class="count" id="historyOrdersCount">0</span>
-                </button>
+        <div id="active-orders-section" class="admin-section">
+            <h2 class="section-title">📦 Активные заказы</h2>
+            <div id="activeOrdersList" class="orders-grid">
+                <div class="loading">Загрузка заказов...</div>
             </div>
+        </div>
 
-            <!-- Активные заказы -->
-            <div id="active-orders" class="orders-tab-content active">
-                <div id="activeOrdersList" class="orders-grid">
-                    <div class="loading">Загрузка заказов...</div>
-                </div>
-            </div>
-
-            <!-- История заказов -->
-            <div id="history-orders" class="orders-tab-content">
-                <div id="historyOrdersList" class="orders-grid">
-                    <div class="loading">Загрузка истории...</div>
-                </div>
+        <!-- ============================================ -->
+        <!-- СЕКЦИЯ: ИСТОРИЯ ЗАКАЗОВ -->
+        <!-- ============================================ -->
+        <div id="history-orders-section" class="admin-section">
+            <h2 class="section-title">📜 История заказов</h2>
+            <div id="historyOrdersList" class="orders-grid">
+                <div class="loading">Загрузка истории...</div>
             </div>
         </div>
 
