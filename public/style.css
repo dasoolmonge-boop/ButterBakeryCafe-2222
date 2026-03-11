@@ -2126,4 +2126,180 @@ input:checked + .toggle-slider:before {
     color: white;
     border-color: var(--error);
 }
+/* ============================================ */
+/* УЛУЧШЕННЫЕ СТИЛИ ДЛЯ КНОПОК И СЕЛЕКТОВ (ДОБАВИТЬ В КОНЕЦ ФАЙЛА) */
+/* ============================================ */
+
+/* Унифицированные стили для всех селектов в админке */
+select, .form-group select, #cakeCategory, #editCakeCategory, #userRole, #editUserRole {
+    width: 100%;
+    padding: 14px 16px !important;          /* Увеличили отступы */
+    background: var(--bg) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;          /* Скругление как у кнопок */
+    color: var(--text-primary) !important;
+    font-size: 15px !important;               /* Крупный шрифт */
+    font-family: 'Inter', sans-serif !important;
+    transition: all 0.2s !important;
+    cursor: pointer !important;
+    height: 52px !important;                  /* Фиксированная высота как у кнопок */
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 16px center !important;
+    background-size: 18px !important;
+    padding-right: 45px !important;
+}
+
+/* Стили для контейнера действий в заказах */
+.order-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Селект внутри действий заказа (Назначить курьера) */
+.order-actions select {
+    flex: 2;
+    min-width: 180px;
+    height: 48px;                             /* Высота как у кнопок */
+    padding: 0 16px !important;                /* Вертикальные отступы через height */
+    font-size: 14px !important;
+    background-position: right 12px center !important;
+}
+
+/* Кнопки внутри действий заказа */
+.order-actions .action-btn {
+    flex: 1;
+    min-width: 120px;
+    height: 48px;                              /* Одинаковая высота с селектом */
+    padding: 0 20px;                           /* Горизонтальные отступы */
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+/* Кнопка "Назначить" (акцентная) */
+.order-actions .action-btn[style*="background: var(--accent)"] {
+    background: var(--accent) !important;
+    color: white !important;
+}
+
+.order-actions .action-btn[style*="background: var(--accent)"]:hover {
+    background: var(--accent-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(190, 114, 62, 0.3);
+}
+
+/* Кнопка "Отменить" (с красным текстом) */
+.order-actions .action-btn[style*="color: var(--error)"] {
+    background: var(--surface) !important;
+    color: var(--error) !important;
+    border: 1px solid var(--border) !important;
+}
+
+.order-actions .action-btn[style*="color: var(--error)"]:hover {
+    background: var(--error) !important;
+    color: white !important;
+    border-color: var(--error) !important;
+    transform: translateY(-2px);
+}
+
+/* Кнопка "Доставлен" (зеленая) */
+.order-actions .action-btn[style*="background: var(--success)"] {
+    background: var(--success) !important;
+    color: white !important;
+}
+
+.order-actions .action-btn[style*="background: var(--success)"]:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+/* Сообщение "Нет курьеров на смене" */
+.order-actions div[style*="color: var(--text-secondary)"] {
+    flex: 1;
+    min-width: 200px;
+    height: 48px;
+    padding: 0 16px;
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Кнопки в карточках пользователей (Редактировать/Удалить) */
+.user-card .order-actions {
+    margin-top: var(--space-md);
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.user-card .order-actions .action-btn {
+    flex: 1;
+    height: 48px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.user-card .order-actions .action-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.user-card .order-actions .action-btn.cancel-btn {
+    color: var(--error);
+}
+
+.user-card .order-actions .action-btn.cancel-btn:hover {
+    background: var(--error);
+    color: white;
+    border-color: var(--error);
+}
+
+/* ============================================ */
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ */
+/* ============================================ */
+@media (max-width: 480px) {
+    .order-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .order-actions select,
+    .order-actions .action-btn,
+    .order-actions div[style*="color: var(--text-secondary)"] {
+        width: 100%;
+        min-width: 100%;
+    }
+    
+    select, .form-group select, #cakeCategory, #editCakeCategory {
+        font-size: 16px; /* Чуть крупнее для тач-ввода */
+        height: 56px;
+    }
+}
 
