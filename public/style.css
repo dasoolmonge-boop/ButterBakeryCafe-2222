@@ -2,21 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    /* Светлая тема с белым фоном */
-    --bg: #FFFFFF;
-    --surface: #F8F5F0;
-    --surface-hover: #F0E9E0;
-    --text-primary: #2C2C2C;
-    --text-secondary: #6B6B6B;
-    --accent: #BE723E;
-    --accent-hover: #A45F32;
-    --border: #E5D9D0;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
-
-    --success: #2E7D32;
-    --error: #C62828;
-    --warning: #F57C00;
+    --bg: #0F0F10;
+    --surface: #1A1A1C;
+    --surface-hover: #252527;
+    --text-primary: #FFFFFF;
+    --text-secondary: #9B9B9B;
+    --accent: #3B82F6;
+    --accent-hover: #2563EB;
+    --border: #2C2C2E;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.4);
+    
+    --success: #34C759;
+    --error: #FF3B30;
+    --warning: #FF9F0A;
 
     /* Отступы */
     --space-xs: 8px;
@@ -85,7 +84,6 @@ body {
     top: 0;
     z-index: 10;
     margin-bottom: var(--space-lg);
-    border-bottom: 1px solid var(--border);
 }
 
 .header-content {
@@ -306,7 +304,7 @@ body {
 .form-group select:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(190, 114, 62, 0.1);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .form-group input::placeholder,
@@ -400,7 +398,7 @@ body {
 .submit-btn:hover {
     background: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(190, 114, 62, 0.2);
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
 }
 
 .submit-btn:active {
@@ -527,27 +525,33 @@ body {
     color: var(--text-secondary);
 }
 
-/* Кнопка добавления в корзину на карточке товара */
+/* Цена и кнопка в одной строке */
+.cake-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-xs);
+}
+
+/* Кнопка добавления в корзину */
 .add-to-cart {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--accent);
-    cursor: pointer;
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
-    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .add-to-cart:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-    transform: scale(1.1);
+    background: var(--accent-hover);
+    transform: scale(1.1) rotate(90deg);
 }
 
 .add-to-cart:active {
@@ -556,15 +560,16 @@ body {
 
 .add-to-cart.added {
     background: var(--success);
-    color: white;
-    border-color: var(--success);
+    animation: successPulse 0.5s ease;
 }
 
-.cake-price-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: var(--space-xs);
+@keyframes successPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
 }
 
 /* Действия на карточке (админка) */
@@ -578,8 +583,8 @@ body {
 }
 
 .cake-action-btn {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     border: 1px solid var(--border);
     background: var(--surface);
@@ -590,30 +595,17 @@ body {
     justify-content: center;
     transition: all 0.2s;
     backdrop-filter: blur(4px);
-    font-size: 16px;
-    box-shadow: var(--shadow);
 }
 
 .cake-action-btn:hover {
-    transform: scale(1.1);
-    box-shadow: var(--shadow-hover);
-}
-
-.cake-action-btn.edit:hover {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
-}
-
-.cake-action-btn.toggle:hover {
-    background: var(--warning);
-    color: white;
-    border-color: var(--warning);
+    transform: scale(1.1);
 }
 
 .cake-action-btn.delete:hover {
     background: var(--error);
-    color: white;
     border-color: var(--error);
 }
 
@@ -663,37 +655,6 @@ body {
     gap: 6px;
 }
 
-.category-action-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    font-size: 14px;
-}
-
-.category-action-btn:hover {
-    transform: scale(1.1);
-}
-
-.category-action-btn.edit:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-}
-
-.category-action-btn.delete:hover {
-    background: var(--error);
-    color: white;
-    border-color: var(--error);
-}
-
 /* ============================================ */
 /* КАРТОЧКИ ПОЛЬЗОВАТЕЛЕЙ */
 /* ============================================ */
@@ -738,7 +699,7 @@ body {
 
 .user-role-badge.courier {
     background: var(--warning);
-    color: white;
+    color: black;
 }
 
 .user-name {
@@ -944,7 +905,7 @@ input:checked + .toggle-slider:before {
 
 .status-active {
     background: var(--warning);
-    color: white;
+    color: black;
 }
 
 .status-processing {
@@ -1018,7 +979,7 @@ input:checked + .toggle-slider:before {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(190, 114, 62, 0.3);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
     transition: all 0.2s;
     z-index: 100;
     border: none;
@@ -1059,7 +1020,7 @@ input:checked + .toggle-slider:before {
     width: 100%;
     max-width: 400px;
     height: 100vh;
-    background: var(--bg);
+    background: var(--surface);
     transition: right 0.3s ease;
     z-index: 1000;
     display: flex;
@@ -1079,31 +1040,6 @@ input:checked + .toggle-slider:before {
     border-bottom: 1px solid var(--border);
 }
 
-.close-cart {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.close-cart:hover {
-    background: var(--surface-hover);
-    color: var(--accent);
-    border-color: var(--accent);
-    transform: scale(1.05);
-}
-
-.close-cart i {
-    font-size: 18px;
-}
-
 .cart-items {
     flex: 1;
     overflow-y: auto;
@@ -1115,117 +1051,89 @@ input:checked + .toggle-slider:before {
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-sm);
-    background: var(--surface);
+    background: var(--bg);
     border-radius: 12px;
     margin-bottom: var(--space-xs);
     border: 1px solid var(--border);
-    position: relative;
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .cart-item-image {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 10px;
     object-fit: cover;
 }
 
-.cart-item-info {
-    flex: 1;
-}
-
 .cart-item-name {
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
     color: var(--text-primary);
-    margin-bottom: 4px;
 }
 
 .cart-item-price {
     color: var(--accent);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
 }
 
 .remove-item {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--error);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 16px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 8px;
     transition: all 0.2s;
 }
 
 .remove-item:hover {
-    background: var(--error);
-    color: white;
-    border-color: var(--error);
-    transform: scale(1.05);
-}
-
-.remove-item i {
-    font-size: 14px;
+    color: var(--error);
+    transform: scale(1.1);
 }
 
 .cart-footer {
     padding: var(--space-md);
     border-top: 1px solid var(--border);
-    background: var(--surface);
 }
 
 .cart-total {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    font-size: 18px;
     font-weight: 600;
-    margin-bottom: var(--space-md);
+    font-size: 16px;
+    margin-bottom: var(--space-sm);
     color: var(--text-primary);
-}
-
-.cart-total span:last-child {
-    color: var(--accent);
-    font-size: 20px;
 }
 
 .checkout-btn {
     width: 100%;
-    padding: 16px;
+    padding: 14px;
     background: var(--accent);
     color: white;
     border: none;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
 }
 
 .checkout-btn:hover {
     background: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(190, 114, 62, 0.2);
-}
-
-.checkout-btn:active {
-    transform: translateY(0);
-}
-
-.checkout-btn i {
-    font-size: 18px;
-}
-
-.checkout-btn:disabled {
-    opacity: 0.5;
-    pointer-events: none;
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
 }
 
 /* ============================================ */
@@ -1239,7 +1147,7 @@ input:checked + .toggle-slider:before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4px);
     z-index: 2000;
     align-items: center;
@@ -1252,7 +1160,7 @@ input:checked + .toggle-slider:before {
 }
 
 .modal-content {
-    background: var(--bg);
+    background: var(--surface);
     border-radius: 24px;
     max-width: 100%;
     width: 450px;
@@ -1281,39 +1189,28 @@ input:checked + .toggle-slider:before {
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
-    background: var(--bg);
-    z-index: 10;
-}
-
-.modal-header h2 {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--text-primary);
+    background: var(--surface);
 }
 
 .close-modal {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
     width: 36px;
     height: 36px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-primary);
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    border-radius: 50%;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .close-modal:hover {
     background: var(--surface-hover);
-    color: var(--accent);
-    border-color: var(--accent);
-    transform: scale(1.05);
-}
-
-.close-modal i {
-    font-size: 18px;
+    color: var(--text-primary);
+    transform: rotate(90deg) scale(1.1);
 }
 
 /* ============================================ */
@@ -1325,49 +1222,34 @@ input:checked + .toggle-slider:before {
 }
 
 .order-summary {
-    background: var(--surface);
-    border-radius: 12px;
+    background: var(--bg);
     padding: var(--space-md);
+    border-radius: 16px;
     margin: var(--space-md) 0;
     border: 1px solid var(--border);
-}
-
-.summary-items {
-    margin-bottom: var(--space-sm);
 }
 
 .summary-item {
     display: flex;
     justify-content: space-between;
-    padding: 6px 0;
+    margin-bottom: var(--space-xs);
     font-size: 14px;
     color: var(--text-secondary);
-    border-bottom: 1px dashed var(--border);
-}
-
-.summary-item:last-child {
-    border-bottom: none;
 }
 
 .summary-total {
     display: flex;
     justify-content: space-between;
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--text-primary);
     margin-top: var(--space-sm);
     padding-top: var(--space-sm);
-    border-top: 2px solid var(--border);
-}
-
-.summary-total span:last-child {
-    color: var(--accent);
-    font-size: 18px;
+    border-top: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 .submit-order {
     width: 100%;
-    padding: 16px;
+    padding: 14px 24px;
     background: var(--accent);
     color: white;
     border: none;
@@ -1377,21 +1259,32 @@ input:checked + .toggle-slider:before {
     cursor: pointer;
     transition: all 0.2s;
     margin-top: var(--space-md);
+    position: relative;
+    overflow: hidden;
 }
 
 .submit-order:hover {
     background: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(190, 114, 62, 0.2);
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
 }
 
-.submit-order:active {
-    transform: translateY(0);
+.submit-order::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
 }
 
-.submit-order:disabled {
-    opacity: 0.5;
-    pointer-events: none;
+.submit-order:hover::after {
+    width: 300px;
+    height: 300px;
 }
 
 /* ============================================ */
@@ -1491,13 +1384,363 @@ input:checked + .toggle-slider:before {
     font-size: 40px;
     color: var(--border);
     margin-bottom: var(--space-sm);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ============================================ */
+/* TIME PICKER - ВЫБОР ВРЕМЕНИ */
+/* ============================================ */
+
+.time-picker-content {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.time-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.time-section label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.time-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: var(--space-xs) 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.time-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.time-unit {
+    min-width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.time-unit:hover {
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.time-unit.selected {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.selected-time {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    padding: var(--space-md);
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-family: 'Inter', monospace;
+}
+
+.time-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+.time-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.time-btn.reset {
+    background: var(--surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+.time-btn.reset:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
+.time-btn.confirm {
+    background: var(--accent);
+    color: white;
+}
+
+.time-btn.confirm:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================ */
+/* УЛУЧШЕННЫЙ КАЛЕНДАРЬ */
+/* ============================================ */
+
+.bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-radius: 24px 24px 0 0;
+    animation: slideUp 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.date-picker-content {
+    padding: var(--space-md);
+}
+
+.month-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+}
+
+.month-nav {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.month-nav:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+}
+
+.current-month {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: var(--space-sm);
+}
+
+.weekdays span {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 8px 0;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: var(--space-lg);
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    max-width: 45px;
+    margin: 0 auto;
+}
+
+.calendar-day:hover {
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.calendar-day.selected {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.calendar-day.today {
+    border: 2px solid var(--accent);
+    font-weight: 700;
+}
+
+.date-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.date-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.date-btn.reset {
+    background: var(--surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+.date-btn.reset:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
+.date-btn.confirm {
+    background: var(--accent);
+    color: white;
+}
+
+.date-btn.confirm:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================ */
+/* ПОЛЯ С ИКОНКАМИ */
+/* ============================================ */
+
+.input-with-icon {
+    position: relative;
+    width: 100%;
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding: 12px 16px;
+    padding-right: 45px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.input-with-icon input:hover {
+    border-color: var(--accent);
+}
+
+.input-with-icon input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-with-icon i {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 16px;
+    pointer-events: none;
+    transition: color 0.2s;
+}
+
+.input-with-icon input:hover + i,
+.input-with-icon input:focus + i {
+    color: var(--accent);
+}
+
+/* ============================================ */
+/* АНИМАЦИИ */
+/* ============================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ============================================ */
 /* АДАПТИВНОСТЬ */
 /* ============================================ */
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .app, .admin-container {
         padding: var(--space-sm) var(--space-sm) 90px;
     }
@@ -1530,13 +1773,38 @@ input:checked + .toggle-slider:before {
         overflow-x: auto;
         padding-bottom: var(--space-xs);
     }
+}
 
-    .cart-item {
-        padding: var(--space-xs);
+@media (max-width: 480px) {
+    .cakes-grid {
+        gap: 8px;
     }
-
-    .cart-item-image {
-        width: 50px;
+    
+    .cake-info {
+        padding: 10px;
+    }
+    
+    .cake-name {
+        font-size: 14px;
+    }
+    
+    .cake-price {
+        font-size: 14px;
+    }
+    
+    .add-to-cart {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+    
+    .time-unit {
+        min-width: 50px;
         height: 50px;
+        font-size: 16px;
+    }
+    
+    .selected-time {
+        font-size: 28px;
     }
 }
