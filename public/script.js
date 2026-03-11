@@ -7,12 +7,7 @@ tg.ready();
 // Расширяем на весь экран
 tg.expand();
 
-// Настройка MainButton
-tg.MainButton.setText('ЗАКАЗАТЬ');
-tg.MainButton.setParams({
-    color: '#D4A373',
-    text_color: '#1A1A1A'
-});
+// Настройка MainButton (теперь скрыта навсегда)
 tg.MainButton.hide();
 
 // Глобальные переменные
