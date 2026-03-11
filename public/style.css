@@ -2178,3 +2178,93 @@ select {
 .modal select {
     caret-color: #000000 !important;
 }
+/* ============================================ */
+/* УЛУЧШЕННАЯ ШАПКА С ЦЕНТРИРОВАННЫМ ЗАГОЛОВКОМ */
+/* ============================================ */
+
+.header-content {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px; /* Три колонки: логотип, заголовок, кнопка */
+    align-items: center;
+    gap: 8px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Стили для кнопки админ */
+.admin-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    height: 36px;
+}
+
+.admin-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.admin-btn i {
+    font-size: 14px;
+    color: var(--accent);
+}
+
+.admin-btn:hover i {
+    color: var(--accent-hover);
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 380px) {
+    .header-content {
+        grid-template-columns: 36px 1fr 36px;
+        gap: 4px;
+    }
+    
+    .header-title {
+        font-size: 16px;
+    }
+    
+    .admin-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+        height: 32px;
+    }
+    
+    .admin-btn i {
+        font-size: 12px;
+    }
+}
