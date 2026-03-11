@@ -1807,4 +1807,33 @@ input:checked + .toggle-slider:before {
     .selected-time {
         font-size: 28px;
     }
+    /* ============================================ */
+/* ЛОГОТИП В ШАПКЕ */
+/* ============================================ */
+
+.logo-container {
+    display: flex;
+    align-items: center;
 }
+
+.header-logo {
+    height: 40px;
+    width: auto;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+/* Адаптивность для логотипа */
+@media (max-width: 480px) {
+    .header-logo {
+        height: 35px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-logo {
+        height: 30px;
+    }
+}
+}
+
