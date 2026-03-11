@@ -20,13 +20,6 @@ const cart = {
         this.saveToStorage();
 
         showToast(`${cake.name} добавлен в корзину`, 'success');
-        
-        // 🔴 УДАЛЕНО: автоматическое открытие корзины
-        // if (this.items.length === 1) {
-        //     setTimeout(() => {
-        //         document.getElementById('cartPanel').classList.add('open');
-        //     }, 300);
-        // }
     },
 
     // Удалить товар
@@ -43,20 +36,33 @@ const cart = {
         this.saveToStorage();
     },
 
-    // Обновить количество
-    updateQuantity(cakeId, quantity) {
+    // Обновить количество (увеличить)
+    increaseQuantity(cakeId) {
         const item = this.items.find(item => item.id === cakeId);
         if (item) {
-            if (quantity <= 0) {
-                this.removeItem(cakeId);
+            item.quantity += 1;
+            this.updateBadge();
+            this.render();
+            this.saveToStorage();
+        }
+    },
+
+    // Обновить количество (уменьшить)
+    decreaseQuantity(cakeId) {
+        const item = this.items.find(item => item.id === cakeId);
+        if (item) {
+            if (item.quantity <= 1) {
+                // Если количество 1, спрашиваем подтверждение на удаление
+                if (confirm(`Удалить "${item.name}" из корзины?`)) {
+                    this.removeItem(cakeId);
+                }
             } else {
-                item.quantity = quantity;
+                item.quantity -= 1;
+                this.updateBadge();
+                this.render();
+                this.saveToStorage();
             }
         }
-
-        this.updateBadge();
-        this.render();
-        this.saveToStorage();
     },
 
     // Получить общую сумму
@@ -92,7 +98,16 @@ const cart = {
                          onerror="this.src='https://via.placeholder.com/60?text=Торт'">
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">${item.price} ₽ × ${item.quantity}</div>
+                        <div class="cart-item-price">${item.price} ₽</div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn decrease" onclick="cart.decreaseQuantity(${item.id})">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity-value">${item.quantity}</span>
+                            <button class="quantity-btn increase" onclick="cart.increaseQuantity(${item.id})">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                         <div class="cart-item-subtotal">${item.price * item.quantity} ₽</div>
                     </div>
                     <button class="remove-item" onclick="cart.removeItem(${item.id})">
