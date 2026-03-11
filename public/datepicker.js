@@ -34,7 +34,7 @@ function closeDatePicker() {
 // Переключить месяц
 function changeMonth(direction) {
     currentMonth += direction;
-    
+
     if (currentMonth < 0) {
         currentMonth = 11;
         currentYear--;
@@ -42,13 +42,13 @@ function changeMonth(direction) {
         currentMonth = 0;
         currentYear++;
     }
-    
+
     renderCalendar();
 }
 
 // Обновить отображение текущего месяца
 function updateMonthDisplay() {
-    document.getElementById('currentMonth').textContent = 
+    document.getElementById('currentMonth').textContent =
         `${months[currentMonth]} ${currentYear}`;
 }
 
@@ -69,38 +69,38 @@ function renderCalendar() {
     const calendarGrid = document.getElementById('calendarGrid');
     const daysInMonth = getDaysInMonth(currentYear, currentMonth);
     const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
-    
+
     updateMonthDisplay();
-    
+
     let html = '';
-    
+
     // Пустые ячейки до первого дня месяца
     for (let i = 0; i < firstDay; i++) {
         html += '<div class="calendar-day disabled"></div>';
     }
-    
+
     // Ячейки с днями
     for (let day = 1; day <= daysInMonth; day++) {
         const isToday = isCurrentDay(day);
-        const isSelected = selectedDate && 
-                          selectedDate.getDate() === day && 
-                          selectedDate.getMonth() === currentMonth && 
+        const isSelected = selectedDate &&
+                          selectedDate.getDate() === day &&
+                          selectedDate.getMonth() === currentMonth &&
                           selectedDate.getFullYear() === currentYear;
-        
+
         const todayClass = isToday ? 'today' : '';
         const selectedClass = isSelected ? 'selected' : '';
-        
+
         html += `<div class="calendar-day ${todayClass} ${selectedClass}" onclick="selectDate(${day})">${day}</div>`;
     }
-    
+
     calendarGrid.innerHTML = html;
 }
 
 // Проверка, является ли день текущим
 function isCurrentDay(day) {
     const today = new Date();
-    return today.getDate() === day && 
-           today.getMonth() === currentMonth && 
+    return today.getDate() === day &&
+           today.getMonth() === currentMonth &&
            today.getFullYear() === currentYear;
 }
 
@@ -110,10 +110,10 @@ function selectDate(day) {
     document.querySelectorAll('.calendar-day').forEach(el => {
         el.classList.remove('selected');
     });
-    
+
     // Выделяем выбранный день
     event.target.classList.add('selected');
-    
+
     // Сохраняем выбранную дату
     selectedDate = new Date(currentYear, currentMonth, day);
 }
@@ -124,7 +124,7 @@ function confirmDate() {
         const day = selectedDate.getDate().toString().padStart(2, '0');
         const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
         const year = selectedDate.getFullYear();
-        
+
         document.getElementById('deliveryDate').value = `${day}.${month}.${year}`;
         closeDatePicker();
     } else {
@@ -136,12 +136,12 @@ function confirmDate() {
 function resetDate() {
     selectedDate = null;
     document.getElementById('deliveryDate').value = '';
-    
+
     // Убираем выделение со всех дней
     document.querySelectorAll('.calendar-day').forEach(el => {
         el.classList.remove('selected');
     });
-    
+
     closeDatePicker();
 }
 
@@ -167,19 +167,20 @@ function renderTimeSelector() {
     renderMinutes();
 }
 
-// Рендер часов (00-23)
+// Рендер часов (07-23) - убраны часы с 00 до 06
 function renderHours() {
     const hourSelector = document.getElementById('hourSelector');
     let html = '';
-    
-    for (let hour = 0; hour < 24; hour++) {
+
+    // Часы с 7 до 23 (для доставки)
+    for (let hour = 7; hour < 24; hour++) {
         const hourStr = hour.toString().padStart(2, '0');
         const isSelected = selectedHour === hour;
         const selectedClass = isSelected ? 'selected' : '';
-        
+
         html += `<div class="time-unit ${selectedClass}" onclick="selectHour(${hour})">${hourStr}</div>`;
     }
-    
+
     hourSelector.innerHTML = html;
 }
 
@@ -188,52 +189,52 @@ function renderMinutes() {
     const minuteSelector = document.getElementById('minuteSelector');
     const minutes = ['00', '15', '30', '45'];
     let html = '';
-    
+
     minutes.forEach((minute, index) => {
         const minuteNum = index * 15;
         const isSelected = selectedMinute === minuteNum;
         const selectedClass = isSelected ? 'selected' : '';
-        
+
         html += `<div class="time-unit ${selectedClass}" onclick="selectMinute(${minuteNum})">${minute}</div>`;
     });
-    
+
     minuteSelector.innerHTML = html;
 }
 
 // Выбрать час
 function selectHour(hour) {
     selectedHour = hour;
-    
+
     // Убираем выделение со всех часов
     document.querySelectorAll('#hourSelector .time-unit').forEach(el => {
         el.classList.remove('selected');
     });
-    
+
     // Выделяем выбранный час
     event.target.classList.add('selected');
-    
+
     updateSelectedTimeDisplay();
 }
 
 // Выбрать минуты
 function selectMinute(minute) {
     selectedMinute = minute;
-    
+
     // Убираем выделение со всех минут
     document.querySelectorAll('#minuteSelector .time-unit').forEach(el => {
         el.classList.remove('selected');
     });
-    
+
     // Выделяем выбранные минуты
     event.target.classList.add('selected');
-    
+
     updateSelectedTimeDisplay();
 }
 
 // Обновить отображение выбранного времени
 function updateSelectedTimeDisplay() {
     const display = document.getElementById('selectedTimeDisplay');
-    
+
     if (selectedHour !== null && selectedMinute !== null) {
         const hourStr = selectedHour.toString().padStart(2, '0');
         const minuteStr = selectedMinute.toString().padStart(2, '0');
@@ -266,7 +267,7 @@ function resetTime() {
     selectedHour = null;
     selectedMinute = null;
     document.getElementById('deliveryTime').value = '';
-    
+
     // Убираем выделение со всех элементов
     document.querySelectorAll('#hourSelector .time-unit').forEach(el => {
         el.classList.remove('selected');
@@ -274,7 +275,7 @@ function resetTime() {
     document.querySelectorAll('#minuteSelector .time-unit').forEach(el => {
         el.classList.remove('selected');
     });
-    
+
     updateSelectedTimeDisplay();
     closeTimePicker();
 }
@@ -287,11 +288,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Добавляем обработчики для полей даты и времени
     const dateInput = document.getElementById('deliveryDate');
     const timeInput = document.getElementById('deliveryTime');
-    
+
     if (dateInput) {
         dateInput.addEventListener('click', openDatePicker);
     }
-    
+
     if (timeInput) {
         timeInput.addEventListener('click', openTimePicker);
     }
