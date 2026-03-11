@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 // Важные переменные окружения - БЕЗОПАСНОСТЬ!
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const SITE_DOMAIN = process.env.SITE_DOMAIN || 'butterbakerycafe.bothost.ru';
-const ADMIN_ID = process.env.ADMIN_ID ? parseInt(process.env.ADMIN_ID) : 1066867845; // ID главного администратора (по умолчанию)
+const ADMIN_ID = process.env.ADMIN_ID ? parseInt(process.env.ADMIN_ID) : 1066867845;
 
 // Проверяем наличие обязательных переменных
 if (!BOT_TOKEN) {
@@ -30,33 +30,13 @@ if (!BOT_TOKEN) {
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 // Путь к папке с данными (для production используем /app/data, для разработки - текущую папку)
-const DATA_DIR = IS_PRODUCTION ? '/app/data' : __dirname;
+const DATA_DIR = IS_PRODUCTION ? '/app/data' : path.join(__dirname, 'data');
 
 // Путь к файлу базы данных
 const DB_FILE = path.join(DATA_DIR, 'db.json');
-const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
 
-// Создаем папки, если их нет
-if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-    console.log(`📁 Создана папка для данных: ${DATA_DIR}`);
-}
-
-if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
-// Проверяем права на запись в папку данных
-try {
-    fs.accessSync(DATA_DIR, fs.constants.W_OK);
-    console.log(`✅ Папка ${DATA_DIR} доступна для записи`);
-} catch (err) {
-    console.error(`❌ Нет прав на запись в ${DATA_DIR}!`, err.message);
-    if (IS_PRODUCTION) {
-        console.error('Критическая ошибка в production режиме!');
-        process.exit(1);
-    }
-}
+// Путь к папке для загрузок - теперь тоже в DATA_DIR!
+const UPLOAD_DIR = path.join(DATA_DIR, 'uploads');
 
 // MIME типы для статических файлов
 const mimeTypes = {
@@ -72,9 +52,44 @@ const mimeTypes = {
     '.ico': 'image/x-icon'
 };
 
+// Создаем необходимые папки
+console.log('\n📁 Проверка папок для данных...');
+
+// Создаем папку data, если её нет
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    console.log(`✅ Создана папка для данных: ${DATA_DIR}`);
+} else {
+    console.log(`✅ Папка для данных существует: ${DATA_DIR}`);
+}
+
+// Создаем папку для загрузок, если её нет
+if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+    console.log(`✅ Создана папка для загрузок: ${UPLOAD_DIR}`);
+} else {
+    console.log(`✅ Папка для загрузок существует: ${UPLOAD_DIR}`);
+}
+
+// Проверяем права на запись в папку данных
+try {
+    fs.accessSync(DATA_DIR, fs.constants.W_OK);
+    console.log(`✅ Папка ${DATA_DIR} доступна для записи`);
+} catch (err) {
+    console.error(`❌ Нет прав на запись в ${DATA_DIR}!`, err.message);
+    if (IS_PRODUCTION) {
+        console.error('Критическая ошибка в production режиме!');
+        process.exit(1);
+    }
+}
+
 // Инициализация базы данных
 function initDB() {
+    console.log(`\n📂 Проверка базы данных: ${DB_FILE}`);
+    
     if (!fs.existsSync(DB_FILE)) {
+        console.log('🆕 База данных не найдена. Создание новой...');
+        
         const initialData = {
             categories: [
                 { id: 1, name: "Классические", description: "Традиционные рецепты" },
@@ -115,7 +130,7 @@ function initDB() {
             users: [
                 {
                     id: 1,
-                    telegramId: ADMIN_ID, // Используем ADMIN_ID из переменных окружения
+                    telegramId: ADMIN_ID,
                     username: "admin",
                     firstName: "Главный администратор",
                     role: "admin",
@@ -139,6 +154,31 @@ function initDB() {
         }
     } else {
         console.log(`📦 База данных найдена: ${DB_FILE}`);
+        
+        // Проверяем, есть ли администратор в базе
+        try {
+            const data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+            const adminExists = data.users.some(u => u.telegramId === ADMIN_ID && u.role === 'admin');
+            
+            if (!adminExists) {
+                console.log('👑 Добавление администратора в существующую базу...');
+                const newAdmin = {
+                    id: data.nextUserId++,
+                    telegramId: ADMIN_ID,
+                    username: "admin",
+                    firstName: "Главный администратор",
+                    role: "admin",
+                    onShift: false,
+                    phone: "",
+                    createdAt: new Date().toISOString()
+                };
+                data.users.push(newAdmin);
+                fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+                console.log('✅ Администратор добавлен');
+            }
+        } catch (e) {
+            console.error('❌ Ошибка проверки администратора:', e);
+        }
     }
 }
 
@@ -530,6 +570,7 @@ const server = http.createServer((req, res) => {
 
                     fs.writeFileSync(filePath, fileData);
 
+                    // URL для доступа к файлу (оставляем /uploads/ для совместимости)
                     const fileUrl = `/uploads/${newFilename}`;
 
                     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -793,9 +834,13 @@ const server = http.createServer((req, res) => {
 
         const cake = db.cakes.find(c => c.id === cakeId);
         if (cake && cake.photo && cake.photo.startsWith('/uploads/')) {
-            const photoPath = path.join(__dirname, 'public', cake.photo);
-            if (fs.existsSync(photoPath)) {
-                fs.unlinkSync(photoPath);
+            // Извлекаем имя файла из URL
+            const filename = path.basename(cake.photo);
+            const filePath = path.join(UPLOAD_DIR, filename);
+            
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+                console.log(`🗑️ Удален файл: ${filename}`);
             }
         }
 
@@ -1211,7 +1256,14 @@ const server = http.createServer((req, res) => {
     // ============================================
 
     let filePath;
-    if (pathname === '/') {
+
+    // Сначала проверяем, не запрашивают ли файл из uploads
+    if (pathname.startsWith('/uploads/')) {
+        // Извлекаем имя файла из пути
+        const filename = path.basename(pathname);
+        filePath = path.join(UPLOAD_DIR, filename);
+    } 
+    else if (pathname === '/') {
         filePath = path.join(__dirname, 'public', 'index.html');
     } else if (pathname === '/admin') {
         filePath = path.join(__dirname, 'public', 'admin.html');
@@ -1225,15 +1277,30 @@ const server = http.createServer((req, res) => {
     fs.readFile(filePath, (error, content) => {
         if (error) {
             if (error.code === 'ENOENT') {
-                fs.readFile(path.join(__dirname, 'public', 'index.html'), (err, content) => {
-                    if (err) {
-                        res.writeHead(404);
-                        res.end('Файл не найден');
-                    } else {
-                        res.writeHead(200, { 'Content-Type': 'text/html' });
-                        res.end(content, 'utf-8');
-                    }
-                });
+                // Если файл не найден в uploads, пробуем в public (для обратной совместимости)
+                if (pathname.startsWith('/uploads/')) {
+                    // Пробуем найти в старой папке public/uploads
+                    const oldPath = path.join(__dirname, 'public', pathname);
+                    fs.readFile(oldPath, (err, oldContent) => {
+                        if (!err) {
+                            res.writeHead(200, { 'Content-Type': contentType });
+                            res.end(oldContent, 'utf-8');
+                        } else {
+                            res.writeHead(404);
+                            res.end('Файл не найден');
+                        }
+                    });
+                } else {
+                    fs.readFile(path.join(__dirname, 'public', 'index.html'), (err, content) => {
+                        if (err) {
+                            res.writeHead(404);
+                            res.end('Файл не найден');
+                        } else {
+                            res.writeHead(200, { 'Content-Type': 'text/html' });
+                            res.end(content, 'utf-8');
+                        }
+                    });
+                }
             } else {
                 res.writeHead(500);
                 res.end(`Ошибка сервера: ${error.code}`);
