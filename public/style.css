@@ -2137,3 +2137,44 @@ input:checked + .toggle-slider:before {
         font-size: 12px !important;
     }
 }
+/* ============================================ */
+/* СТИЛИ ДЛЯ КУРСОРА - ЧЕРНЫЙ ЦВЕТ */
+/* ============================================ */
+
+/* Для всех полей ввода */
+input, 
+textarea, 
+select {
+    caret-color: #000000 !important; /* Черный курсор */
+}
+
+/* Для полей с иконками */
+.input-with-icon input {
+    caret-color: #000000 !important;
+}
+
+/* Для полей в админ-панели */
+.admin-container input,
+.admin-container textarea,
+.admin-container select {
+    caret-color: #000000 !important;
+}
+
+/* Для полей в формах */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    caret-color: #000000 !important;
+}
+
+/* Для поиска и других полей */
+.header-right .header-icon {
+    /* это не поле ввода, тут курсор не меняем */
+}
+
+/* Для модальных окон */
+.modal input,
+.modal textarea,
+.modal select {
+    caret-color: #000000 !important;
+}
