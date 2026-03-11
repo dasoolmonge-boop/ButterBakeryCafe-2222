@@ -527,6 +527,46 @@ body {
     color: var(--text-secondary);
 }
 
+/* Кнопка добавления в корзину на карточке товара */
+.add-to-cart {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--accent);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 18px;
+}
+
+.add-to-cart:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: scale(1.1);
+}
+
+.add-to-cart:active {
+    transform: scale(0.95);
+}
+
+.add-to-cart.added {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+}
+
+.cake-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--space-xs);
+}
+
 /* Действия на карточке (админка) */
 .cake-actions {
     position: absolute;
@@ -538,8 +578,8 @@ body {
 }
 
 .cake-action-btn {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     border: 1px solid var(--border);
     background: var(--surface);
@@ -550,17 +590,30 @@ body {
     justify-content: center;
     transition: all 0.2s;
     backdrop-filter: blur(4px);
+    font-size: 16px;
+    box-shadow: var(--shadow);
 }
 
 .cake-action-btn:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-hover);
+}
+
+.cake-action-btn.edit:hover {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
-    transform: scale(1.1);
+}
+
+.cake-action-btn.toggle:hover {
+    background: var(--warning);
+    color: white;
+    border-color: var(--warning);
 }
 
 .cake-action-btn.delete:hover {
     background: var(--error);
+    color: white;
     border-color: var(--error);
 }
 
@@ -608,6 +661,37 @@ body {
     right: var(--space-sm);
     display: flex;
     gap: 6px;
+}
+
+.category-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.category-action-btn:hover {
+    transform: scale(1.1);
+}
+
+.category-action-btn.edit:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.category-action-btn.delete:hover {
+    background: var(--error);
+    color: white;
+    border-color: var(--error);
 }
 
 /* ============================================ */
@@ -1137,6 +1221,11 @@ input:checked + .toggle-slider:before {
 
 .checkout-btn i {
     font-size: 18px;
+}
+
+.checkout-btn:disabled {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 /* ============================================ */
