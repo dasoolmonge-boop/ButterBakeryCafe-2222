@@ -1,10 +1,16 @@
 // admin.js - Логика админ-панели с категориями, пользователями и назначением курьеров
 
+console.log('✅ admin.js загружен');
+
 const tg = window.Telegram.WebApp;
+console.log('Telegram WebApp:', tg ? 'доступен' : 'недоступен');
+
 tg.ready();
 tg.expand();
 
 let currentUser = tg.initDataUnsafe.user || {};
+console.log('Текущий пользователь:', currentUser);
+
 let isAdmin = false;
 let ordersUpdateInterval = null;
 let lastActiveOrdersCount = 0;
@@ -36,12 +42,12 @@ async function checkAdmin() {
             loadActiveOrders();
             loadHistoryOrders();
             loadStats();
-            
+
             // Запускаем автоматическое обновление ВСЕХ данных каждые 3 секунды
             startAutoRefresh();
         }
     } catch (error) {
-        console.error('Ошибка проверки прав:', error);
+        console.error('❌ Ошибка проверки прав:', error);
     }
 }
 
@@ -50,29 +56,29 @@ function startAutoRefresh() {
     if (ordersUpdateInterval) {
         clearInterval(ordersUpdateInterval);
     }
-    
+
     ordersUpdateInterval = setInterval(() => {
         // Обновляем заказы независимо от открытой вкладки
         refreshAllOrders();
-        
+
         // Обновляем статистику, если открыта вкладка статистики
         const statsSection = document.getElementById('stats-section');
         if (statsSection && statsSection.classList.contains('active')) {
             loadStats();
         }
-        
+
         // Обновляем пользователей, если открыта вкладка пользователей
         const usersSection = document.getElementById('users-section');
         if (usersSection && usersSection.classList.contains('active')) {
             loadUsers();
         }
-        
+
         // Обновляем торты, если открыта вкладка тортов
         const cakesSection = document.getElementById('cakes-section');
         if (cakesSection && cakesSection.classList.contains('active')) {
             loadCakes();
         }
-        
+
         // Обновляем категории, если открыта вкладка категорий
         const categoriesSection = document.getElementById('categories-section');
         if (categoriesSection && categoriesSection.classList.contains('active')) {
@@ -87,53 +93,53 @@ async function refreshAllOrders() {
         // Загружаем все заказы одним запросом для проверки
         const allOrdersResponse = await fetch('/api/admin/orders');
         const allOrders = await allOrdersResponse.json();
-        
+
         // Фильтруем активные и историю
         const activeOrders = allOrders.filter(o => o.status === 'active' || o.status === 'assigned_to_courier');
         const historyOrders = allOrders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
-        
+
         // Загружаем курьеров на смене
         const couriersResponse = await fetch('/api/admin/couriers/on-shift');
         const couriersOnShift = await couriersResponse.json();
-        
+
         // Проверяем, появились ли новые активные заказы
         if (activeOrders.length > lastActiveOrdersCount) {
             showToast(`🆕 Новый заказ! Всего активных: ${activeOrders.length}`, 'success');
-            
+
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.notificationOccurred('success');
             }
-            
+
             // Анимируем счетчик на вкладке
             animateCounter('activeOrdersCountHeader');
         }
-        
+
         // Проверяем, изменилась ли история
         if (historyOrders.length !== lastHistoryOrdersCount) {
             animateCounter('historyOrdersCountHeader');
         }
-        
+
         lastActiveOrdersCount = activeOrders.length;
         lastHistoryOrdersCount = historyOrders.length;
-        
+
         // Обновляем счетчики в заголовках вкладок
         document.getElementById('activeOrdersCountHeader').textContent = activeOrders.length;
         document.getElementById('historyOrdersCountHeader').textContent = historyOrders.length;
-        
+
         // Обновляем отображение в зависимости от открытой вкладки
         const activeSection = document.getElementById('active-orders-section');
         const historySection = document.getElementById('history-orders-section');
-        
+
         if (activeSection && activeSection.classList.contains('active')) {
             renderOrders(activeOrders, 'activeOrdersList', couriersOnShift, true);
         }
-        
+
         if (historySection && historySection.classList.contains('active')) {
             renderOrders(historyOrders, 'historyOrdersList', [], false);
         }
-        
+
     } catch (error) {
-        console.error('Ошибка обновления заказов:', error);
+        console.error('❌ Ошибка обновления заказов:', error);
     }
 }
 
@@ -154,12 +160,12 @@ function switchTab(tab) {
     document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
 
     document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
-    
+
     let sectionId = tab;
     if (tab === 'active-orders') sectionId = 'active-orders-section';
     else if (tab === 'history-orders') sectionId = 'history-orders-section';
     else sectionId = tab + '-section';
-    
+
     document.getElementById(sectionId).classList.add('active');
 
     // Загружаем данные при переключении
@@ -211,7 +217,7 @@ async function uploadPhoto(file) {
             throw new Error('Ошибка загрузки');
         }
     } catch (error) {
-        console.error('Ошибка загрузки фото:', error);
+        console.error('❌ Ошибка загрузки фото:', error);
         showToast('Ошибка при загрузке фото', 'error');
         return null;
     }
@@ -241,7 +247,7 @@ async function loadCategoriesForSelect() {
 
         return categories;
     } catch (error) {
-        console.error('Ошибка загрузки категорий:', error);
+        console.error('❌ Ошибка загрузки категорий:', error);
         return [];
     }
 }
@@ -254,7 +260,7 @@ async function loadCategories() {
         renderAdminCategories(categories);
         await loadCategoriesForSelect();
     } catch (error) {
-        console.error('Ошибка загрузки категорий:', error);
+        console.error('❌ Ошибка загрузки категорий:', error);
         showToast('Ошибка загрузки категорий', 'error');
     }
 }
@@ -303,7 +309,7 @@ async function addCategory(event) {
         });
 
         if (response.ok) {
-            showToast('Категория добавлена!', 'success');
+            showToast('✅ Категория добавлена!', 'success');
             document.getElementById('addCategoryForm').reset();
             loadCategories();
 
@@ -312,7 +318,7 @@ async function addCategory(event) {
             }
         }
     } catch (error) {
-        console.error('Ошибка добавления категории:', error);
+        console.error('❌ Ошибка добавления категории:', error);
         showToast('Ошибка при добавлении категории', 'error');
     }
 }
@@ -332,7 +338,7 @@ async function editCategory(categoryId) {
             document.getElementById('editCategoryModal').classList.add('open');
         }
     } catch (error) {
-        console.error('Ошибка загрузки данных категории:', error);
+        console.error('❌ Ошибка загрузки данных категории:', error);
         showToast('Ошибка загрузки данных', 'error');
     }
 }
@@ -353,7 +359,7 @@ async function saveCategoryEdit(event) {
         });
 
         if (response.ok) {
-            showToast('Изменения сохранены!', 'success');
+            showToast('✅ Изменения сохранены!', 'success');
             closeEditCategoryModal();
             loadCategories();
 
@@ -362,7 +368,7 @@ async function saveCategoryEdit(event) {
             }
         }
     } catch (error) {
-        console.error('Ошибка сохранения категории:', error);
+        console.error('❌ Ошибка сохранения категории:', error);
         showToast('Ошибка при сохранении', 'error');
     }
 }
@@ -377,14 +383,14 @@ async function deleteCategory(categoryId) {
         });
 
         if (response.ok) {
-            showToast('Категория удалена', 'success');
+            showToast('✅ Категория удалена', 'success');
             loadCategories();
         } else {
             const data = await response.json();
             showToast(data.error || 'Ошибка при удалении', 'error');
         }
     } catch (error) {
-        console.error('Ошибка удаления категории:', error);
+        console.error('❌ Ошибка удаления категории:', error);
         showToast('Ошибка при удалении', 'error');
     }
 }
@@ -406,7 +412,7 @@ async function loadCakes() {
         const cakes = await response.json();
         renderAdminCakes(cakes);
     } catch (error) {
-        console.error('Ошибка загрузки тортов:', error);
+        console.error('❌ Ошибка загрузки тортов:', error);
         showToast('Ошибка загрузки тортов', 'error');
     }
 }
@@ -460,6 +466,7 @@ async function addCake(event) {
     }
 
     const submitBtn = event.target.querySelector('.submit-btn');
+    const originalText = submitBtn.innerHTML;
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка...';
 
@@ -488,7 +495,7 @@ async function addCake(event) {
         });
 
         if (response.ok) {
-            showToast('Торт успешно добавлен!', 'success');
+            showToast('✅ Торт успешно добавлен!', 'success');
             document.getElementById('addCakeForm').reset();
             document.getElementById('cakePhotoPreview').classList.remove('show');
             loadCakes();
@@ -498,11 +505,11 @@ async function addCake(event) {
             }
         }
     } catch (error) {
-        console.error('Ошибка добавления:', error);
+        console.error('❌ Ошибка добавления:', error);
         showToast('Ошибка при добавлении торта', 'error');
     } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-plus"></i> Добавить торт';
+        submitBtn.innerHTML = originalText;
     }
 }
 
@@ -540,7 +547,7 @@ async function editCake(cakeId) {
             document.getElementById('editCakeModal').classList.add('open');
         }
     } catch (error) {
-        console.error('Ошибка загрузки данных торта:', error);
+        console.error('❌ Ошибка загрузки данных торта:', error);
         showToast('Ошибка загрузки данных', 'error');
     }
 }
@@ -554,6 +561,7 @@ async function saveCakeEdit(event) {
     let photoUrl = document.getElementById('editCakePhoto').value;
 
     const submitBtn = event.target.querySelector('.submit-btn');
+    const originalText = submitBtn.innerHTML;
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Сохранение...';
 
@@ -583,7 +591,7 @@ async function saveCakeEdit(event) {
         });
 
         if (response.ok) {
-            showToast('Изменения сохранены!', 'success');
+            showToast('✅ Изменения сохранены!', 'success');
             closeEditModal();
             loadCakes();
 
@@ -592,11 +600,11 @@ async function saveCakeEdit(event) {
             }
         }
     } catch (error) {
-        console.error('Ошибка сохранения:', error);
+        console.error('❌ Ошибка сохранения:', error);
         showToast('Ошибка при сохранении', 'error');
     } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Сохранить изменения';
+        submitBtn.innerHTML = originalText;
     }
 }
 
@@ -616,11 +624,11 @@ async function toggleCakeAvailability(cakeId) {
         });
 
         if (updateResponse.ok) {
-            showToast(`Торт ${cake.available ? 'скрыт' : 'опубликован'}`, 'success');
+            showToast(`✅ Торт ${cake.available ? 'скрыт' : 'опубликован'}`, 'success');
             loadCakes();
         }
     } catch (error) {
-        console.error('Ошибка:', error);
+        console.error('❌ Ошибка:', error);
         showToast('Ошибка при изменении статуса', 'error');
     }
 }
@@ -635,7 +643,7 @@ async function deleteCake(cakeId) {
         });
 
         if (response.ok) {
-            showToast('Торт удален', 'success');
+            showToast('✅ Торт удален', 'success');
             loadCakes();
 
             if (tg.HapticFeedback) {
@@ -643,7 +651,7 @@ async function deleteCake(cakeId) {
             }
         }
     } catch (error) {
-        console.error('Ошибка удаления:', error);
+        console.error('❌ Ошибка удаления:', error);
         showToast('Ошибка при удалении', 'error');
     }
 }
@@ -666,7 +674,7 @@ async function loadUsers() {
         const users = await response.json();
         renderAdminUsers(users);
     } catch (error) {
-        console.error('Ошибка загрузки пользователей:', error);
+        console.error('❌ Ошибка загрузки пользователей:', error);
         showToast('Ошибка загрузки пользователей', 'error');
     }
 }
@@ -708,40 +716,124 @@ function renderAdminUsers(users) {
     `).join('');
 }
 
-// Добавление пользователя
+// ============================================
+// ИСПРАВЛЕННАЯ ФУНКЦИЯ ДОБАВЛЕНИЯ ПОЛЬЗОВАТЕЛЯ
+// ============================================
 async function addUser(event) {
     event.preventDefault();
+    
+    console.log('📝 Функция addUser вызвана');
+
+    // Получаем элементы формы с проверкой
+    const telegramIdInput = document.getElementById('userTelegramId');
+    const usernameInput = document.getElementById('userUsername');
+    const firstNameInput = document.getElementById('userFirstName');
+    const roleSelect = document.getElementById('userRole');
+    const phoneInput = document.getElementById('userPhone');
+
+    // Проверяем, что все необходимые элементы существуют
+    if (!telegramIdInput) {
+        console.error('❌ Поле Telegram ID не найдено');
+        showToast('Ошибка: поле Telegram ID не найдено', 'error');
+        return;
+    }
+    
+    if (!firstNameInput) {
+        console.error('❌ Поле Имя не найдено');
+        showToast('Ошибка: поле Имя не найдено', 'error');
+        return;
+    }
+    
+    if (!roleSelect) {
+        console.error('❌ Поле Роль не найдено');
+        showToast('Ошибка: поле Роль не найдено', 'error');
+        return;
+    }
+
+    // Получаем значения
+    const telegramId = parseInt(telegramIdInput.value);
+    const username = usernameInput ? usernameInput.value : '';
+    const firstName = firstNameInput.value.trim();
+    const role = roleSelect.value;
+    const phone = phoneInput ? phoneInput.value : '';
+
+    console.log('📋 Получены значения:', { telegramId, username, firstName, role, phone });
+
+    // Валидация
+    if (!telegramId || isNaN(telegramId)) {
+        showToast('Введите корректный Telegram ID', 'error');
+        telegramIdInput.focus();
+        return;
+    }
+
+    if (!firstName) {
+        showToast('Введите имя сотрудника', 'error');
+        firstNameInput.focus();
+        return;
+    }
+
+    if (!role) {
+        showToast('Выберите роль', 'error');
+        roleSelect.focus();
+        return;
+    }
+
+    // Дополнительная проверка роли
+    if (role !== 'admin' && role !== 'courier') {
+        showToast('Выберите корректную роль', 'error');
+        return;
+    }
 
     const userData = {
-        telegramId: parseInt(document.getElementById('userTelegramId').value),
-        username: document.getElementById('userUsername').value,
-        firstName: document.getElementById('userFirstName').value,
-        role: document.getElementById('userRole').value,
-        phone: document.getElementById('userPhone').value
+        telegramId: telegramId,
+        username: username,
+        firstName: firstName,
+        role: role,
+        phone: phone
     };
+
+    console.log('📤 Отправка данных:', userData);
+
+    // Показываем индикатор загрузки
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Добавление...';
 
     try {
         const response = await fetch('/api/admin/users', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
             body: JSON.stringify(userData)
         });
 
+        const data = await response.json();
+        console.log('📥 Ответ сервера:', data);
+
         if (response.ok) {
-            showToast('Сотрудник добавлен!', 'success');
+            showToast('✅ Сотрудник добавлен!', 'success');
+            
+            // Очищаем форму
             document.getElementById('addUserForm').reset();
-            loadUsers();
+            
+            // Перезагружаем список сотрудников
+            await loadUsers();
 
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.notificationOccurred('success');
             }
         } else {
-            const data = await response.json();
-            showToast(data.error || 'Ошибка добавления', 'error');
+            showToast(data.error || '❌ Ошибка добавления', 'error');
         }
     } catch (error) {
-        console.error('Ошибка добавления пользователя:', error);
-        showToast('Ошибка при добавлении', 'error');
+        console.error('❌ Ошибка добавления пользователя:', error);
+        showToast('Ошибка при добавлении: ' + error.message, 'error');
+    } finally {
+        // Восстанавливаем кнопку
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
     }
 }
 
@@ -763,7 +855,7 @@ async function editUser(userId) {
             document.getElementById('editUserModal').classList.add('open');
         }
     } catch (error) {
-        console.error('Ошибка загрузки данных пользователя:', error);
+        console.error('❌ Ошибка загрузки данных пользователя:', error);
         showToast('Ошибка загрузки данных', 'error');
     }
 }
@@ -788,7 +880,7 @@ async function saveUserEdit(event) {
         });
 
         if (response.ok) {
-            showToast('Изменения сохранены!', 'success');
+            showToast('✅ Изменения сохранены!', 'success');
             closeEditUserModal();
             loadUsers();
 
@@ -797,10 +889,10 @@ async function saveUserEdit(event) {
             }
         } else {
             const data = await response.json();
-            showToast(data.error || 'Ошибка сохранения', 'error');
+            showToast(data.error || '❌ Ошибка сохранения', 'error');
         }
     } catch (error) {
-        console.error('Ошибка сохранения пользователя:', error);
+        console.error('❌ Ошибка сохранения пользователя:', error);
         showToast('Ошибка при сохранении', 'error');
     }
 }
@@ -815,14 +907,14 @@ async function deleteUser(userId) {
         });
 
         if (response.ok) {
-            showToast('Сотрудник удален', 'success');
+            showToast('✅ Сотрудник удален', 'success');
             loadUsers();
         } else {
             const data = await response.json();
-            showToast(data.error || 'Ошибка удаления', 'error');
+            showToast(data.error || '❌ Ошибка удаления', 'error');
         }
     } catch (error) {
-        console.error('Ошибка удаления пользователя:', error);
+        console.error('❌ Ошибка удаления пользователя:', error);
         showToast('Ошибка при удалении', 'error');
     }
 }
@@ -836,11 +928,11 @@ async function toggleUserShift(userId) {
 
         if (response.ok) {
             const data = await response.json();
-            showToast(`Статус обновлен`, 'success');
+            showToast(`✅ Статус обновлен`, 'success');
             loadUsers();
         }
     } catch (error) {
-        console.error('Ошибка переключения статуса:', error);
+        console.error('❌ Ошибка переключения статуса:', error);
         showToast('Ошибка при изменении статуса', 'error');
     }
 }
@@ -871,7 +963,7 @@ async function loadActiveOrders() {
 
         renderOrders(activeOrders, 'activeOrdersList', couriersOnShift, true);
     } catch (error) {
-        console.error('Ошибка загрузки активных заказов:', error);
+        console.error('❌ Ошибка загрузки активных заказов:', error);
     }
 }
 
@@ -890,7 +982,7 @@ async function loadHistoryOrders() {
 
         renderOrders(historyOrders, 'historyOrdersList', [], false);
     } catch (error) {
-        console.error('Ошибка загрузки истории заказов:', error);
+        console.error('❌ Ошибка загрузки истории заказов:', error);
     }
 }
 
@@ -1004,7 +1096,7 @@ async function assignCourier(orderId) {
         });
 
         if (response.ok) {
-            showToast('Курьер назначен', 'success');
+            showToast('✅ Курьер назначен', 'success');
             await refreshAllOrders(); // Обновляем все заказы
 
             if (tg.HapticFeedback) {
@@ -1012,7 +1104,7 @@ async function assignCourier(orderId) {
             }
         }
     } catch (error) {
-        console.error('Ошибка назначения курьера:', error);
+        console.error('❌ Ошибка назначения курьера:', error);
         showToast('Ошибка при назначении курьера', 'error');
     }
 }
@@ -1027,7 +1119,7 @@ async function updateOrderStatus(orderId, status) {
         });
 
         if (response.ok) {
-            showToast(`Статус заказа обновлен`, 'success');
+            showToast(`✅ Статус заказа обновлен`, 'success');
             await refreshAllOrders(); // Обновляем все заказы
             loadStats();
 
@@ -1036,7 +1128,7 @@ async function updateOrderStatus(orderId, status) {
             }
         }
     } catch (error) {
-        console.error('Ошибка:', error);
+        console.error('❌ Ошибка:', error);
         showToast('Ошибка при обновлении статуса', 'error');
     }
 }
@@ -1084,7 +1176,7 @@ async function loadStats() {
         createOrdersChart(orders);
 
     } catch (error) {
-        console.error('Ошибка загрузки статистики:', error);
+        console.error('❌ Ошибка загрузки статистики:', error);
     }
 }
 
