@@ -3870,3 +3870,99 @@ body {
         display: none;
     }
 }
+/* ============================================ */
+/* ДОЖДЬ ИЗ КРУАССАНЧИКОВ */
+/* ============================================ */
+
+.croissants-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.croissants-bg span {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+    opacity: 0.2;
+    font-size: 20px;
+    animation: rain 8s linear infinite;
+    top: -10%;
+}
+
+/* Распределяем по ширине экрана с интервалом 4-5% */
+.croissants-bg span:nth-child(1) { left: 2%; animation-delay: 0s; animation-duration: 7s; }
+.croissants-bg span:nth-child(2) { left: 7%; animation-delay: 1s; animation-duration: 8s; }
+.croissants-bg span:nth-child(3) { left: 12%; animation-delay: 2.5s; animation-duration: 6s; }
+.croissants-bg span:nth-child(4) { left: 17%; animation-delay: 0.5s; animation-duration: 9s; }
+.croissants-bg span:nth-child(5) { left: 22%; animation-delay: 3s; animation-duration: 7.5s; }
+.croissants-bg span:nth-child(6) { left: 27%; animation-delay: 1.5s; animation-duration: 8.5s; }
+.croissants-bg span:nth-child(7) { left: 32%; animation-delay: 4s; animation-duration: 6.5s; }
+.croissants-bg span:nth-child(8) { left: 37%; animation-delay: 2s; animation-duration: 9.5s; }
+.croissants-bg span:nth-child(9) { left: 42%; animation-delay: 5s; animation-duration: 7s; }
+.croissants-bg span:nth-child(10) { left: 47%; animation-delay: 0.8s; animation-duration: 8.2s; }
+.croissants-bg span:nth-child(11) { left: 52%; animation-delay: 3.2s; animation-duration: 6.8s; }
+.croissants-bg span:nth-child(12) { left: 57%; animation-delay: 1.2s; animation-duration: 9.2s; }
+.croissants-bg span:nth-child(13) { left: 62%; animation-delay: 4.5s; animation-duration: 7.3s; }
+.croissants-bg span:nth-child(14) { left: 67%; animation-delay: 2.8s; animation-duration: 8.7s; }
+.croissants-bg span:nth-child(15) { left: 72%; animation-delay: 5.5s; animation-duration: 6.2s; }
+.croissants-bg span:nth-child(16) { left: 77%; animation-delay: 0.3s; animation-duration: 9.8s; }
+.croissants-bg span:nth-child(17) { left: 82%; animation-delay: 3.7s; animation-duration: 7.8s; }
+.croissants-bg span:nth-child(18) { left: 87%; animation-delay: 1.8s; animation-duration: 8.3s; }
+.croissants-bg span:nth-child(19) { left: 92%; animation-delay: 4.2s; animation-duration: 6.5s; }
+.croissants-bg span:nth-child(20) { left: 97%; animation-delay: 2.2s; animation-duration: 9s; }
+
+/* Анимация падения */
+@keyframes rain {
+    0% {
+        transform: translateY(-10vh) rotate(0deg);
+        opacity: 0.2;
+    }
+    80% {
+        opacity: 0.25;
+    }
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0.1;
+    }
+}
+
+/* Разные размеры для разнообразия */
+.croissants-bg span:nth-child(odd) {
+    font-size: 22px;
+}
+
+.croissants-bg span:nth-child(even) {
+    font-size: 18px;
+}
+
+.croissants-bg span:nth-child(3n) {
+    font-size: 26px;
+}
+
+.croissants-bg span:nth-child(5n) {
+    font-size: 16px;
+}
+
+/* Для мобильных устройств */
+@media screen and (max-width: 768px) {
+    .croissants-bg span {
+        font-size: 16px;
+    }
+    
+    .croissants-bg span:nth-child(n+15) {
+        display: none; /* Меньше круассанчиков на мобильных */
+    }
+}
+
+/* Для планшетов */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .croissants-bg span:nth-child(n+18) {
+        display: none;
+    }
+}
