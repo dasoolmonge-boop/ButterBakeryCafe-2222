@@ -3460,3 +3460,102 @@ body {
         grid-template-columns: repeat(6, 1fr) !important;
     }
 }
+/* ============================================ */
+/* ИСПРАВЛЕНИЕ ПОЛОЖЕНИЯ КНОПКИ ЗАКРЫТИЯ В КОРЗИНЕ */
+/* ============================================ */
+
+/* Фиксим отступ в шапке корзины */
+.cart-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 15px 20px !important;
+    min-height: 60px !important;
+    background: var(--bg) !important;
+    border-bottom: 1px solid var(--border) !important;
+    position: relative !important;
+}
+
+/* Кнопка закрытия */
+.close-cart {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    border: 1px solid var(--border) !important;
+    background: var(--surface) !important;
+    color: var(--text-primary) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    top: 0 !important;
+    right: 0 !important;
+}
+
+/* Заголовок корзины */
+.cart-header h2 {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+}
+
+/* Адаптация для мобильных устройств */
+@media screen and (max-width: 480px) {
+    .cart-header {
+        padding: 12px 16px !important;
+        min-height: 55px !important;
+    }
+    
+    .close-cart {
+        width: 36px !important;
+        height: 36px !important;
+    }
+    
+    .cart-header h2 {
+        font-size: 18px !important;
+    }
+}
+
+/* Для планшетов */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .cart-header {
+        padding: 18px 24px !important;
+        min-height: 65px !important;
+    }
+    
+    .close-cart {
+        width: 44px !important;
+        height: 44px !important;
+    }
+    
+    .cart-header h2 {
+        font-size: 22px !important;
+    }
+}
+
+/* Для ПК */
+@media screen and (min-width: 1025px) {
+    .cart-header {
+        padding: 20px 25px !important;
+        min-height: 70px !important;
+    }
+    
+    .close-cart {
+        width: 45px !important;
+        height: 45px !important;
+    }
+    
+    .close-cart:hover {
+        background: var(--accent) !important;
+        color: white !important;
+        border-color: var(--accent) !important;
+        transform: scale(1.05) !important;
+    }
+}
