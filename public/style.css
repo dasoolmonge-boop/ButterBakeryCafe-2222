@@ -2692,4 +2692,409 @@ select {
         font-size: 14px;
     }
 }
+/* ============================================ */
+/* УЛУЧШЕННАЯ АДАПТИВНОСТЬ ДЛЯ ВСЕХ УСТРОЙСТВ */
+/* ============================================ */
+
+/* Базовые улучшения для всех устройств */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Улучшения для планшетов (шире 768px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .app, .admin-container {
+        max-width: 90%;
+        padding: 24px 24px 100px;
+    }
+
+    /* Увеличиваем карточки товаров */
+    .cakes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .cake-card {
+        border-radius: 20px;
+    }
+
+    .cake-info {
+        padding: 20px;
+    }
+
+    .cake-name {
+        font-size: 18px;
+    }
+
+    .cake-price {
+        font-size: 20px;
+    }
+
+    .cake-description {
+        font-size: 14px;
+        -webkit-line-clamp: 3;
+    }
+
+    /* Увеличиваем кнопки */
+    .add-to-cart {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+    }
+
+    .cart-icon {
+        width: 64px;
+        height: 64px;
+        bottom: 24px;
+        right: 24px;
+    }
+
+    .cart-icon i {
+        font-size: 28px;
+    }
+
+    .cart-badge {
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+    }
+}
+
+/* Специально для iPad в портретной ориентации */
+@media (min-width: 768px) and (max-width: 834px) and (orientation: portrait) {
+    .app, .admin-container {
+        max-width: 95%;
+        padding: 20px 20px 100px;
+    }
+
+    .cakes-grid {
+        gap: 16px;
+    }
+}
+
+/* Специально для iPad в ландшафтной ориентации */
+@media (min-width: 1024px) and (max-width: 1194px) and (orientation: landscape) {
+    .app, .admin-container {
+        max-width: 85%;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Улучшения для админ-панели на планшетах */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .admin-container {
+        max-width: 90%;
+        padding: 24px 24px 100px;
+    }
+
+    /* Вкладки в админке */
+    .admin-tabs {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 12px !important;
+        margin-bottom: 32px !important;
+    }
+
+    .admin-tab {
+        padding: 16px 12px !important;
+        font-size: 15px !important;
+        border-radius: 14px !important;
+    }
+
+    .admin-tab i {
+        font-size: 18px !important;
+    }
+
+    .admin-tab .count {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+
+    /* Формы */
+    .form-container {
+        padding: 28px;
+        border-radius: 24px;
+    }
+
+    .form-group label {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 16px 20px;
+        font-size: 16px;
+        border-radius: 14px;
+        height: 56px;
+    }
+
+    .form-group textarea {
+        height: auto;
+        min-height: 100px;
+    }
+
+    .submit-btn {
+        padding: 16px 28px;
+        font-size: 17px;
+        border-radius: 14px;
+    }
+
+    /* Карточки пользователей */
+    .users-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .user-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .user-name {
+        font-size: 18px;
+    }
+
+    .user-detail {
+        font-size: 14px;
+    }
+
+    .user-detail i {
+        width: 18px;
+        font-size: 14px;
+    }
+
+    /* Карточки заказов */
+    .order-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .order-id {
+        font-size: 16px;
+    }
+
+    .order-info div {
+        font-size: 14px;
+    }
+
+    .order-cake-item {
+        font-size: 14px;
+    }
+
+    .order-total {
+        font-size: 16px;
+    }
+
+    /* Кнопки в заказах */
+    .order-actions select,
+    .order-actions .action-btn {
+        height: 52px;
+        font-size: 15px;
+        border-radius: 12px;
+    }
+
+    /* Модальные окна */
+    .modal-content {
+        width: 600px;
+        border-radius: 28px;
+    }
+
+    .modal-header {
+        padding: 20px 24px;
+    }
+
+    .modal-header h2 {
+        font-size: 22px;
+    }
+
+    .close-modal {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+    }
+
+    .modal-body {
+        padding: 24px;
+    }
+
+    /* Календарь и Time Picker */
+    .time-unit {
+        min-width: 70px;
+        height: 70px;
+        font-size: 20px;
+        border-radius: 18px;
+    }
+
+    .selected-time {
+        font-size: 38px;
+        padding: 24px;
+        border-radius: 24px;
+    }
+
+    .calendar-day {
+        max-width: 55px;
+        height: 55px;
+        font-size: 17px;
+    }
+}
+
+/* Улучшения для больших планшетов (iPad Pro) */
+@media (min-width: 1024px) and (max-width: 1366px) {
+    .app, .admin-container {
+        max-width: 80%;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    .users-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .modal-content {
+        width: 700px;
+    }
+}
+
+/* Улучшения для очень маленьких экранов (телефоны) */
+@media (max-width: 480px) {
+    .app, .admin-container {
+        padding: 12px 12px 90px;
+    }
+
+    .cakes-grid {
+        gap: 12px;
+    }
+
+    .cake-info {
+        padding: 12px;
+    }
+
+    .cake-name {
+        font-size: 15px;
+    }
+
+    .cake-price {
+        font-size: 15px;
+    }
+
+    .cake-description {
+        font-size: 12px;
+        -webkit-line-clamp: 2;
+    }
+
+    .add-to-cart {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .cart-icon {
+        width: 52px;
+        height: 52px;
+        bottom: 16px;
+        right: 16px;
+    }
+
+    /* Админ-панель на телефонах */
+    .admin-tabs {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    .admin-tab {
+        padding: 10px 6px !important;
+        font-size: 13px !important;
+    }
+
+    .users-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .order-actions {
+        flex-direction: column;
+    }
+
+    .order-actions select,
+    .order-actions .action-btn {
+        width: 100%;
+    }
+}
+
+/* Улучшения для темной темы (если пользователь включил) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Можно добавить поддержку темной темы позже */
+    }
+}
+
+/* Улучшения для устройств с большим экраном */
+@media (min-width: 1367px) {
+    .app, .admin-container {
+        max-width: 1200px;
+        padding: 32px 32px 100px;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 28px;
+    }
+
+    .cake-card:hover {
+        transform: translateY(-6px);
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 16px !important;
+    }
+}
+
+/* Улучшения для touch-устройств */
+@media (hover: none) and (pointer: coarse) {
+    /* Убираем hover-эффекты на touch-устройствах */
+    .cake-card:hover,
+    .admin-tab:hover,
+    .action-btn:hover,
+    .submit-btn:hover {
+        transform: none;
+    }
+
+    /* Увеличиваем область нажатия */
+    button, 
+    .clickable,
+    [onclick] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .add-to-cart {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .category {
+        padding: 10px 18px;
+    }
+
+    .admin-tab {
+        min-height: 48px;
+    }
+}
 
