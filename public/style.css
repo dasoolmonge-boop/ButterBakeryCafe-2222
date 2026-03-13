@@ -24,10 +24,6 @@
     --space-md: 16px;
     --space-lg: 24px;
     --space-xl: 32px;
-    
-    /* Telegram safe area */
-    --tg-safe-top: env(safe-area-inset-top, 0px);
-    --tg-safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 * {
@@ -45,7 +41,6 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    padding-top: var(--tg-safe-top);
 }
 
 /* Контейнеры */
@@ -55,18 +50,6 @@ body {
     min-height: 100vh;
     background-color: var(--bg);
     padding: var(--space-md) var(--space-md) 100px;
-}
-
-/* Для страниц без header */
-body:not(.has-header) .app,
-body:not(.has-header) .admin-container {
-    padding-top: calc(var(--space-md) + var(--tg-safe-top));
-}
-
-/* Если первый элемент не header, добавляем отступ */
-.app > *:first-child:not(.header),
-.admin-container > *:first-child:not(.header) {
-    margin-top: var(--tg-safe-top);
 }
 
 /* ============================================ */
@@ -98,30 +81,23 @@ body:not(.has-header) .admin-container {
 .header {
     background: var(--bg);
     padding: var(--space-md) 0;
-    margin-top: var(--tg-safe-top);
     position: sticky;
-    top: calc(var(--tg-safe-top) * 1);
+    top: 0;
     z-index: 10;
     margin-bottom: var(--space-lg);
     border-bottom: 1px solid var(--border);
-    background: linear-gradient(135deg, var(--bg) 0%, #fff9f5 100%);
-    overflow: hidden;
 }
 
 .header-content {
-    display: grid;
-    grid-template-columns: 40px 1fr 40px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    padding: 8px 0;
-    position: relative;
-    z-index: 5;
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    gap: var(--space-sm);
 }
 
 /* Стили для логотипа */
@@ -136,28 +112,14 @@ body:not(.has-header) .admin-container {
 }
 
 .header-title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--text-primary);
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0 4px;
-    position: relative;
-    z-index: 2;
-    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
-    letter-spacing: 0.5px;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     gap: var(--space-md);
 }
 
@@ -173,42 +135,7 @@ body:not(.has-header) .admin-container {
     transform: scale(1.1);
 }
 
-/* Кнопка админ */
-.admin-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.2s;
-    white-space: nowrap;
-    height: 36px;
-}
-
-.admin-btn:hover {
-    background: var(--surface-hover);
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: translateY(-1px);
-}
-
-.admin-btn i {
-    font-size: 14px;
-    color: var(--accent);
-}
-
-.admin-btn:hover i {
-    color: var(--accent-hover);
-}
-
-/* Кнопка назад */
+/* Кнопка назад больше не используется, но стили оставим на всякий случай */
 .back-btn {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -230,115 +157,30 @@ body:not(.has-header) .admin-container {
 }
 
 /* ============================================ */
-/* ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ШАПКИ */
-/* ============================================ */
-
-/* Декоративные линии */
-.header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg,
-        transparent 0%,
-        var(--accent) 20%,
-        var(--accent) 80%,
-        transparent 100%
-    );
-    opacity: 0.3;
-}
-
-/* Декоративные точки */
-.header::after {
-    content: '';
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    width: 60px;
-    height: 60px;
-    background-image:
-        radial-gradient(circle at 10px 10px, var(--accent) 2px, transparent 2px),
-        radial-gradient(circle at 30px 25px, #ffb6c1 2px, transparent 2px),
-        radial-gradient(circle at 45px 5px, #ffd700 2px, transparent 2px),
-        radial-gradient(circle at 15px 40px, #98fb98 2px, transparent 2px);
-    background-size: 60px 60px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Затемнение */
-.header .header-overlay {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.8) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* Орнамент */
-.header-ornament-left,
-.header-ornament-right {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 20px;
-    background-image: repeating-linear-gradient(
-        45deg,
-        var(--accent) 0px,
-        var(--accent) 2px,
-        transparent 2px,
-        transparent 6px
-    );
-    opacity: 0.1;
-    pointer-events: none;
-}
-
-.header-ornament-left {
-    left: 0;
-}
-
-.header-ornament-right {
-    right: 0;
-}
-
-/* ============================================ */
-/* КНОПКИ НАВИГАЦИИ */
+/* КНОПКИ НАВИГАЦИИ (PILL BUTTONS) */
 /* ============================================ */
 
 .admin-tabs {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important;
-    margin-bottom: var(--space-xl) !important;
-    padding: 0 !important;
-    overflow: visible !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-xl);
 }
 
 .admin-tab {
-    width: 100% !important;
-    padding: 12px 8px !important;
+    padding: 10px 20px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px !important;
+    border-radius: 100px;
     color: var(--text-secondary);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
+    gap: 8px;
     transition: all 0.2s;
     white-space: nowrap;
-    text-align: center;
-    box-sizing: border-box;
 }
 
 .admin-tab i {
@@ -349,29 +191,13 @@ body:not(.has-header) .admin-container {
     background: var(--surface-hover);
     color: var(--text-primary);
     border-color: var(--accent);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .admin-tab.active {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
-}
-
-.admin-tab .count {
-    background: var(--surface-hover);
-    padding: 2px 6px;
-    border-radius: 20px;
-    font-size: 11px;
-    margin-left: 4px;
-    color: var(--text-secondary);
-    min-width: 20px;
-    display: inline-block;
-}
-
-.admin-tab.active .count {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
 }
 
 /* Категории (для пользовательской части) */
@@ -382,7 +208,6 @@ body:not(.has-header) .admin-container {
     padding: var(--space-xs) 0 var(--space-md);
     scrollbar-width: none;
     margin-bottom: var(--space-sm);
-    -webkit-overflow-scrolling: touch;
 }
 
 .categories::-webkit-scrollbar {
@@ -480,7 +305,6 @@ body:not(.has-header) .admin-container {
     font-size: 15px;
     font-family: 'Inter', sans-serif;
     transition: all 0.2s;
-    caret-color: #000000 !important;
 }
 
 .form-group input:hover,
@@ -715,7 +539,7 @@ body:not(.has-header) .admin-container {
     color: var(--text-secondary);
 }
 
-/* Кнопка добавления в корзину */
+/* Кнопка добавления в корзину на карточке товара */
 .add-to-cart {
     width: 40px;
     height: 40px;
@@ -1086,33 +910,6 @@ input:checked + .toggle-slider:before {
     color: var(--text-primary);
 }
 
-.status-badge {
-    padding: 4px 12px;
-    border-radius: 100px;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.status-active {
-    background: var(--warning);
-    color: white;
-}
-
-.status-assigned {
-    background: var(--accent);
-    color: white;
-}
-
-.status-completed {
-    background: var(--success);
-    color: white;
-}
-
-.status-cancelled {
-    background: var(--error);
-    color: white;
-}
-
 .order-info div {
     display: flex;
     align-items: center;
@@ -1157,6 +954,33 @@ input:checked + .toggle-slider:before {
     margin-top: var(--space-xs);
 }
 
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-active {
+    background: var(--warning);
+    color: white;
+}
+
+.status-assigned {
+    background: var(--accent);
+    color: white;
+}
+
+.status-completed {
+    background: var(--success);
+    color: white;
+}
+
+.status-cancelled {
+    background: var(--error);
+    color: white;
+}
+
 .order-actions {
     display: flex;
     gap: var(--space-sm);
@@ -1172,8 +996,6 @@ input:checked + .toggle-slider:before {
     background: var(--surface);
     color: var(--text-primary);
     border: 1px solid var(--border);
-    height: 48px !important;
-    font-size: 15px !important;
 }
 
 /* ============================================ */
@@ -1222,7 +1044,7 @@ input:checked + .toggle-slider:before {
 
 .cart-icon {
     position: fixed;
-    bottom: calc(20px + var(--tg-safe-bottom));
+    bottom: 20px;
     right: 20px;
     width: 56px;
     height: 56px;
@@ -1279,8 +1101,6 @@ input:checked + .toggle-slider:before {
     display: flex;
     flex-direction: column;
     border-left: 1px solid var(--border);
-    padding-top: var(--tg-safe-top);
-    padding-bottom: var(--tg-safe-bottom);
 }
 
 .cart-panel.open {
@@ -1347,89 +1167,26 @@ input:checked + .toggle-slider:before {
 
 .cart-item-info {
     flex: 1;
-    padding: 4px 0;
 }
 
 .cart-item-name {
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--text-primary);
     margin-bottom: 4px;
 }
 
 .cart-item-price {
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 8px;
-}
-
-.cart-item-price::before {
-    content: "Цена: ";
-    color: var(--text-secondary);
-    font-weight: 400;
-}
-
-.cart-item-quantity {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 8px 0;
-}
-
-.quantity-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    font-size: 12px;
-}
-
-.quantity-btn:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-    transform: scale(1.05);
-}
-
-.quantity-btn:active {
-    transform: scale(0.95);
-}
-
-.quantity-value {
+    color: var(--accent);
+    font-size: 14px;
     font-weight: 600;
-    font-size: 16px;
-    min-width: 24px;
-    text-align: center;
-    color: var(--text-primary);
 }
 
 .cart-item-subtotal {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px dashed var(--border);
-}
-
-.subtotal-label {
     font-size: 13px;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-.subtotal-value {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--accent);
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-top: 2px;
 }
 
 .remove-item {
@@ -1531,8 +1288,6 @@ input:checked + .toggle-slider:before {
     align-items: center;
     justify-content: center;
     padding: var(--space-md);
-    padding-top: calc(var(--space-md) + var(--tg-safe-top));
-    padding-bottom: calc(var(--space-md) + var(--tg-safe-bottom));
 }
 
 .modal.open {
@@ -1688,7 +1443,7 @@ input:checked + .toggle-slider:before {
 
 .toast-container {
     position: fixed;
-    bottom: calc(20px + var(--tg-safe-bottom));
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 3000;
@@ -1916,7 +1671,6 @@ input:checked + .toggle-slider:before {
     animation: slideUp 0.3s ease;
     max-height: 80vh;
     overflow-y: auto;
-    margin-bottom: var(--tg-safe-bottom);
 }
 
 @keyframes slideUp {
@@ -2079,7 +1833,6 @@ input:checked + .toggle-slider:before {
     font-size: 15px;
     cursor: pointer;
     transition: all 0.2s;
-    caret-color: #000000 !important;
 }
 
 .input-with-icon input:hover {
@@ -2148,8 +1901,375 @@ input:checked + .toggle-slider:before {
     opacity: 1;
 }
 
+/* Адаптивность для мобильных устройств */
+@media (max-width: 480px) {
+    .app, .admin-container {
+        padding: var(--space-sm) var(--space-sm) 90px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+
+    .cakes-grid {
+        gap: var(--space-sm);
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-icon {
+        bottom: 16px;
+        right: 16px;
+        width: 52px;
+        height: 52px;
+    }
+
+    .admin-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: var(--space-xs);
+    }
+
+    .cart-item {
+        padding: var(--space-xs);
+    }
+
+    .cart-item-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    /* Адаптивность для Time Picker */
+    .time-unit {
+        min-width: 50px;
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .selected-time {
+        font-size: 28px;
+    }
+}
 /* ============================================ */
-/* ПРОСТЫЕ ЛЕТАЮЩИЕ СЕРДЕЧКИ */
+/* УЛУЧШЕННЫЕ КНОПКИ И СЕЛЕКТЫ (ТОЛЬКО НУЖНЫЕ ЭЛЕМЕНТЫ) */
+/* ============================================ */
+
+/* Увеличиваем селекты выбора категории */
+#cakeCategory,
+#editCakeCategory {
+    height: 52px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+}
+
+/* Увеличиваем селекты выбора роли */
+#userRole,
+#editUserRole {
+    height: 52px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+}
+
+/* Увеличиваем селект выбора курьера в заказах */
+.order-actions select {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 10px 16px !important;
+    min-width: 180px !important;
+}
+
+/* Увеличиваем кнопку "Назначить курьера" */
+.order-actions .action-btn[style*="background: var(--accent)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Увеличиваем кнопку "Отменить" рядом с назначением курьера */
+.order-actions .action-btn[style*="color: var(--error)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Увеличиваем кнопки "Доставлен" и "Отменить" в статусе assigned */
+.order-actions .action-btn[style*="background: var(--success)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Увеличиваем сообщение "Нет курьеров на смене" для единообразия */
+.order-actions div[style*="color: var(--text-secondary)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 16px !important;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    #cakeCategory,
+    #editCakeCategory,
+    #userRole,
+    #editUserRole,
+    .order-actions select,
+    .order-actions .action-btn,
+    .order-actions div[style*="color: var(--text-secondary)"] {
+        height: 56px !important;
+        font-size: 16px !important;
+    }
+
+    .order-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .order-actions select,
+    .order-actions .action-btn,
+    .order-actions div[style*="color: var(--text-secondary)"] {
+        width: 100% !important;
+    }
+}
+/* ============================================ */
+/* УЛУЧШЕННЫЕ ВКЛАДКИ АДМИН-ПАНЕЛИ (2 СТОЛБИКА) */
+/* ============================================ */
+
+/* Контейнер вкладок - теперь сетка 2x3 */
+.admin-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* Два столбика равной ширины */
+    gap: 10px !important;
+    margin-bottom: var(--space-xl) !important;
+    padding: 0 !important;
+    overflow: visible !important; /* Убираем скролл */
+    flex-wrap: nowrap !important; /* Отключаем перенос */
+}
+
+/* Стили для каждой вкладки */
+.admin-tab {
+    width: 100% !important; /* На всю ширину ячейки */
+    padding: 12px 8px !important; /* Немного увеличил отступы */
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px !important; /* Чуть меньше скругление для компактности */
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Уменьшаем отступы на очень маленьких экранах */
+@media (max-width: 360px) {
+    .admin-tab {
+        padding: 10px 4px !important;
+        font-size: 13px !important;
+    }
+
+    .admin-tab i {
+        font-size: 14px !important;
+    }
+}
+
+/* Стили для счетчиков на вкладках */
+.admin-tab .count {
+    background: var(--surface-hover);
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-size: 11px;
+    margin-left: 4px;
+    color: var(--text-secondary);
+    min-width: 20px;
+    display: inline-block;
+}
+
+/* Активная вкладка */
+.admin-tab.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.admin-tab.active .count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* Эффект при наведении */
+.admin-tab:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* Иконки во вкладках */
+.admin-tab i {
+    font-size: 16px;
+}
+
+/* Адаптивность для совсем маленьких экранов */
+@media (max-width: 320px) {
+    .admin-tabs {
+        gap: 6px !important;
+    }
+
+    .admin-tab {
+        padding: 8px 2px !important;
+        font-size: 12px !important;
+    }
+}
+/* ============================================ */
+/* СТИЛИ ДЛЯ КУРСОРА - ЧЕРНЫЙ ЦВЕТ */
+/* ============================================ */
+
+/* Для всех полей ввода */
+input,
+textarea,
+select {
+    caret-color: #000000 !important; /* Черный курсор */
+}
+
+/* Для полей с иконками */
+.input-with-icon input {
+    caret-color: #000000 !important;
+}
+
+/* Для полей в админ-панели */
+.admin-container input,
+.admin-container textarea,
+.admin-container select {
+    caret-color: #000000 !important;
+}
+
+/* Для полей в формах */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    caret-color: #000000 !important;
+}
+
+/* Для поиска и других полей */
+.header-right .header-icon {
+    /* это не поле ввода, тут курсор не меняем */
+}
+
+/* Для модальных окон */
+.modal input,
+.modal textarea,
+.modal select {
+    caret-color: #000000 !important;
+}
+/* ============================================ */
+/* УЛУЧШЕННАЯ ШАПКА С ЦЕНТРИРОВАННЫМ ЗАГОЛОВКОМ */
+/* ============================================ */
+
+.header-content {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px; /* Три колонки: логотип, заголовок, кнопка */
+    align-items: center;
+    gap: 8px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Стили для кнопки админ */
+.admin-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    height: 36px;
+}
+
+.admin-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.admin-btn i {
+    font-size: 14px;
+    color: var(--accent);
+}
+
+.admin-btn:hover i {
+    color: var(--accent-hover);
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 380px) {
+    .header-content {
+        grid-template-columns: 36px 1fr 36px;
+        gap: 4px;
+    }
+
+    .header-title {
+        font-size: 16px;
+    }
+
+    .admin-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+        height: 32px;
+    }
+
+    .admin-btn i {
+        font-size: 12px;
+    }
+}
+/* ============================================ */
+/* ПРОСТЫЕ ЛЕТАЮЩИЕ СЕРДЕЧКИ (ТОЛЬКО CSS) */
 /* ============================================ */
 
 .hearts-simple {
@@ -2202,137 +2322,363 @@ input:checked + .toggle-slider:before {
         opacity: 0;
     }
 }
-
 /* ============================================ */
-/* УЛУЧШЕННЫЕ КНОПКИ И СЕЛЕКТЫ */
+/* ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ДЛЯ ШАПКИ */
 /* ============================================ */
 
-#cakeCategory,
-#editCakeCategory,
-#userRole,
-#editUserRole {
-    height: 52px !important;
-    font-size: 16px !important;
-    padding: 12px 16px !important;
+.header {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--bg) 0%, #fff9f5 100%);
+    border-bottom: 2px solid rgba(190, 114, 62, 0.2);
 }
 
-.order-actions .action-btn[style*="background: var(--accent)"],
-.order-actions .action-btn[style*="color: var(--error)"],
-.order-actions .action-btn[style*="background: var(--success)"] {
-    height: 48px !important;
-    font-size: 15px !important;
-    padding: 0 24px !important;
-    font-weight: 600 !important;
+/* Декоративные линии */
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--accent) 20%,
+        var(--accent) 80%,
+        transparent 100%
+    );
+    opacity: 0.3;
 }
 
-.order-actions div[style*="color: var(--text-secondary)"] {
-    height: 48px !important;
-    font-size: 15px !important;
-    display: flex !important;
-    align-items: center !important;
-    padding: 0 16px !important;
+/* Декоративные точки (конфетти) */
+.header::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    background-image:
+        radial-gradient(circle at 10px 10px, var(--accent) 2px, transparent 2px),
+        radial-gradient(circle at 30px 25px, #ffb6c1 2px, transparent 2px),
+        radial-gradient(circle at 45px 5px, #ffd700 2px, transparent 2px),
+        radial-gradient(circle at 15px 40px, #98fb98 2px, transparent 2px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
 }
 
-/* ============================================ */
-/* СТИЛИ ДЛЯ КУРСОРА */
-/* ============================================ */
-
-input,
-textarea,
-select,
-.admin-container input,
-.admin-container textarea,
-.admin-container select,
-.modal input,
-.modal textarea,
-.modal select {
-    caret-color: #000000 !important;
+/* Вторая группа точек слева */
+.header .header-decoration {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+    background-image:
+        radial-gradient(circle at 5px 5px, #ffb6c1 2px, transparent 2px),
+        radial-gradient(circle at 25px 15px, var(--accent) 2px, transparent 2px),
+        radial-gradient(circle at 40px 30px, #ffd700 2px, transparent 2px);
+    background-size: 50px 50px;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 0;
 }
 
+/* Вензель / завиток */
+.header .header-scroll {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--accent);
+    border-radius: 50% 50% 0 50%;
+    opacity: 0.15;
+    transform: rotate(45deg);
+}
+
+.header .header-scroll-right {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--accent);
+    border-radius: 50% 50% 50% 0;
+    opacity: 0.15;
+    transform: rotate(45deg);
+}
+
+/* Блестящие звездочки */
+.header .sparkle {
+    position: absolute;
+    color: var(--accent);
+    font-size: 10px;
+    opacity: 0.2;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle-1 { top: 5px; right: 30px; }
+.sparkle-2 { bottom: 5px; left: 50px; animation-delay: 0.5s; }
+.sparkle-3 { top: 15px; left: 80px; animation-delay: 1s; }
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+/* Ленточка под заголовком */
+.header-title-wrapper {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+}
+
+.header-title {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.header-title-wrapper::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--accent) 20%,
+        var(--accent) 80%,
+        transparent 100%
+    );
+    border-radius: 2px;
+}
+
+/* Орнамент по краям */
+.header-ornament-left,
+.header-ornament-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background-image: repeating-linear-gradient(
+        45deg,
+        var(--accent) 0px,
+        var(--accent) 2px,
+        transparent 2px,
+        transparent 6px
+    );
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.header-ornament-left {
+    left: 0;
+}
+
+.header-ornament-right {
+    right: 0;
+}
+
+/* Конфетти (падающие элементы) */
+.header-confetti {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.header-confetti i {
+    position: absolute;
+    color: var(--accent);
+    font-size: 8px;
+    opacity: 0.1;
+    animation: fall 3s linear infinite;
+}
+
+.header-confetti i:nth-child(1) { left: 10%; animation-delay: 0s; }
+.header-confetti i:nth-child(2) { left: 30%; animation-delay: 0.5s; }
+.header-confetti i:nth-child(3) { left: 50%; animation-delay: 1s; }
+.header-confetti i:nth-child(4) { left: 70%; animation-delay: 1.5s; }
+.header-confetti i:nth-child(5) { left: 90%; animation-delay: 2s; }
+
+@keyframes fall {
+    0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.2;
+    }
+    90% {
+        opacity: 0.2;
+    }
+    100% {
+        transform: translateY(100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Обновленные стили для контента шапки */
+.header-content {
+    position: relative;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+}
+
+/* Затемнение для лучшей читаемости */
+.header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.8) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+}
 /* ============================================ */
-/* АДАПТИВНОСТЬ */
+/* СТИЛИ ДЛЯ КНОПОК + И - В КОРЗИНЕ */
 /* ============================================ */
 
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 12px;
+}
+
+.quantity-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
+.quantity-value {
+    font-weight: 600;
+    font-size: 16px;
+    min-width: 24px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.cart-item-subtotal {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 4px;
+}
+
+.cart-item-info {
+    flex: 1;
+    padding: 4px 0;
+}
+
+/* Адаптивность для мобильных */
 @media (max-width: 480px) {
-    .app, .admin-container {
-        padding: var(--space-sm) var(--space-sm) 90px;
-    }
-    
-    body:not(.has-header) .app,
-    body:not(.has-header) .admin-container {
-        padding-top: calc(var(--space-sm) + var(--tg-safe-top));
-    }
-    
-    .header {
-        margin-top: var(--tg-safe-top);
-        top: calc(var(--tg-safe-top) * 1);
-    }
-    
-    .form-grid {
-        grid-template-columns: 1fr;
+    .quantity-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
     }
 
-    .form-group.full-width {
-        grid-column: span 1;
+    .quantity-value {
+        font-size: 18px;
+        min-width: 30px;
     }
+}
+/* ============================================ */
+/* СТИЛИ ДЛЯ НАДПИСИ ИТОГО В КАРТОЧКЕ ТОВАРА */
+/* ============================================ */
 
-    .cakes-grid {
-        gap: var(--space-sm);
-    }
+.cart-item-subtotal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+}
 
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
+.subtotal-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
 
-    .cart-icon {
-        bottom: calc(16px + var(--tg-safe-bottom));
-        right: 16px;
-        width: 52px;
-        height: 52px;
-    }
-    
-    .cart-icon i {
-        font-size: 22px;
-    }
+.subtotal-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+}
 
-    .admin-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: var(--space-xs);
-    }
+/* Обновленные стили для существующих элементов */
+.cart-item-info {
+    flex: 1;
+    padding: 4px 0;
+}
 
-    .cart-item {
-        padding: var(--space-xs);
-    }
+.cart-item-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
 
-    .cart-item-image {
-        width: 50px;
-        height: 50px;
-    }
+.cart-item-price {
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
 
-    .time-unit {
-        min-width: 50px;
-        height: 50px;
-        font-size: 16px;
-    }
+.cart-item-price::before {
+    content: "Цена: ";
+    color: var(--text-secondary);
+    font-weight: 400;
+}
 
-    .selected-time {
-        font-size: 28px;
-    }
-
-    .order-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .order-actions select,
-    .order-actions .action-btn,
-    .order-actions div[style*="color: var(--text-secondary)"] {
-        width: 100% !important;
-        height: 56px !important;
-        font-size: 16px !important;
-    }
-
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
     .cart-item-subtotal {
         margin-top: 6px;
         padding-top: 6px;
@@ -2345,76 +2691,55 @@ select,
     .subtotal-value {
         font-size: 14px;
     }
-    
-    .quantity-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 14px;
-    }
-
-    .quantity-value {
-        font-size: 18px;
-        min-width: 30px;
-    }
 }
-
-@media (max-width: 380px) {
-    .header-content {
-        grid-template-columns: 36px 1fr 36px;
-        gap: 4px;
-    }
-
-    .header-title {
-        font-size: 16px;
-    }
-
-    .admin-btn {
-        padding: 4px 8px;
-        font-size: 12px;
-        height: 32px;
-    }
-
-    .admin-btn i {
-        font-size: 12px;
-    }
-}
-
-@media (max-width: 360px) {
-    .admin-tab {
-        padding: 10px 4px !important;
-        font-size: 13px !important;
-    }
-
-    .admin-tab i {
-        font-size: 14px !important;
-    }
-}
-
-@media (max-width: 320px) {
-    .admin-tabs {
-        gap: 6px !important;
-    }
-
-    .admin-tab {
-        padding: 8px 2px !important;
-        font-size: 12px !important;
-    }
-}
-
 /* ============================================ */
-/* ПОДДЕРЖКА SAFE AREAS */
+/* ОТСТУП ДЛЯ TELEGRAM MINI APP */
 /* ============================================ */
 
-@supports (padding-top: constant(safe-area-inset-top)) {
-    :root {
-        --tg-safe-top: constant(safe-area-inset-top);
-        --tg-safe-bottom: constant(safe-area-inset-bottom);
-    }
+/* Добавляем отступ для основного контента, чтобы он не перекрывался с системными кнопками Telegram */
+body {
+    padding-top: env(safe-area-inset-top, 0);
 }
 
-@supports (padding-top: env(safe-area-inset-top)) {
-    :root {
-        --tg-safe-top: env(safe-area-inset-top);
-        --tg-safe-bottom: env(safe-area-inset-bottom);
-    }
+.app, .admin-container {
+    padding-top: calc(var(--space-md) + env(safe-area-inset-top, 20px));
+}
+
+/* Для sticky header добавляем дополнительный отступ */
+.header {
+    top: env(safe-area-inset-top, 0);
+    margin-top: 0;
+    padding-top: calc(var(--space-md) + env(safe-area-inset-top, 10px));
+}
+
+/* Корректируем позиционирование декоративных элементов в шапке */
+.header .sparkle-1,
+.header .sparkle-2,
+.header .sparkle-3 {
+    top: calc(env(safe-area-inset-top, 0) + 15px);
+}
+
+.header-ornament-left,
+.header-ornament-right {
+    top: env(safe-area-inset-top, 0);
+    height: calc(100% - env(safe-area-inset-top, 0));
+}
+
+/* Для модальных окон учитываем безопасную зону */
+.modal {
+    padding-top: env(safe-area-inset-top, var(--space-md));
+}
+
+/* Для bottom sheet модальных окон */
+.modal-content.bottom-sheet {
+    margin-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Для фиксированных элементов (корзина) */
+.cart-icon {
+    bottom: calc(20px + env(safe-area-inset-bottom, 0));
+}
+
+.toast-container {
+    bottom: calc(20px + env(safe-area-inset-bottom, 0));
 }
