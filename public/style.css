@@ -3559,3 +3559,79 @@ body {
         transform: scale(1.05) !important;
     }
 }
+/* ============================================ */
+/* ПРИНУДИТЕЛЬНОЕ ИСПРАВЛЕНИЕ КНОПКИ ЗАКРЫТИЯ В КОРЗИНЕ */
+/* ============================================ */
+
+.cart-panel .cart-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 20px 20px 15px 20px !important;
+    min-height: auto !important;
+    height: auto !important;
+}
+
+.cart-panel .cart-header h2 {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+    display: block !important;
+}
+
+.cart-panel .close-cart {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transform: none !important;
+}
+
+/* Для мобильных */
+@media screen and (max-width: 480px) {
+    .cart-panel .cart-header {
+        padding: 15px 15px 10px 15px !important;
+    }
+    
+    .cart-panel .close-cart {
+        width: 32px !important;
+        height: 32px !important;
+    }
+}
+
+/* Для планшетов */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .cart-panel .cart-header {
+        padding: 25px 25px 20px 25px !important;
+    }
+    
+    .cart-panel .close-cart {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
+
+/* Для ПК */
+@media screen and (min-width: 1025px) {
+    .cart-panel .cart-header {
+        padding: 25px 30px 20px 30px !important;
+    }
+    
+    .cart-panel .close-cart {
+        width: 42px !important;
+        height: 42px !important;
+    }
+}
+
+/* Убираем все возможные трансформации и позиционирования */
+.cart-panel .close-cart i {
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
