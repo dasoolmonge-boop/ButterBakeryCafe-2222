@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ButterBakeryCafe</title>
 
+    <!-- Мета-теги для улучшенной адаптации на мобильных устройствах -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#BE723E">
+    <meta name="description" content="Вкуснейшие торты и круассаны с доставкой">
+
+    <!-- Иконки для разных устройств -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -24,11 +36,11 @@
             <!-- Декоративные элементы -->
             <div class="header-ornament-left"></div>
             <div class="header-ornament-right"></div>
-            
+
             <div class="header-decoration"></div>
             <div class="header-scroll"></div>
             <div class="header-scroll-right"></div>
-            
+
             <div class="header-confetti">
                 <i class="fas fa-heart"></i>
                 <i class="fas fa-star"></i>
@@ -36,7 +48,7 @@
                 <i class="fas fa-candy-cane"></i>
                 <i class="fas fa-crown"></i>
             </div>
-            
+
             <div class="sparkle sparkle-1">✨</div>
             <div class="sparkle sparkle-2">✨</div>
             <div class="sparkle sparkle-3">✨</div>
@@ -45,13 +57,19 @@
                 <div class="header-left">
                     <!-- Встроенный SVG логотип (круассан) -->
                     <svg class="header-logo" width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M30 35 C25 45, 25 60, 35 70 C45 78, 60 75, 68 65 C75 55, 72 40, 62 32 C52 25, 38 28, 30 35" 
-                        fill="#BE723E" stroke="#A45F32" stroke-width="3"/>
-                        <path d="M42 42 L35 52 L45 58 L58 48 L50 40 L42 42" 
-                        fill="#F8F5F0" stroke="#A45F32" stroke-width="2"/>
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#BE723E" />
+                                <stop offset="100%" stop-color="#D4A373" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M30 35 C25 45, 25 60, 35 70 C45 78, 60 75, 68 65 C75 55, 72 40, 62 32 C52 25, 38 28, 30 35"
+                              fill="url(#logoGradient)" stroke="#A45F32" stroke-width="3"/>
+                        <path d="M42 42 L35 52 L45 58 L58 48 L50 40 L42 42"
+                              fill="#F8F5F0" stroke="#A45F32" stroke-width="2"/>
                         <path d="M48 45 Q52 48, 55 45" stroke="#A45F32" stroke-width="2" fill="none"/>
-                  <circle cx="45" cy="50" r="2" fill="#A45F32"/>
-                  <circle cx="52" cy="48" r="2" fill="#A45F32"/>
+                        <circle cx="45" cy="50" r="2" fill="#A45F32"/>
+                        <circle cx="52" cy="48" r="2" fill="#A45F32"/>
                     </svg>
                 </div>
                 <div class="header-title-wrapper">
@@ -73,7 +91,7 @@
             <!-- Категории будут загружаться через JavaScript -->
         </div>
 
-        <!-- Сетка товаров - 2 карточки в ряд -->
+        <!-- Сетка товаров - 2 карточки в ряд (адаптивно) -->
         <div class="cakes-grid" id="cakesGrid">
             <div class="loading">Загрузка товаров...</div>
         </div>
@@ -255,5 +273,3 @@
     <script src="datepicker.js"></script>
 </body>
 </html>
-
-
