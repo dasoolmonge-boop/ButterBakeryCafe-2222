@@ -41,15 +41,20 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
 }
 
-/* Контейнеры */
-.app, .admin-container {
+/* Контейнеры - УБРАНЫ ОТСТУПЫ */
+.app, 
+.admin-container {
     max-width: 480px;
     margin: 0 auto;
     min-height: 100vh;
     background-color: var(--bg);
-    padding: var(--space-md) var(--space-md) 100px;
+    padding: 0 !important; /* Убраны все отступы */
+    position: relative;
+    z-index: 1;
 }
 
 /* ============================================ */
@@ -58,6 +63,7 @@ body {
 
 .page-header {
     margin-bottom: var(--space-xl);
+    padding-top: var(--space-md);
 }
 
 .page-header h1 {
@@ -83,44 +89,54 @@ body {
     padding: var(--space-md) 0;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 100;
     margin-bottom: var(--space-lg);
     border-bottom: 1px solid var(--border);
 }
 
 .header-content {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
     align-items: center;
+    gap: 8px;
+    padding: 8px 0;
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    justify-content: flex-start;
 }
 
-/* Стили для логотипа */
 .header-logo {
     height: 40px;
     width: auto;
     object-fit: contain;
 }
 
-.header-logo.rounded {
-    border-radius: 50%;
-}
-
 .header-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--text-primary);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
+    justify-content: flex-end;
 }
 
 .header-icon {
@@ -135,7 +151,38 @@ body {
     transform: scale(1.1);
 }
 
-/* Кнопка назад больше не используется, но стили оставим на всякий случай */
+/* Кнопка админ */
+.admin-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    height: 36px;
+}
+
+.admin-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.admin-btn i {
+    font-size: 14px;
+    color: var(--accent);
+}
+
+/* Кнопка назад */
 .back-btn {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -157,47 +204,67 @@ body {
 }
 
 /* ============================================ */
-/* КНОПКИ НАВИГАЦИИ (PILL BUTTONS) */
+/* КНОПКИ НАВИГАЦИИ */
 /* ============================================ */
 
 .admin-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs);
-    margin-bottom: var(--space-xl);
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    margin-bottom: var(--space-xl) !important;
+    padding: 0 !important;
 }
 
 .admin-tab {
-    padding: 10px 20px;
+    width: 100% !important;
+    padding: 12px 8px !important;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 100px;
+    border-radius: 12px !important;
     color: var(--text-secondary);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 6px;
     transition: all 0.2s;
     white-space: nowrap;
+    text-align: center;
 }
 
 .admin-tab i {
     font-size: 16px;
 }
 
+.admin-tab .count {
+    background: var(--surface-hover);
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-size: 11px;
+    margin-left: 4px;
+    color: var(--text-secondary);
+    min-width: 20px;
+    display: inline-block;
+}
+
 .admin-tab:hover {
     background: var(--surface-hover);
     color: var(--text-primary);
     border-color: var(--accent);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
 .admin-tab.active {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
+}
+
+.admin-tab.active .count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
 }
 
 /* Категории (для пользовательской части) */
@@ -305,6 +372,7 @@ body {
     font-size: 15px;
     font-family: 'Inter', sans-serif;
     transition: all 0.2s;
+    caret-color: #000000 !important;
 }
 
 .form-group input:hover,
@@ -319,12 +387,6 @@ body {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(190, 114, 62, 0.1);
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: var(--text-secondary);
-    opacity: 0.5;
 }
 
 /* ============================================ */
@@ -428,7 +490,6 @@ body {
     pointer-events: none;
 }
 
-/* Кнопки действий на карточках */
 .action-btn {
     width: 100%;
     padding: 10px;
@@ -539,7 +600,13 @@ body {
     color: var(--text-secondary);
 }
 
-/* Кнопка добавления в корзину на карточке товара */
+.cake-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--space-xs);
+}
+
 .add-to-cart {
     width: 40px;
     height: 40px;
@@ -562,21 +629,10 @@ body {
     transform: scale(1.1);
 }
 
-.add-to-cart:active {
-    transform: scale(0.95);
-}
-
 .add-to-cart.added {
     background: var(--success);
     color: white;
     border-color: var(--success);
-}
-
-.cake-price-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: var(--space-xs);
 }
 
 /* Действия на карточке (админка) */
@@ -688,10 +744,6 @@ body {
     justify-content: center;
     transition: all 0.2s;
     font-size: 14px;
-}
-
-.category-action-btn:hover {
-    transform: scale(1.1);
 }
 
 .category-action-btn.edit:hover {
@@ -829,55 +881,6 @@ input:checked + .toggle-slider:before {
 /* ЗАКАЗЫ */
 /* ============================================ */
 
-.orders-tabs {
-    display: flex;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-lg);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: var(--space-sm);
-}
-
-.order-tab {
-    padding: 8px 16px;
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.2s;
-}
-
-.order-tab:hover {
-    color: var(--text-primary);
-}
-
-.order-tab.active {
-    color: var(--text-primary);
-    font-weight: 600;
-}
-
-.order-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: -9px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--accent);
-    border-radius: 2px;
-}
-
-.order-tab .count {
-    background: var(--surface);
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-size: 11px;
-    margin-left: 6px;
-    color: var(--text-secondary);
-}
-
 .orders-grid {
     display: grid;
     gap: var(--space-md);
@@ -996,6 +999,8 @@ input:checked + .toggle-slider:before {
     background: var(--surface);
     color: var(--text-primary);
     border: 1px solid var(--border);
+    height: 48px !important;
+    font-size: 15px !important;
 }
 
 /* ============================================ */
@@ -1111,33 +1116,46 @@ input:checked + .toggle-slider:before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-md);
-    border-bottom: 1px solid var(--border);
+    padding: 15px 20px !important;
+    min-height: 60px !important;
+    background: var(--bg) !important;
+    border-bottom: 1px solid var(--border) !important;
+    position: relative !important;
 }
 
 .close-cart {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    border: 1px solid var(--border) !important;
+    background: var(--surface) !important;
+    color: var(--text-primary) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    top: 0 !important;
+    right: 0 !important;
 }
 
 .close-cart:hover {
-    background: var(--surface-hover);
-    color: var(--accent);
-    border-color: var(--accent);
-    transform: scale(1.05);
+    background: var(--surface-hover) !important;
+    color: var(--accent) !important;
+    border-color: var(--accent) !important;
+    transform: scale(1.05) !important;
 }
 
-.close-cart i {
-    font-size: 18px;
+.cart-header h2 {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
 }
 
 .cart-items {
@@ -1167,26 +1185,79 @@ input:checked + .toggle-slider:before {
 
 .cart-item-info {
     flex: 1;
+    padding: 4px 0;
 }
 
 .cart-item-name {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--text-primary);
     margin-bottom: 4px;
 }
 
 .cart-item-price {
-    color: var(--accent);
-    font-size: 14px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 12px;
+}
+
+.quantity-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.quantity-value {
     font-weight: 600;
+    font-size: 16px;
+    min-width: 24px;
+    text-align: center;
+    color: var(--text-primary);
 }
 
 .cart-item-subtotal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+}
+
+.subtotal-label {
     font-size: 13px;
-    color: var(--text-primary);
-    font-weight: 600;
-    margin-top: 2px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.subtotal-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
 }
 
 .remove-item {
@@ -1208,10 +1279,6 @@ input:checked + .toggle-slider:before {
     color: white;
     border-color: var(--error);
     transform: scale(1.05);
-}
-
-.remove-item i {
-    font-size: 14px;
 }
 
 .cart-footer {
@@ -1256,19 +1323,6 @@ input:checked + .toggle-slider:before {
     background: var(--accent-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(190, 114, 62, 0.2);
-}
-
-.checkout-btn:active {
-    transform: translateY(0);
-}
-
-.checkout-btn i {
-    font-size: 18px;
-}
-
-.checkout-btn:disabled {
-    opacity: 0.5;
-    pointer-events: none;
 }
 
 /* ============================================ */
@@ -1355,10 +1409,6 @@ input:checked + .toggle-slider:before {
     transform: scale(1.05);
 }
 
-.close-modal i {
-    font-size: 18px;
-}
-
 /* ============================================ */
 /* ФОРМА ЗАКАЗА */
 /* ============================================ */
@@ -1386,10 +1436,6 @@ input:checked + .toggle-slider:before {
     font-size: 14px;
     color: var(--text-secondary);
     border-bottom: 1px dashed var(--border);
-}
-
-.summary-item:last-child {
-    border-bottom: none;
 }
 
 .summary-total {
@@ -1426,15 +1472,6 @@ input:checked + .toggle-slider:before {
     background: var(--accent-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(190, 114, 62, 0.2);
-}
-
-.submit-order:active {
-    transform: translateY(0);
-}
-
-.submit-order:disabled {
-    opacity: 0.5;
-    pointer-events: none;
 }
 
 /* ============================================ */
@@ -1638,24 +1675,13 @@ input:checked + .toggle-slider:before {
     border: 1px solid var(--border);
 }
 
-.time-btn.reset:hover {
-    background: var(--surface-hover);
-    color: var(--text-primary);
-}
-
 .time-btn.confirm {
     background: var(--accent);
     color: white;
 }
 
-.time-btn.confirm:hover {
-    background: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(190, 114, 62, 0.3);
-}
-
 /* ============================================ */
-/* УЛУЧШЕННЫЙ КАЛЕНДАРЬ */
+/* КАЛЕНДАРЬ */
 /* ============================================ */
 
 .bottom-sheet {
@@ -1671,15 +1697,6 @@ input:checked + .toggle-slider:before {
     animation: slideUp 0.3s ease;
     max-height: 80vh;
     overflow-y: auto;
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
-    }
-    to {
-        transform: translateY(0);
-    }
 }
 
 .date-picker-content {
@@ -1705,11 +1722,6 @@ input:checked + .toggle-slider:before {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
-}
-
-.month-nav:hover {
-    background: var(--surface-hover);
-    border-color: var(--accent);
 }
 
 .current-month {
@@ -1797,20 +1809,9 @@ input:checked + .toggle-slider:before {
     border: 1px solid var(--border);
 }
 
-.date-btn.reset:hover {
-    background: var(--surface-hover);
-    color: var(--text-primary);
-}
-
 .date-btn.confirm {
     background: var(--accent);
     color: white;
-}
-
-.date-btn.confirm:hover {
-    background: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(190, 114, 62, 0.3);
 }
 
 /* ============================================ */
@@ -1833,16 +1834,7 @@ input:checked + .toggle-slider:before {
     font-size: 15px;
     cursor: pointer;
     transition: all 0.2s;
-}
-
-.input-with-icon input:hover {
-    border-color: var(--accent);
-}
-
-.input-with-icon input:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(190, 114, 62, 0.1);
+    caret-color: #000000 !important;
 }
 
 .input-with-icon i {
@@ -1856,474 +1848,18 @@ input:checked + .toggle-slider:before {
     transition: color 0.2s;
 }
 
-.input-with-icon input:hover + i,
-.input-with-icon input:focus + i {
-    color: var(--accent);
+/* ============================================ */
+/* АНИМАЦИИ */
+/* ============================================ */
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); background-color: var(--accent); color: white; }
+    100% { transform: scale(1); }
 }
 
 /* ============================================ */
-/* СЧЕТЧИК НА КАРТОЧКЕ ТОВАРА */
-/* ============================================ */
-
-.cart-counter {
-    position: relative;
-    display: inline-block;
-}
-
-.counter-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--accent);
-    color: white;
-    font-size: 11px;
-    font-weight: 600;
-    min-width: 18px;
-    height: 18px;
-    border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 4px;
-    border: 2px solid var(--surface);
-    z-index: 2;
-}
-
-.add-to-cart.has-items {
-    background: var(--success);
-    color: white;
-    border-color: var(--success);
-    opacity: 0.9;
-}
-
-.add-to-cart.has-items:hover {
-    background: var(--success);
-    opacity: 1;
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 480px) {
-    .app, .admin-container {
-        padding: var(--space-sm) var(--space-sm) 90px;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-group.full-width {
-        grid-column: span 1;
-    }
-
-    .cakes-grid {
-        gap: var(--space-sm);
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .cart-icon {
-        bottom: 16px;
-        right: 16px;
-        width: 52px;
-        height: 52px;
-    }
-
-    .admin-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: var(--space-xs);
-    }
-
-    .cart-item {
-        padding: var(--space-xs);
-    }
-
-    .cart-item-image {
-        width: 50px;
-        height: 50px;
-    }
-
-    /* Адаптивность для Time Picker */
-    .time-unit {
-        min-width: 50px;
-        height: 50px;
-        font-size: 16px;
-    }
-
-    .selected-time {
-        font-size: 28px;
-    }
-}
-/* ============================================ */
-/* УЛУЧШЕННЫЕ КНОПКИ И СЕЛЕКТЫ (ТОЛЬКО НУЖНЫЕ ЭЛЕМЕНТЫ) */
-/* ============================================ */
-
-/* Увеличиваем селекты выбора категории */
-#cakeCategory,
-#editCakeCategory {
-    height: 52px !important;
-    font-size: 16px !important;
-    padding: 12px 16px !important;
-}
-
-/* Увеличиваем селекты выбора роли */
-#userRole,
-#editUserRole {
-    height: 52px !important;
-    font-size: 16px !important;
-    padding: 12px 16px !important;
-}
-
-/* Увеличиваем селект выбора курьера в заказах */
-.order-actions select {
-    height: 48px !important;
-    font-size: 15px !important;
-    padding: 10px 16px !important;
-    min-width: 180px !important;
-}
-
-/* Увеличиваем кнопку "Назначить курьера" */
-.order-actions .action-btn[style*="background: var(--accent)"] {
-    height: 48px !important;
-    font-size: 15px !important;
-    padding: 0 24px !important;
-    font-weight: 600 !important;
-}
-
-/* Увеличиваем кнопку "Отменить" рядом с назначением курьера */
-.order-actions .action-btn[style*="color: var(--error)"] {
-    height: 48px !important;
-    font-size: 15px !important;
-    padding: 0 24px !important;
-    font-weight: 600 !important;
-}
-
-/* Увеличиваем кнопки "Доставлен" и "Отменить" в статусе assigned */
-.order-actions .action-btn[style*="background: var(--success)"] {
-    height: 48px !important;
-    font-size: 15px !important;
-    padding: 0 24px !important;
-    font-weight: 600 !important;
-}
-
-/* Увеличиваем сообщение "Нет курьеров на смене" для единообразия */
-.order-actions div[style*="color: var(--text-secondary)"] {
-    height: 48px !important;
-    font-size: 15px !important;
-    display: flex !important;
-    align-items: center !important;
-    padding: 0 16px !important;
-}
-
-/* Адаптивность для мобильных */
-@media (max-width: 480px) {
-    #cakeCategory,
-    #editCakeCategory,
-    #userRole,
-    #editUserRole,
-    .order-actions select,
-    .order-actions .action-btn,
-    .order-actions div[style*="color: var(--text-secondary)"] {
-        height: 56px !important;
-        font-size: 16px !important;
-    }
-
-    .order-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .order-actions select,
-    .order-actions .action-btn,
-    .order-actions div[style*="color: var(--text-secondary)"] {
-        width: 100% !important;
-    }
-}
-/* ============================================ */
-/* УЛУЧШЕННЫЕ ВКЛАДКИ АДМИН-ПАНЕЛИ (2 СТОЛБИКА) */
-/* ============================================ */
-
-/* Контейнер вкладок - теперь сетка 2x3 */
-.admin-tabs {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important; /* Два столбика равной ширины */
-    gap: 10px !important;
-    margin-bottom: var(--space-xl) !important;
-    padding: 0 !important;
-    overflow: visible !important; /* Убираем скролл */
-    flex-wrap: nowrap !important; /* Отключаем перенос */
-}
-
-/* Стили для каждой вкладки */
-.admin-tab {
-    width: 100% !important; /* На всю ширину ячейки */
-    padding: 12px 8px !important; /* Немного увеличил отступы */
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px !important; /* Чуть меньше скругление для компактности */
-    color: var(--text-secondary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.2s;
-    white-space: nowrap;
-    text-align: center;
-    box-sizing: border-box;
-}
-
-/* Уменьшаем отступы на очень маленьких экранах */
-@media (max-width: 360px) {
-    .admin-tab {
-        padding: 10px 4px !important;
-        font-size: 13px !important;
-    }
-
-    .admin-tab i {
-        font-size: 14px !important;
-    }
-}
-
-/* Стили для счетчиков на вкладках */
-.admin-tab .count {
-    background: var(--surface-hover);
-    padding: 2px 6px;
-    border-radius: 20px;
-    font-size: 11px;
-    margin-left: 4px;
-    color: var(--text-secondary);
-    min-width: 20px;
-    display: inline-block;
-}
-
-/* Активная вкладка */
-.admin-tab.active {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-}
-
-.admin-tab.active .count {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-}
-
-/* Эффект при наведении */
-.admin-tab:hover {
-    background: var(--surface-hover);
-    color: var(--text-primary);
-    border-color: var(--accent);
-    transform: translateY(-2px);
-}
-
-/* Иконки во вкладках */
-.admin-tab i {
-    font-size: 16px;
-}
-
-/* Адаптивность для совсем маленьких экранов */
-@media (max-width: 320px) {
-    .admin-tabs {
-        gap: 6px !important;
-    }
-
-    .admin-tab {
-        padding: 8px 2px !important;
-        font-size: 12px !important;
-    }
-}
-/* ============================================ */
-/* СТИЛИ ДЛЯ КУРСОРА - ЧЕРНЫЙ ЦВЕТ */
-/* ============================================ */
-
-/* Для всех полей ввода */
-input,
-textarea,
-select {
-    caret-color: #000000 !important; /* Черный курсор */
-}
-
-/* Для полей с иконками */
-.input-with-icon input {
-    caret-color: #000000 !important;
-}
-
-/* Для полей в админ-панели */
-.admin-container input,
-.admin-container textarea,
-.admin-container select {
-    caret-color: #000000 !important;
-}
-
-/* Для полей в формах */
-.form-group input,
-.form-group textarea,
-.form-group select {
-    caret-color: #000000 !important;
-}
-
-/* Для поиска и других полей */
-.header-right .header-icon {
-    /* это не поле ввода, тут курсор не меняем */
-}
-
-/* Для модальных окон */
-.modal input,
-.modal textarea,
-.modal select {
-    caret-color: #000000 !important;
-}
-/* ============================================ */
-/* УЛУЧШЕННАЯ ШАПКА С ЦЕНТРИРОВАННЫМ ЗАГОЛОВКОМ */
-/* ============================================ */
-
-.header-content {
-    display: grid;
-    grid-template-columns: 40px 1fr 40px; /* Три колонки: логотип, заголовок, кнопка */
-    align-items: center;
-    gap: 8px;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.header-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-primary);
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0 4px;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-/* Стили для кнопки админ */
-.admin-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.2s;
-    white-space: nowrap;
-    height: 36px;
-}
-
-.admin-btn:hover {
-    background: var(--surface-hover);
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: translateY(-1px);
-}
-
-.admin-btn i {
-    font-size: 14px;
-    color: var(--accent);
-}
-
-.admin-btn:hover i {
-    color: var(--accent-hover);
-}
-
-/* Адаптивность для маленьких экранов */
-@media (max-width: 380px) {
-    .header-content {
-        grid-template-columns: 36px 1fr 36px;
-        gap: 4px;
-    }
-
-    .header-title {
-        font-size: 16px;
-    }
-
-    .admin-btn {
-        padding: 4px 8px;
-        font-size: 12px;
-        height: 32px;
-    }
-
-    .admin-btn i {
-        font-size: 12px;
-    }
-}
-/* ============================================ */
-/* ПРОСТЫЕ ЛЕТАЮЩИЕ СЕРДЕЧКИ (ТОЛЬКО CSS) */
-/* ============================================ */
-
-.hearts-simple {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-}
-
-.hearts-simple::before,
-.hearts-simple::after,
-.hearts-simple .heart1,
-.hearts-simple .heart2,
-.hearts-simple .heart3,
-.hearts-simple .heart4,
-.hearts-simple .heart5 {
-    content: '❤️';
-    position: absolute;
-    font-size: 10px;
-    color: rgba(255, 200, 220, 0.5);
-    animation: floatSimple 10s linear infinite;
-    opacity: 0;
-}
-
-.hearts-simple::before { left: 10%; animation-delay: 0s; }
-.hearts-simple::after { left: 30%; animation-delay: 2s; }
-.hearts-simple .heart1 { left: 50%; animation-delay: 4s; }
-.hearts-simple .heart2 { left: 70%; animation-delay: 6s; }
-.hearts-simple .heart3 { left: 90%; animation-delay: 8s; }
-.hearts-simple .heart4 { left: 20%; animation-delay: 1s; }
-.hearts-simple .heart5 { left: 80%; animation-delay: 3s; }
-
-@keyframes floatSimple {
-    0% {
-        transform: translateY(100vh) rotate(0deg);
-        opacity: 0;
-    }
-    10% {
-        opacity: 0.5;
-    }
-    90% {
-        opacity: 0.5;
-    }
-    100% {
-        transform: translateY(-20vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-/* ============================================ */
-/* ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ДЛЯ ШАПКИ */
+/* ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ШАПКИ */
 /* ============================================ */
 
 .header {
@@ -2333,7 +1869,6 @@ select {
     border-bottom: 2px solid rgba(190, 114, 62, 0.2);
 }
 
-/* Декоративные линии */
 .header::before {
     content: '';
     position: absolute;
@@ -2350,7 +1885,6 @@ select {
     opacity: 0.3;
 }
 
-/* Декоративные точки (конфетти) */
 .header::after {
     content: '';
     position: absolute;
@@ -2369,8 +1903,7 @@ select {
     z-index: 0;
 }
 
-/* Вторая группа точек слева */
-.header .header-decoration {
+.header-decoration {
     position: absolute;
     bottom: 5px;
     left: 10px;
@@ -2386,8 +1919,7 @@ select {
     z-index: 0;
 }
 
-/* Вензель / завиток */
-.header .header-scroll {
+.header-scroll {
     position: absolute;
     top: 50%;
     left: 20px;
@@ -2400,7 +1932,7 @@ select {
     transform: rotate(45deg);
 }
 
-.header .header-scroll-right {
+.header-scroll-right {
     position: absolute;
     top: 50%;
     right: 20px;
@@ -2413,8 +1945,7 @@ select {
     transform: rotate(45deg);
 }
 
-/* Блестящие звездочки */
-.header .sparkle {
+.sparkle {
     position: absolute;
     color: var(--accent);
     font-size: 10px;
@@ -2429,24 +1960,6 @@ select {
 @keyframes sparkle {
     0%, 100% { opacity: 0.2; transform: scale(1); }
     50% { opacity: 0.6; transform: scale(1.2); }
-}
-
-/* Ленточка под заголовком */
-.header-title-wrapper {
-    position: relative;
-    display: inline-block;
-    z-index: 1;
-}
-
-.header-title {
-    position: relative;
-    z-index: 2;
-    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
-    letter-spacing: 0.5px;
 }
 
 .header-title-wrapper::before {
@@ -2465,7 +1978,6 @@ select {
     border-radius: 2px;
 }
 
-/* Орнамент по краям */
 .header-ornament-left,
 .header-ornament-right {
     position: absolute;
@@ -2491,7 +2003,6 @@ select {
     right: 0;
 }
 
-/* Конфетти (падающие элементы) */
 .header-confetti {
     position: absolute;
     top: 0;
@@ -2533,1343 +2044,6 @@ select {
     }
 }
 
-/* Обновленные стили для контента шапки */
-.header-content {
-    position: relative;
-    z-index: 5;
-    display: grid;
-    grid-template-columns: 40px 1fr 40px;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 0;
-}
-
-/* Затемнение для лучшей читаемости */
-.header::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.8) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 1;
-}
-/* ============================================ */
-/* СТИЛИ ДЛЯ КНОПОК + И - В КОРЗИНЕ */
-/* ============================================ */
-
-.cart-item-quantity {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 8px 0;
-}
-
-.quantity-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    font-size: 12px;
-}
-
-.quantity-btn:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-    transform: scale(1.05);
-}
-
-.quantity-btn:active {
-    transform: scale(0.95);
-}
-
-.quantity-value {
-    font-weight: 600;
-    font-size: 16px;
-    min-width: 24px;
-    text-align: center;
-    color: var(--text-primary);
-}
-
-.cart-item-subtotal {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--accent);
-    margin-top: 4px;
-}
-
-.cart-item-info {
-    flex: 1;
-    padding: 4px 0;
-}
-
-/* Адаптивность для мобильных */
-@media (max-width: 480px) {
-    .quantity-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 14px;
-    }
-
-    .quantity-value {
-        font-size: 18px;
-        min-width: 30px;
-    }
-}
-/* ============================================ */
-/* СТИЛИ ДЛЯ НАДПИСИ ИТОГО В КАРТОЧКЕ ТОВАРА */
-/* ============================================ */
-
-.cart-item-subtotal {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px dashed var(--border);
-}
-
-.subtotal-label {
-    font-size: 13px;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-.subtotal-value {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--accent);
-}
-
-/* Обновленные стили для существующих элементов */
-.cart-item-info {
-    flex: 1;
-    padding: 4px 0;
-}
-
-.cart-item-name {
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-}
-
-.cart-item-price {
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 8px;
-}
-
-.cart-item-price::before {
-    content: "Цена: ";
-    color: var(--text-secondary);
-    font-weight: 400;
-}
-
-/* Адаптивность для мобильных */
-@media (max-width: 480px) {
-    .cart-item-subtotal {
-        margin-top: 6px;
-        padding-top: 6px;
-    }
-
-    .subtotal-label {
-        font-size: 12px;
-    }
-
-    .subtotal-value {
-        font-size: 14px;
-    }
-}
-/* ============================================ */
-/* ОТСТУП ДЛЯ TELEGRAM MINI APP */
-/* ============================================ */
-
-/* Добавляем отступ для основного контента, чтобы он не перекрывался с системными кнопками Telegram */
-body {
-    padding-top: env(safe-area-inset-top, 0);
-}
-
-.app, .admin-container {
-    padding-top: calc(var(--space-md) + env(safe-area-inset-top, 20px));
-}
-
-/* Для sticky header добавляем дополнительный отступ */
-.header {
-    top: env(safe-area-inset-top, 0);
-    margin-top: 0;
-    padding-top: calc(var(--space-md) + env(safe-area-inset-top, 10px));
-}
-
-/* Корректируем позиционирование декоративных элементов в шапке */
-.header .sparkle-1,
-.header .sparkle-2,
-.header .sparkle-3 {
-    top: calc(env(safe-area-inset-top, 0) + 15px);
-}
-
-.header-ornament-left,
-.header-ornament-right {
-    top: env(safe-area-inset-top, 0);
-    height: calc(100% - env(safe-area-inset-top, 0));
-}
-
-/* Для модальных окон учитываем безопасную зону */
-.modal {
-    padding-top: env(safe-area-inset-top, var(--space-md));
-}
-
-/* Для bottom sheet модальных окон */
-.modal-content.bottom-sheet {
-    margin-bottom: env(safe-area-inset-bottom, 0);
-}
-
-/* Для фиксированных элементов (корзина) */
-.cart-icon {
-    bottom: calc(20px + env(safe-area-inset-bottom, 0));
-}
-
-.toast-container {
-    bottom: calc(20px + env(safe-area-inset-bottom, 0));
-}
-/* ============================================ */
-/* ФИНАЛЬНОЕ РЕШЕНИЕ ДЛЯ ОТСТУПА TELEGRAM */
-/* ============================================ */
-
-/* Принудительный отступ для всего контента */
-body {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Основной контейнер - добавляем большой отступ сверху */
-.app, .admin-container {
-    padding-top: 55px !important;
-    position: relative !important;
-    z-index: 1 !important;
-}
-
-/* Фиксируем шапку с правильным отступом */
-.header {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 100 !important;
-    background: var(--bg) !important;
-    margin-top: 0 !important;
-    padding-top: 15px !important; /* Внутренний отступ шапки */
-    min-height: 60px !important;
-}
-
-/* Добавляем дополнительный фон для шапки, чтобы контент не просвечивал */
-.header::before {
-    content: '' !important;
-    position: absolute !important;
-    top: -55px !important; /* Растягиваем фон вверх под системные кнопки */
-    left: 0 !important;
-    right: 0 !important;
-    height: 55px !important;
-    background: var(--bg) !important;
-    z-index: -1 !important;
-}
-
-/* Корректируем декоративные элементы в шапке */
-.header .sparkle-1,
-.header .sparkle-2,
-.header .sparkle-3 {
-    top: 25px !important;
-}
-
-.header-ornament-left,
-.header-ornament-right {
-    top: 0 !important;
-    height: calc(100% + 55px) !important;
-}
-
-/* Для модальных окон */
-.modal {
-    padding-top: 55px !important;
-}
-
-.modal-content {
-    margin-top: 0 !important;
-}
-
-/* Для bottom sheet */
-.modal-content.bottom-sheet {
-    margin-top: auto !important;
-    padding-top: 0 !important;
-}
-
-/* Для фиксированной корзины */
-.cart-icon {
-    bottom: 20px !important;
-    z-index: 1000 !important;
-}
-
-/* Для уведомлений */
-.toast-container {
-    z-index: 2000 !important;
-}
-
-/* Если шапка все еще перекрывается, увеличиваем отступ */
-@media (max-width: 480px) {
-    .app, .admin-container {
-        padding-top: 60px !important;
-    }
-    
-    .header::before {
-        height: 60px !important;
-        top: -60px !important;
-    }
-}
-/* Дополнительный отступ только для админ-панели */
-.admin-container {
-    padding-top: 65px !important; /* Чуть больше, чем в пользовательской части */
-}
-
-/* Или если нужно выровнять заголовок админки */
-.admin-container .page-header {
-    margin-top: 10px;
-}
-/* ============================================ */
-/* АДАПТИВНЫЙ ОТСТУП ДЛЯ TELEGRAM MINI APP */
-/* ============================================ */
-
-/* Базовые переменные для отступов */
-:root {
-    --tg-top-padding: 45px; /* Базовый отступ */
-    --tg-header-offset: 45px;
-}
-
-/* Адаптация под разные устройства */
-@media (max-width: 320px) {
-    :root {
-        --tg-top-padding: 40px;
-        --tg-header-offset: 40px;
-    }
-}
-
-@media (min-width: 321px) and (max-width: 375px) {
-    :root {
-        --tg-top-padding: 45px;
-        --tg-header-offset: 45px;
-    }
-}
-
-@media (min-width: 376px) and (max-width: 414px) {
-    :root {
-        --tg-top-padding: 50px;
-        --tg-header-offset: 50px;
-    }
-}
-
-@media (min-width: 415px) and (max-width: 480px) {
-    :root {
-        --tg-top-padding: 55px;
-        --tg-header-offset: 55px;
-    }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-    :root {
-        --tg-top-padding: 60px;
-        --tg-header-offset: 60px;
-    }
-}
-
-@media (min-width: 769px) {
-    :root {
-        --tg-top-padding: 65px;
-        --tg-header-offset: 65px;
-    }
-}
-
-/* Применяем отступы к контейнерам */
-.app, 
-.admin-container {
-    padding-top: var(--tg-top-padding) !important;
-    position: relative !important;
-    z-index: 1 !important;
-    min-height: 100vh;
-    transition: padding-top 0.2s ease; /* Плавное изменение при ресайзе */
-}
-
-/* Корректируем шапку */
-.header {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 100 !important;
-    background: var(--bg) !important;
-    margin-top: 0 !important;
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-    min-height: 60px !important;
-}
-
-/* Добавляем фон под системные кнопки */
-.header::before {
-    content: '' !important;
-    position: absolute !important;
-    top: calc(-1 * var(--tg-header-offset)) !important;
-    left: 0 !important;
-    right: 0 !important;
-    height: var(--tg-header-offset) !important;
-    background: var(--bg) !important;
-    z-index: -1 !important;
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* Корректируем декоративные элементы */
-.header .sparkle-1,
-.header .sparkle-2,
-.header .sparkle-3 {
-    top: calc(var(--tg-header-offset) - 20px) !important;
-}
-
-.header-ornament-left,
-.header-ornament-right {
-    top: 0 !important;
-    height: calc(100% + var(--tg-header-offset)) !important;
-}
-
-/* Специальные стили для админ-панели */
-.admin-container {
-    padding-top: calc(var(--tg-top-padding) + 5px) !important; /* Немного больше отступ для админки */
-}
-
-/* Корректируем заголовок админки */
-.admin-container .page-header {
-    margin-top: 0;
-    padding-top: 10px;
-}
-
-/* Корректируем вкладки админки */
-.admin-tabs {
-    margin-top: 10px;
-}
-
-/* Для модальных окон */
-.modal {
-    padding-top: var(--tg-top-padding) !important;
-}
-
-.modal-content {
-    margin-top: 0 !important;
-    max-height: calc(90vh - var(--tg-top-padding));
-}
-
-/* Для bottom sheet */
-.modal-content.bottom-sheet {
-    margin-top: auto !important;
-    padding-top: 0 !important;
-    max-height: 80vh;
-}
-
-/* Для фиксированной корзины */
-.cart-icon {
-    bottom: calc(20px + env(safe-area-inset-bottom, 0)) !important;
-    z-index: 1000 !important;
-}
-
-/* Для уведомлений */
-.toast-container {
-    bottom: calc(20px + env(safe-area-inset-bottom, 0)) !important;
-    z-index: 2000 !important;
-}
-
-/* Поддержка safe-area-inset для современных устройств */
-@supports (padding-top: env(safe-area-inset-top)) {
-    :root {
-        --tg-top-padding: calc(45px + env(safe-area-inset-top, 0));
-        --tg-header-offset: calc(45px + env(safe-area-inset-top, 0));
-    }
-    
-    @media (max-width: 320px) {
-        :root {
-            --tg-top-padding: calc(40px + env(safe-area-inset-top, 0));
-            --tg-header-offset: calc(40px + env(safe-area-inset-top, 0));
-        }
-    }
-    
-    /* остальные медиа-запросы с env() */
-}
-
-/* Для очень высоких экранов */
-@media (min-height: 800px) {
-    :root {
-        --tg-top-padding: 70px;
-        --tg-header-offset: 70px;
-    }
-    
-    .admin-container {
-        padding-top: calc(var(--tg-top-padding) + 5px) !important;
-    }
-}
-
-/* Для планшетов в ландшафтной ориентации */
-@media (orientation: landscape) and (max-height: 500px) {
-    :root {
-        --tg-top-padding: 35px;
-        --tg-header-offset: 35px;
-    }
-    
-    .header {
-        min-height: 50px !important;
-    }
-}
-
-/* Анимация при изменении ориентации */
-.app, 
-.admin-container,
-.header {
-    transition: padding-top 0.3s ease, top 0.3s ease;
-}
-
-/* Фикс для iPhone с челкой */
-@supports (padding-top: constant(safe-area-inset-top)) {
-    .app, 
-    .admin-container {
-        padding-top: calc(var(--tg-top-padding) + constant(safe-area-inset-top)) !important;
-    }
-    
-    .header::before {
-        height: calc(var(--tg-header-offset) + constant(safe-area-inset-top)) !important;
-        top: calc(-1 * (var(--tg-header-offset) + constant(safe-area-inset-top))) !important;
-    }
-}
-/* ============================================ */
-/* АДАПТАЦИЯ ДЛЯ ПЛАНШЕТОВ И ПК */
-/* ============================================ */
-
-/* Планшеты (768px - 1024px) */
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-    .app, 
-    .admin-container {
-        max-width: 90% !important;
-        padding-left: 30px !important;
-        padding-right: 30px !important;
-        margin: 0 auto !important;
-    }
-
-    /* Сетка товаров - 3 колонки */
-    .cakes-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 20px !important;
-    }
-
-    /* Карточки категорий */
-    .categories-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-
-    /* Карточки пользователей */
-    .users-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-
-    /* Статистика - 3 колонки */
-    .stats-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-
-    /* Заголовки */
-    .page-header h1 {
-        font-size: 36px !important;
-    }
-
-    .page-header .subtitle {
-        font-size: 22px !important;
-    }
-
-    /* Категории */
-    .categories {
-        justify-content: center !important;
-        flex-wrap: wrap !important;
-    }
-
-    .category {
-        padding: 10px 24px !important;
-        font-size: 16px !important;
-    }
-
-    /* Шапка */
-    .header-title {
-        font-size: 24px !important;
-    }
-
-    /* Админ вкладки */
-    .admin-tabs {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 15px !important;
-    }
-
-    .admin-tab {
-        padding: 15px 10px !important;
-        font-size: 16px !important;
-    }
-
-    /* Формы */
-    .form-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 20px !important;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        padding: 14px 18px !important;
-        font-size: 16px !important;
-    }
-
-    /* Заказы - две колонки */
-    .orders-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 20px !important;
-    }
-
-    /* Модальные окна */
-    .modal-content {
-        width: 600px !important;
-        max-width: 80% !important;
-    }
-
-    /* График */
-    .chart-container {
-        height: 350px !important;
-    }
-}
-
-/* Маленькие планшеты (600px - 768px) */
-@media screen and (min-width: 600px) and (max-width: 767px) {
-    .app, 
-    .admin-container {
-        max-width: 95% !important;
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-        margin: 0 auto !important;
-    }
-
-    /* Сетка товаров - 2 колонки (как на телефоне) */
-    .cakes-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 15px !important;
-    }
-
-    /* Админ вкладки - все еще 2 колонки */
-    .admin-tabs {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-
-    /* Заказы - одна колонка */
-    .orders-grid {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-/* Ноутбуки и ПК (1025px - 1440px) */
-@media screen and (min-width: 1025px) and (max-width: 1440px) {
-    .app, 
-    .admin-container {
-        max-width: 1200px !important;
-        padding-left: 40px !important;
-        padding-right: 40px !important;
-        margin: 0 auto !important;
-    }
-
-    /* Сетка товаров - 4 колонки */
-    .cakes-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 25px !important;
-    }
-
-    /* Карточки категорий */
-    .categories-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-    }
-
-    /* Карточки пользователей */
-    .users-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-    }
-
-    /* Статистика - 4 колонки */
-    .stats-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-    }
-
-    /* Заголовки */
-    .page-header h1 {
-        font-size: 42px !important;
-    }
-
-    .page-header .subtitle {
-        font-size: 24px !important;
-    }
-
-    /* Категории */
-    .categories {
-        justify-content: center !important;
-        flex-wrap: wrap !important;
-        gap: 15px !important;
-    }
-
-    .category {
-        padding: 12px 28px !important;
-        font-size: 18px !important;
-    }
-
-    /* Шапка */
-    .header-title {
-        font-size: 28px !important;
-    }
-
-    .header-logo {
-        height: 50px !important;
-    }
-
-    /* Админ вкладки */
-    .admin-tabs {
-        grid-template-columns: repeat(6, 1fr) !important; /* Все вкладки в ряд */
-        gap: 15px !important;
-    }
-
-    .admin-tab {
-        padding: 15px 10px !important;
-        font-size: 16px !important;
-    }
-
-    /* Формы */
-    .form-container {
-        padding: 30px !important;
-    }
-
-    .form-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 25px !important;
-    }
-
-    .form-group.full-width {
-        grid-column: span 3 !important;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        padding: 16px 20px !important;
-        font-size: 16px !important;
-    }
-
-    /* Заказы - три колонки */
-    .orders-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 25px !important;
-    }
-
-    /* Модальные окна */
-    .modal-content {
-        width: 700px !important;
-        max-width: 60% !important;
-    }
-
-    /* График */
-    .chart-container {
-        height: 400px !important;
-    }
-
-    /* Кнопки действий */
-    .order-actions {
-        flex-direction: row !important;
-    }
-
-    .order-actions select,
-    .order-actions .action-btn {
-        width: auto !important;
-    }
-
-    /* Ховер эффекты для ПК */
-    .cake-card:hover {
-        transform: translateY(-6px) !important;
-    }
-
-    .admin-tab:hover {
-        transform: translateY(-3px) !important;
-    }
-}
-
-/* Большие ПК (1441px и выше) */
-@media screen and (min-width: 1441px) {
-    .app, 
-    .admin-container {
-        max-width: 1400px !important;
-        padding-left: 50px !important;
-        padding-right: 50px !important;
-        margin: 0 auto !important;
-    }
-
-    /* Сетка товаров - 5 колонок */
-    .cakes-grid {
-        grid-template-columns: repeat(5, 1fr) !important;
-        gap: 30px !important;
-    }
-
-    /* Карточки категорий */
-    .categories-grid {
-        grid-template-columns: repeat(5, 1fr) !important;
-    }
-
-    /* Карточки пользователей */
-    .users-grid {
-        grid-template-columns: repeat(5, 1fr) !important;
-    }
-
-    /* Статистика - 6 колонок */
-    .stats-grid {
-        grid-template-columns: repeat(6, 1fr) !important;
-    }
-
-    /* Заголовки */
-    .page-header h1 {
-        font-size: 48px !important;
-    }
-
-    .page-header .subtitle {
-        font-size: 28px !important;
-    }
-
-    /* Админ вкладки */
-    .admin-tabs {
-        grid-template-columns: repeat(6, 1fr) !important;
-        gap: 20px !important;
-    }
-
-    .admin-tab {
-        padding: 18px 15px !important;
-        font-size: 18px !important;
-    }
-
-    /* Формы */
-    .form-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-    }
-
-    .form-group.full-width {
-        grid-column: span 4 !important;
-    }
-
-    /* Заказы - 4 колонки */
-    .orders-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 30px !important;
-    }
-
-    /* Модальные окна */
-    .modal-content {
-        width: 800px !important;
-        max-width: 50% !important;
-    }
-
-    /* Размер шрифтов */
-    body {
-        font-size: 18px !important;
-    }
-
-    .cake-name {
-        font-size: 20px !important;
-    }
-
-    .cake-price {
-        font-size: 20px !important;
-    }
-
-    .cake-description {
-        font-size: 15px !important;
-    }
-}
-
-/* Горизонтальная ориентация на планшетах */
-@media screen and (orientation: landscape) and (max-height: 600px) {
-    .app, 
-    .admin-container {
-        padding-top: 35px !important;
-    }
-
-    .header {
-        min-height: 50px !important;
-    }
-
-    .cakes-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-    }
-
-    /* Адаптация модальных окон */
-    .modal-content {
-        max-height: 85vh !important;
-    }
-}
-
-/* Улучшаем читаемость на больших экранах */
-@media screen and (min-width: 1025px) {
-    /* Убираем мобильные ограничения */
-    .cart-panel {
-        max-width: 450px !important;
-    }
-
-    /* Улучшаем отображение карточек */
-    .cake-card {
-        transition: all 0.3s ease !important;
-    }
-
-    .cake-card:hover .cake-image {
-        transform: scale(1.02) !important;
-        transition: transform 0.3s ease !important;
-    }
-
-    /* Улучшаем отображение админки */
-    .admin-container .section-title {
-        font-size: 24px !important;
-        margin-bottom: 25px !important;
-    }
-
-    /* Центрируем контент */
-    .empty-state {
-        grid-column: 1 / -1 !important;
-        padding: 60px !important;
-    }
-}
-
-/* Для очень широких экранов */
-@media screen and (min-width: 1920px) {
-    .app, 
-    .admin-container {
-        max-width: 1600px !important;
-    }
-
-    .cakes-grid {
-        grid-template-columns: repeat(6, 1fr) !important;
-    }
-}
-/* ============================================ */
-/* ИСПРАВЛЕНИЕ ПОЛОЖЕНИЯ КНОПКИ ЗАКРЫТИЯ В КОРЗИНЕ */
-/* ============================================ */
-
-/* Фиксим отступ в шапке корзины */
-.cart-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding: 15px 20px !important;
-    min-height: 60px !important;
-    background: var(--bg) !important;
-    border-bottom: 1px solid var(--border) !important;
-    position: relative !important;
-}
-
-/* Кнопка закрытия */
-.close-cart {
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 50% !important;
-    border: 1px solid var(--border) !important;
-    background: var(--surface) !important;
-    color: var(--text-primary) !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.2s !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: relative !important;
-    top: 0 !important;
-    right: 0 !important;
-}
-
-/* Заголовок корзины */
-.cart-header h2 {
-    font-size: 20px !important;
-    font-weight: 600 !important;
-    color: var(--text-primary) !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1 !important;
-}
-
-/* Адаптация для мобильных устройств */
-@media screen and (max-width: 480px) {
-    .cart-header {
-        padding: 12px 16px !important;
-        min-height: 55px !important;
-    }
-    
-    .close-cart {
-        width: 36px !important;
-        height: 36px !important;
-    }
-    
-    .cart-header h2 {
-        font-size: 18px !important;
-    }
-}
-
-/* Для планшетов */
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-    .cart-header {
-        padding: 18px 24px !important;
-        min-height: 65px !important;
-    }
-    
-    .close-cart {
-        width: 44px !important;
-        height: 44px !important;
-    }
-    
-    .cart-header h2 {
-        font-size: 22px !important;
-    }
-}
-
-/* Для ПК */
-@media screen and (min-width: 1025px) {
-    .cart-header {
-        padding: 20px 25px !important;
-        min-height: 70px !important;
-    }
-    
-    .close-cart {
-        width: 45px !important;
-        height: 45px !important;
-    }
-    
-    .close-cart:hover {
-        background: var(--accent) !important;
-        color: white !important;
-        border-color: var(--accent) !important;
-        transform: scale(1.05) !important;
-    }
-}
-/* ============================================ */
-/* ПРИНУДИТЕЛЬНОЕ ИСПРАВЛЕНИЕ КНОПКИ ЗАКРЫТИЯ В КОРЗИНЕ */
-/* ============================================ */
-
-.cart-panel .cart-header {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 20px 20px 15px 20px !important;
-    min-height: auto !important;
-    height: auto !important;
-}
-
-.cart-panel .cart-header h2 {
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 20px !important;
-    line-height: 1 !important;
-    display: block !important;
-}
-
-.cart-panel .close-cart {
-    position: static !important;
-    top: auto !important;
-    right: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 36px !important;
-    height: 36px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transform: none !important;
-}
-
-/* Для мобильных */
-@media screen and (max-width: 480px) {
-    .cart-panel .cart-header {
-        padding: 15px 15px 10px 15px !important;
-    }
-    
-    .cart-panel .close-cart {
-        width: 32px !important;
-        height: 32px !important;
-    }
-}
-
-/* Для планшетов */
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-    .cart-panel .cart-header {
-        padding: 25px 25px 20px 25px !important;
-    }
-    
-    .cart-panel .close-cart {
-        width: 40px !important;
-        height: 40px !important;
-    }
-}
-
-/* Для ПК */
-@media screen and (min-width: 1025px) {
-    .cart-panel .cart-header {
-        padding: 25px 30px 20px 30px !important;
-    }
-    
-    .cart-panel .close-cart {
-        width: 42px !important;
-        height: 42px !important;
-    }
-}
-
-/* Убираем все возможные трансформации и позиционирования */
-.cart-panel .close-cart i {
-    font-size: 18px !important;
-    line-height: 1 !important;
-}
-/* ЭКСТРЕМАЛЬНОЕ ИСПРАВЛЕНИЕ */
-.cart-header {
-    position: relative !important;
-    padding-top: 20px !important;
-    padding-bottom: 20px !important;
-}
-
-.close-cart {
-    position: absolute !important;
-    top: 50% !important;
-    right: 20px !important;
-    transform: translateY(-50%) !important;
-    margin: 0 !important;
-}
-
-.cart-header h2 {
-    position: relative !important;
-    left: 0 !important;
-    top: 0 !important;
-    margin: 0 !important;
-}
-/* ============================================ */
-/* ОПУСКАЕМ ВЕРХНЮЮ ПАНЕЛЬ КОРЗИНЫ ЕЩЕ НИЖЕ */
-/* ============================================ */
-
-.cart-panel {
-    padding-top: 60px !important; /* Увеличили отступ */
-}
-
-.cart-header {
-    margin-top: 25px !important;
-    padding-top: 20px !important;
-    padding-bottom: 20px !important;
-}
-
-/* Для мобильных */
-@media screen and (max-width: 480px) {
-    .cart-panel {
-        padding-top: 70px !important; /* Еще больше для мобильных */
-    }
-    
-    .cart-header {
-        margin-top: 30px !important;
-    }
-}
-
-/* Если нужно еще ниже - раскомментируйте и увеличьте значения */
-/*
-.cart-panel {
-    padding-top: 80px !important;
-}
-
-.cart-header {
-    margin-top: 40px !important;
-}
-*/
-/* ============================================ */
-/* ЛЕТАЮЩИЕ КРУАССАНЧИКИ НА ФОНЕ */
-/* ============================================ */
-
-.croissants-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Чтобы не мешали нажимать на кнопки */
-    z-index: 0;
-    overflow: hidden;
-}
-
-.croissants-bg span {
-    position: absolute;
-    display: block;
-    pointer-events: none;
-    opacity: 0.15; /* Очень прозрачные, чтобы не отвлекали */
-    animation: float-croissant 15s linear infinite;
-    font-size: 24px;
-}
-
-/* Разные размеры и позиции */
-.croissants-bg span:nth-child(1) {
-    top: 10%;
-    left: 5%;
-    font-size: 32px;
-    animation-duration: 18s;
-    animation-delay: 0s;
-}
-
-.croissants-bg span:nth-child(2) {
-    top: 20%;
-    right: 8%;
-    font-size: 28px;
-    animation-duration: 20s;
-    animation-delay: 2s;
-}
-
-.croissants-bg span:nth-child(3) {
-    bottom: 15%;
-    left: 12%;
-    font-size: 36px;
-    animation-duration: 22s;
-    animation-delay: 4s;
-}
-
-.croissants-bg span:nth-child(4) {
-    top: 40%;
-    right: 15%;
-    font-size: 24px;
-    animation-duration: 16s;
-    animation-delay: 1s;
-}
-
-.croissants-bg span:nth-child(5) {
-    bottom: 25%;
-    right: 20%;
-    font-size: 30px;
-    animation-duration: 19s;
-    animation-delay: 3s;
-}
-
-.croissants-bg span:nth-child(6) {
-    top: 60%;
-    left: 20%;
-    font-size: 26px;
-    animation-duration: 21s;
-    animation-delay: 5s;
-}
-
-.croissants-bg span:nth-child(7) {
-    bottom: 40%;
-    right: 5%;
-    font-size: 34px;
-    animation-duration: 17s;
-    animation-delay: 6s;
-}
-
-.croissants-bg span:nth-child(8) {
-    top: 75%;
-    left: 25%;
-    font-size: 22px;
-    animation-duration: 23s;
-    animation-delay: 2.5s;
-}
-
-.croissants-bg span:nth-child(9) {
-    bottom: 10%;
-    right: 30%;
-    font-size: 38px;
-    animation-duration: 24s;
-    animation-delay: 7s;
-}
-
-.croissants-bg span:nth-child(10) {
-    top: 85%;
-    left: 40%;
-    font-size: 20px;
-    animation-duration: 25s;
-    animation-delay: 1.5s;
-}
-
-.croissants-bg span:nth-child(11) {
-    top: 30%;
-    left: 30%;
-    font-size: 40px;
-    animation-duration: 26s;
-    animation-delay: 8s;
-}
-
-.croissants-bg span:nth-child(12) {
-    bottom: 60%;
-    right: 45%;
-    font-size: 18px;
-    animation-duration: 27s;
-    animation-delay: 4.5s;
-}
-
-/* Анимация плаванья */
-@keyframes float-croissant {
-    0% {
-        transform: translate(0, 0) rotate(0deg);
-        opacity: 0.1;
-    }
-    25% {
-        transform: translate(20px, -15px) rotate(10deg);
-        opacity: 0.2;
-    }
-    50% {
-        transform: translate(10px, -30px) rotate(20deg);
-        opacity: 0.15;
-    }
-    75% {
-        transform: translate(-15px, -15px) rotate(10deg);
-        opacity: 0.2;
-    }
-    100% {
-        transform: translate(0, 0) rotate(0deg);
-        opacity: 0.1;
-    }
-}
-
-/* Второй вариант анимации - более хаотичное движение */
-@keyframes float-croissant-random {
-    0% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-    33% {
-        transform: translate(-25px, 20px) rotate(-15deg);
-    }
-    66% {
-        transform: translate(25px, -20px) rotate(15deg);
-    }
-    100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-}
-
-/* Для мобильных устройств - меньше круассанов */
-@media screen and (max-width: 768px) {
-    .croissants-bg span:nth-child(n+7) {
-        display: none; /* Прячем часть круассанов на мобильных */
-    }
-    
-    .croissants-bg span {
-        opacity: 0.1; /* Еще прозрачнее на мобильных */
-        font-size: 20px;
-    }
-}
-
-/* Для планшетов */
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-    .croissants-bg span:nth-child(n+10) {
-        display: none;
-    }
-}
 /* ============================================ */
 /* ДОЖДЬ ИЗ КРУАССАНЧИКОВ */
 /* ============================================ */
@@ -3895,7 +2069,7 @@ body {
     top: -10%;
 }
 
-/* Распределяем по ширине экрана с интервалом 4-5% */
+/* Распределяем по ширине экрана */
 .croissants-bg span:nth-child(1) { left: 2%; animation-delay: 0s; animation-duration: 7s; }
 .croissants-bg span:nth-child(2) { left: 7%; animation-delay: 1s; animation-duration: 8s; }
 .croissants-bg span:nth-child(3) { left: 12%; animation-delay: 2.5s; animation-duration: 6s; }
@@ -3932,7 +2106,7 @@ body {
     }
 }
 
-/* Разные размеры для разнообразия */
+/* Разные размеры */
 .croissants-bg span:nth-child(odd) {
     font-size: 22px;
 }
@@ -3949,20 +2123,124 @@ body {
     font-size: 16px;
 }
 
-/* Для мобильных устройств */
-@media screen and (max-width: 768px) {
-    .croissants-bg span {
-        font-size: 16px;
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ РАЗНЫХ ЭКРАНОВ */
+/* ============================================ */
+
+@media screen and (max-width: 480px) {
+    .app, .admin-container {
+        max-width: 100%;
+    }
+    
+    .cart-header {
+        padding: 12px 16px !important;
+        min-height: 55px !important;
+    }
+    
+    .close-cart {
+        width: 36px !important;
+        height: 36px !important;
+    }
+    
+    .cart-header h2 {
+        font-size: 18px !important;
     }
     
     .croissants-bg span:nth-child(n+15) {
-        display: none; /* Меньше круассанчиков на мобильных */
+        display: none;
+    }
+    
+    .croissants-bg span {
+        font-size: 16px;
     }
 }
 
-/* Для планшетов */
-@media screen and (min-width: 769px) and (max-width: 1024px) {
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .app, .admin-container {
+        max-width: 90%;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .cakes-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .admin-tabs {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+    
+    .cart-header {
+        padding: 18px 24px !important;
+        min-height: 65px !important;
+    }
+    
+    .close-cart {
+        width: 44px !important;
+        height: 44px !important;
+    }
+    
     .croissants-bg span:nth-child(n+18) {
         display: none;
     }
+}
+
+@media screen and (min-width: 1025px) {
+    .app, .admin-container {
+        max-width: 1200px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    
+    .cakes-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+    }
+    
+    .admin-tabs {
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
+    
+    .cart-header {
+        padding: 20px 25px !important;
+        min-height: 70px !important;
+    }
+    
+    .close-cart {
+        width: 45px !important;
+        height: 45px !important;
+    }
+    
+    .close-cart:hover {
+        background: var(--accent) !important;
+        color: white !important;
+        border-color: var(--accent) !important;
+        transform: scale(1.05) !important;
+    }
+}
+
+@media screen and (min-width: 1441px) {
+    .app, .admin-container {
+        max-width: 1400px;
+    }
+    
+    .cakes-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Горизонтальная ориентация */
+@media screen and (orientation: landscape) and (max-height: 600px) {
+    .header {
+        min-height: 50px !important;
+    }
+    
+    .cakes-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Для всех полей ввода */
+input, textarea, select {
+    caret-color: #000000 !important;
 }
