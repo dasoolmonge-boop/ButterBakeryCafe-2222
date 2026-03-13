@@ -3049,3 +3049,414 @@ body {
         top: calc(-1 * (var(--tg-header-offset) + constant(safe-area-inset-top))) !important;
     }
 }
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ ПЛАНШЕТОВ И ПК */
+/* ============================================ */
+
+/* Планшеты (768px - 1024px) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .app, 
+    .admin-container {
+        max-width: 90% !important;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
+        margin: 0 auto !important;
+    }
+
+    /* Сетка товаров - 3 колонки */
+    .cakes-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px !important;
+    }
+
+    /* Карточки категорий */
+    .categories-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    /* Карточки пользователей */
+    .users-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    /* Статистика - 3 колонки */
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    /* Заголовки */
+    .page-header h1 {
+        font-size: 36px !important;
+    }
+
+    .page-header .subtitle {
+        font-size: 22px !important;
+    }
+
+    /* Категории */
+    .categories {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+    }
+
+    .category {
+        padding: 10px 24px !important;
+        font-size: 16px !important;
+    }
+
+    /* Шапка */
+    .header-title {
+        font-size: 24px !important;
+    }
+
+    /* Админ вкладки */
+    .admin-tabs {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 15px !important;
+    }
+
+    .admin-tab {
+        padding: 15px 10px !important;
+        font-size: 16px !important;
+    }
+
+    /* Формы */
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 20px !important;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 14px 18px !important;
+        font-size: 16px !important;
+    }
+
+    /* Заказы - две колонки */
+    .orders-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 20px !important;
+    }
+
+    /* Модальные окна */
+    .modal-content {
+        width: 600px !important;
+        max-width: 80% !important;
+    }
+
+    /* График */
+    .chart-container {
+        height: 350px !important;
+    }
+}
+
+/* Маленькие планшеты (600px - 768px) */
+@media screen and (min-width: 600px) and (max-width: 767px) {
+    .app, 
+    .admin-container {
+        max-width: 95% !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        margin: 0 auto !important;
+    }
+
+    /* Сетка товаров - 2 колонки (как на телефоне) */
+    .cakes-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+
+    /* Админ вкладки - все еще 2 колонки */
+    .admin-tabs {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Заказы - одна колонка */
+    .orders-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Ноутбуки и ПК (1025px - 1440px) */
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
+    .app, 
+    .admin-container {
+        max-width: 1200px !important;
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+        margin: 0 auto !important;
+    }
+
+    /* Сетка товаров - 4 колонки */
+    .cakes-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 25px !important;
+    }
+
+    /* Карточки категорий */
+    .categories-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    /* Карточки пользователей */
+    .users-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    /* Статистика - 4 колонки */
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    /* Заголовки */
+    .page-header h1 {
+        font-size: 42px !important;
+    }
+
+    .page-header .subtitle {
+        font-size: 24px !important;
+    }
+
+    /* Категории */
+    .categories {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 15px !important;
+    }
+
+    .category {
+        padding: 12px 28px !important;
+        font-size: 18px !important;
+    }
+
+    /* Шапка */
+    .header-title {
+        font-size: 28px !important;
+    }
+
+    .header-logo {
+        height: 50px !important;
+    }
+
+    /* Админ вкладки */
+    .admin-tabs {
+        grid-template-columns: repeat(6, 1fr) !important; /* Все вкладки в ряд */
+        gap: 15px !important;
+    }
+
+    .admin-tab {
+        padding: 15px 10px !important;
+        font-size: 16px !important;
+    }
+
+    /* Формы */
+    .form-container {
+        padding: 30px !important;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 25px !important;
+    }
+
+    .form-group.full-width {
+        grid-column: span 3 !important;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 16px 20px !important;
+        font-size: 16px !important;
+    }
+
+    /* Заказы - три колонки */
+    .orders-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 25px !important;
+    }
+
+    /* Модальные окна */
+    .modal-content {
+        width: 700px !important;
+        max-width: 60% !important;
+    }
+
+    /* График */
+    .chart-container {
+        height: 400px !important;
+    }
+
+    /* Кнопки действий */
+    .order-actions {
+        flex-direction: row !important;
+    }
+
+    .order-actions select,
+    .order-actions .action-btn {
+        width: auto !important;
+    }
+
+    /* Ховер эффекты для ПК */
+    .cake-card:hover {
+        transform: translateY(-6px) !important;
+    }
+
+    .admin-tab:hover {
+        transform: translateY(-3px) !important;
+    }
+}
+
+/* Большие ПК (1441px и выше) */
+@media screen and (min-width: 1441px) {
+    .app, 
+    .admin-container {
+        max-width: 1400px !important;
+        padding-left: 50px !important;
+        padding-right: 50px !important;
+        margin: 0 auto !important;
+    }
+
+    /* Сетка товаров - 5 колонок */
+    .cakes-grid {
+        grid-template-columns: repeat(5, 1fr) !important;
+        gap: 30px !important;
+    }
+
+    /* Карточки категорий */
+    .categories-grid {
+        grid-template-columns: repeat(5, 1fr) !important;
+    }
+
+    /* Карточки пользователей */
+    .users-grid {
+        grid-template-columns: repeat(5, 1fr) !important;
+    }
+
+    /* Статистика - 6 колонок */
+    .stats-grid {
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
+
+    /* Заголовки */
+    .page-header h1 {
+        font-size: 48px !important;
+    }
+
+    .page-header .subtitle {
+        font-size: 28px !important;
+    }
+
+    /* Админ вкладки */
+    .admin-tabs {
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 20px !important;
+    }
+
+    .admin-tab {
+        padding: 18px 15px !important;
+        font-size: 18px !important;
+    }
+
+    /* Формы */
+    .form-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    .form-group.full-width {
+        grid-column: span 4 !important;
+    }
+
+    /* Заказы - 4 колонки */
+    .orders-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 30px !important;
+    }
+
+    /* Модальные окна */
+    .modal-content {
+        width: 800px !important;
+        max-width: 50% !important;
+    }
+
+    /* Размер шрифтов */
+    body {
+        font-size: 18px !important;
+    }
+
+    .cake-name {
+        font-size: 20px !important;
+    }
+
+    .cake-price {
+        font-size: 20px !important;
+    }
+
+    .cake-description {
+        font-size: 15px !important;
+    }
+}
+
+/* Горизонтальная ориентация на планшетах */
+@media screen and (orientation: landscape) and (max-height: 600px) {
+    .app, 
+    .admin-container {
+        padding-top: 35px !important;
+    }
+
+    .header {
+        min-height: 50px !important;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    /* Адаптация модальных окон */
+    .modal-content {
+        max-height: 85vh !important;
+    }
+}
+
+/* Улучшаем читаемость на больших экранах */
+@media screen and (min-width: 1025px) {
+    /* Убираем мобильные ограничения */
+    .cart-panel {
+        max-width: 450px !important;
+    }
+
+    /* Улучшаем отображение карточек */
+    .cake-card {
+        transition: all 0.3s ease !important;
+    }
+
+    .cake-card:hover .cake-image {
+        transform: scale(1.02) !important;
+        transition: transform 0.3s ease !important;
+    }
+
+    /* Улучшаем отображение админки */
+    .admin-container .section-title {
+        font-size: 24px !important;
+        margin-bottom: 25px !important;
+    }
+
+    /* Центрируем контент */
+    .empty-state {
+        grid-column: 1 / -1 !important;
+        padding: 60px !important;
+    }
+}
+
+/* Для очень широких экранов */
+@media screen and (min-width: 1920px) {
+    .app, 
+    .admin-container {
+        max-width: 1600px !important;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
+}
