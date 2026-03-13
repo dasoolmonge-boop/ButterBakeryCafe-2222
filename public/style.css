@@ -2833,3 +2833,12 @@ body {
         top: -60px !important;
     }
 }
+/* Дополнительный отступ только для админ-панели */
+.admin-container {
+    padding-top: 65px !important; /* Чуть больше, чем в пользовательской части */
+}
+
+/* Или если нужно выровнять заголовок админки */
+.admin-container .page-header {
+    margin-top: 10px;
+}
