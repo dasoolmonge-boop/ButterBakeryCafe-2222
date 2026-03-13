@@ -3657,37 +3657,37 @@ body {
     margin: 0 !important;
 }
 /* ============================================ */
-/* СДВИГАЕМ ВЕРХНЮЮ ПАНЕЛЬ КОРЗИНЫ НИЖЕ */
+/* ОПУСКАЕМ ВЕРХНЮЮ ПАНЕЛЬ КОРЗИНЫ ЕЩЕ НИЖЕ */
 /* ============================================ */
 
 .cart-panel {
-    padding-top: 30px !important; /* Добавляем отступ сверху для всей панели */
+    padding-top: 60px !important; /* Увеличили отступ */
 }
 
 .cart-header {
-    margin-top: 10px !important; /* Сдвигаем шапку еще ниже */
-    padding-top: 15px !important;
-    padding-bottom: 15px !important;
+    margin-top: 25px !important;
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
 }
 
-/* Если нужно еще ниже */
+/* Для мобильных */
 @media screen and (max-width: 480px) {
     .cart-panel {
-        padding-top: 30px !important;
+        padding-top: 70px !important; /* Еще больше для мобильных */
     }
     
     .cart-header {
-        margin-top: 15px !important;
+        margin-top: 30px !important;
     }
 }
 
-/* Для планшетов и ПК */
-@media screen and (min-width: 768px) {
-    .cart-panel {
-        padding-top: 40px !important;
-    }
-    
-    .cart-header {
-        margin-top: 20px !important;
-    }
+/* Если нужно еще ниже - раскомментируйте и увеличьте значения */
+/*
+.cart-panel {
+    padding-top: 80px !important;
 }
+
+.cart-header {
+    margin-top: 40px !important;
+}
+*/
