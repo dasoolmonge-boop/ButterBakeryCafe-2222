@@ -24,6 +24,10 @@
     --space-md: 16px;
     --space-lg: 24px;
     --space-xl: 32px;
+    
+    /* Telegram safe area */
+    --tg-safe-top: env(safe-area-inset-top, 0px);
+    --tg-safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 * {
@@ -43,13 +47,13 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Контейнеры */
+/* Контейнеры с отступами для Telegram */
 .app, .admin-container {
     max-width: 480px;
     margin: 0 auto;
     min-height: 100vh;
     background-color: var(--bg);
-    padding: var(--space-md) var(--space-md) 100px;
+    padding: calc(var(--space-md) + var(--tg-safe-top)) var(--space-md) calc(100px + var(--tg-safe-bottom));
 }
 
 /* ============================================ */
@@ -80,7 +84,7 @@ body {
 
 .header {
     background: var(--bg);
-    padding: var(--space-md) 0;
+    padding: calc(var(--space-md) + var(--tg-safe-top)) 0 var(--space-md);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -1044,7 +1048,7 @@ input:checked + .toggle-slider:before {
 
 .cart-icon {
     position: fixed;
-    bottom: 20px;
+    bottom: calc(20px + var(--tg-safe-bottom));
     right: 20px;
     width: 56px;
     height: 56px;
@@ -1101,6 +1105,8 @@ input:checked + .toggle-slider:before {
     display: flex;
     flex-direction: column;
     border-left: 1px solid var(--border);
+    padding-top: var(--tg-safe-top);
+    padding-bottom: var(--tg-safe-bottom);
 }
 
 .cart-panel.open {
@@ -1288,6 +1294,8 @@ input:checked + .toggle-slider:before {
     align-items: center;
     justify-content: center;
     padding: var(--space-md);
+    padding-top: calc(var(--space-md) + var(--tg-safe-top));
+    padding-bottom: calc(var(--space-md) + var(--tg-safe-bottom));
 }
 
 .modal.open {
@@ -1443,7 +1451,7 @@ input:checked + .toggle-slider:before {
 
 .toast-container {
     position: fixed;
-    bottom: 20px;
+    bottom: calc(20px + var(--tg-safe-bottom));
     left: 50%;
     transform: translateX(-50%);
     z-index: 3000;
@@ -1671,6 +1679,7 @@ input:checked + .toggle-slider:before {
     animation: slideUp 0.3s ease;
     max-height: 80vh;
     overflow-y: auto;
+    margin-bottom: var(--tg-safe-bottom);
 }
 
 @keyframes slideUp {
@@ -1904,7 +1913,7 @@ input:checked + .toggle-slider:before {
 /* Адаптивность для мобильных устройств */
 @media (max-width: 480px) {
     .app, .admin-container {
-        padding: var(--space-sm) var(--space-sm) 90px;
+        padding: calc(var(--space-sm) + var(--tg-safe-top)) var(--space-sm) calc(90px + var(--tg-safe-bottom));
     }
 
     .form-grid {
@@ -1924,7 +1933,7 @@ input:checked + .toggle-slider:before {
     }
 
     .cart-icon {
-        bottom: 16px;
+        bottom: calc(16px + var(--tg-safe-bottom));
         right: 16px;
         width: 52px;
         height: 52px;
@@ -1956,6 +1965,22 @@ input:checked + .toggle-slider:before {
         font-size: 28px;
     }
 }
+
+/* Поддержка safe areas для Telegram */
+@supports (padding-top: constant(safe-area-inset-top)) {
+    :root {
+        --tg-safe-top: constant(safe-area-inset-top);
+        --tg-safe-bottom: constant(safe-area-inset-bottom);
+    }
+}
+
+@supports (padding-top: env(safe-area-inset-top)) {
+    :root {
+        --tg-safe-top: env(safe-area-inset-top);
+        --tg-safe-bottom: env(safe-area-inset-bottom);
+    }
+}
+
 /* ============================================ */
 /* УЛУЧШЕННЫЕ КНОПКИ И СЕЛЕКТЫ (ТОЛЬКО НУЖНЫЕ ЭЛЕМЕНТЫ) */
 /* ============================================ */
@@ -2165,11 +2190,6 @@ select {
 .form-group textarea,
 .form-group select {
     caret-color: #000000 !important;
-}
-
-/* Для поиска и других полей */
-.header-right .header-icon {
-    /* это не поле ввода, тут курсор не меняем */
 }
 
 /* Для модальных окон */
