@@ -174,7 +174,14 @@ function switchTab(tab) {
         loadCakes();
     }
     if (tab === 'categories') loadCategories();
-    if (tab === 'users') loadUsers();
+    if (tab === 'users') {
+        console.log('👥 Переключение на вкладку пользователей');
+        const grid = document.getElementById('adminUsersGrid');
+        if (grid) {
+            grid.innerHTML = '<div class="loading">Загрузка...</div>';
+        }
+        setTimeout(() => loadUsers(true), 100);
+    }
     if (tab === 'active-orders') {
         loadActiveOrders();
     }
@@ -667,58 +674,138 @@ function closeEditModal() {
 // УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ
 // ============================================
 
-// Загрузка пользователей (только админы и курьеры)
-async function loadUsers() {
+// Улучшенная функция загрузки пользователей
+async function loadUsers(force = false) {
+    if (force) {
+        console.log('🔄 Принудительная загрузка пользователей...');
+    } else {
+        console.log('📥 Загрузка пользователей...');
+    }
+    
     try {
-        const response = await fetch('/api/admin/users');
+        // Добавляем timestamp для обхода кэша
+        let url = '/api/admin/users';
+        if (force) {
+            url += '?_=' + Date.now();
+        }
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const users = await response.json();
+        console.log('📦 Получены пользователи:', users.length);
+        
         renderAdminUsers(users);
     } catch (error) {
         console.error('❌ Ошибка загрузки пользователей:', error);
         showToast('Ошибка загрузки пользователей', 'error');
+        
+        const grid = document.getElementById('adminUsersGrid');
+        if (grid) {
+            grid.innerHTML = '<div class="empty-cart">Ошибка загрузки. <button onclick="loadUsers(true)" style="background: none; border: none; color: var(--accent); text-decoration: underline; cursor: pointer;">Повторить</button></div>';
+        }
     }
 }
 
-// Отрисовка пользователей в админке
+// Улучшенная функция отрисовки пользователей
 function renderAdminUsers(users) {
     const grid = document.getElementById('adminUsersGrid');
-
-    if (users.length === 0) {
-        grid.innerHTML = '<div class="empty-cart">Нет сотрудников</div>';
+    
+    if (!grid) {
+        console.error('❌ Элемент adminUsersGrid не найден');
         return;
     }
 
-    grid.innerHTML = users.map(user => `
-        <div class="user-card">
-            <span class="user-role-badge ${user.role}">${user.role === 'admin' ? 'Админ' : 'Курьер'}</span>
-            <div class="user-info">
-                <div class="user-name">${user.firstName}</div>
-                <div class="user-detail"><i class="fas fa-user"></i> @${user.username || 'нет'}</div>
-                <div class="user-detail"><i class="fas fa-id-badge"></i> ID: ${user.telegramId}</div>
-                <div class="user-detail"><i class="fas fa-phone"></i> ${user.phone || 'не указан'}</div>
-            </div>
-            <div class="user-shift-toggle">
-                <span>На смене</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" ${user.onShift ? 'checked' : ''} onchange="toggleUserShift(${user.id})">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            <div class="order-actions">
-                <button class="action-btn" onclick="editUser(${user.id})">
-                    <i class="fas fa-edit"></i> Редактировать
-                </button>
-                <button class="action-btn cancel-btn" onclick="deleteUser(${user.id})">
-                    <i class="fas fa-trash"></i> Удалить
-                </button>
-            </div>
-        </div>
-    `).join('');
+    // Принудительно очищаем все дочерние элементы
+    while (grid.firstChild) {
+        grid.removeChild(grid.firstChild);
+    }
+
+    if (users.length === 0) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'empty-cart';
+        emptyDiv.innerHTML = 'Нет сотрудников';
+        grid.appendChild(emptyDiv);
+        return;
+    }
+
+    console.log('🎨 Отрисовка пользователей:', users.length);
+
+    // Создаем карточки через DOM API для лучшей совместимости
+    users.forEach(user => {
+        const card = document.createElement('div');
+        card.className = 'user-card';
+        
+        // Badge роли
+        const roleBadge = document.createElement('span');
+        roleBadge.className = `user-role-badge ${user.role}`;
+        roleBadge.textContent = user.role === 'admin' ? 'Админ' : 'Курьер';
+        card.appendChild(roleBadge);
+        
+        // Информация о пользователе
+        const userInfo = document.createElement('div');
+        userInfo.className = 'user-info';
+        
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'user-name';
+        nameDiv.textContent = user.firstName || 'Без имени';
+        userInfo.appendChild(nameDiv);
+        
+        const usernameDiv = document.createElement('div');
+        usernameDiv.className = 'user-detail';
+        usernameDiv.innerHTML = `<i class="fas fa-user"></i> @${user.username || 'нет'}`;
+        userInfo.appendChild(usernameDiv);
+        
+        const idDiv = document.createElement('div');
+        idDiv.className = 'user-detail';
+        idDiv.innerHTML = `<i class="fas fa-id-badge"></i> ID: ${user.telegramId}`;
+        userInfo.appendChild(idDiv);
+        
+        const phoneDiv = document.createElement('div');
+        phoneDiv.className = 'user-detail';
+        phoneDiv.innerHTML = `<i class="fas fa-phone"></i> ${user.phone || 'не указан'}`;
+        userInfo.appendChild(phoneDiv);
+        
+        card.appendChild(userInfo);
+        
+        // Toggle смены
+        const shiftToggle = document.createElement('div');
+        shiftToggle.className = 'user-shift-toggle';
+        shiftToggle.innerHTML = `
+            <span>На смене</span>
+            <label class="toggle-switch">
+                <input type="checkbox" ${user.onShift ? 'checked' : ''} onchange="toggleUserShift(${user.id})">
+                <span class="toggle-slider"></span>
+            </label>
+        `;
+        card.appendChild(shiftToggle);
+        
+        // Кнопки действий
+        const actions = document.createElement('div');
+        actions.className = 'order-actions';
+        
+        const editBtn = document.createElement('button');
+        editBtn.className = 'action-btn';
+        editBtn.setAttribute('onclick', `editUser(${user.id})`);
+        editBtn.innerHTML = '<i class="fas fa-edit"></i> Редактировать';
+        actions.appendChild(editBtn);
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'action-btn cancel-btn';
+        deleteBtn.setAttribute('onclick', `deleteUser(${user.id})`);
+        deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Удалить';
+        actions.appendChild(deleteBtn);
+        
+        card.appendChild(actions);
+        
+        grid.appendChild(card);
+    });
 }
 
-// ============================================
-// ИСПРАВЛЕННАЯ ФУНКЦИЯ ДОБАВЛЕНИЯ ПОЛЬЗОВАТЕЛЯ
-// ============================================
+// ИСПРАВЛЕННАЯ функция добавления пользователя
 async function addUser(event) {
     event.preventDefault();
     
@@ -792,7 +879,7 @@ async function addUser(event) {
         phone: phone
     };
 
-    console.log('📤 Отправка данных:', userData);
+    console.log('📤 Отправка данных на сервер:', userData);
 
     // Показываем индикатор загрузки
     const submitBtn = event.target.querySelector('button[type="submit"]');
@@ -818,8 +905,18 @@ async function addUser(event) {
             // Очищаем форму
             document.getElementById('addUserForm').reset();
             
-            // Перезагружаем список сотрудников
-            await loadUsers();
+            // Очищаем контейнер перед обновлением
+            const grid = document.getElementById('adminUsersGrid');
+            if (grid) {
+                grid.innerHTML = '<div class="loading">Обновление списка...</div>';
+            }
+            
+            // Ждем немного и обновляем список
+            setTimeout(async () => {
+                console.log('🔄 Обновление списка пользователей...');
+                await loadUsers(true);
+                console.log('✅ Список пользователей обновлен');
+            }, 1000);
 
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.notificationOccurred('success');
@@ -872,6 +969,11 @@ async function saveUserEdit(event) {
         phone: document.getElementById('editUserPhone').value
     };
 
+    const submitBtn = event.target.querySelector('.submit-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Сохранение...';
+
     try {
         const response = await fetch(`/api/admin/users/${userId}`, {
             method: 'PUT',
@@ -882,7 +984,7 @@ async function saveUserEdit(event) {
         if (response.ok) {
             showToast('✅ Изменения сохранены!', 'success');
             closeEditUserModal();
-            loadUsers();
+            await loadUsers(true);
 
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.notificationOccurred('success');
@@ -894,6 +996,9 @@ async function saveUserEdit(event) {
     } catch (error) {
         console.error('❌ Ошибка сохранения пользователя:', error);
         showToast('Ошибка при сохранении', 'error');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
     }
 }
 
@@ -908,7 +1013,7 @@ async function deleteUser(userId) {
 
         if (response.ok) {
             showToast('✅ Сотрудник удален', 'success');
-            loadUsers();
+            await loadUsers(true);
         } else {
             const data = await response.json();
             showToast(data.error || '❌ Ошибка удаления', 'error');
@@ -929,7 +1034,7 @@ async function toggleUserShift(userId) {
         if (response.ok) {
             const data = await response.json();
             showToast(`✅ Статус обновлен`, 'success');
-            loadUsers();
+            loadUsers(true);
         }
     } catch (error) {
         console.error('❌ Ошибка переключения статуса:', error);
