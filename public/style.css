@@ -2743,3 +2743,93 @@ body {
 .toast-container {
     bottom: calc(20px + env(safe-area-inset-bottom, 0));
 }
+/* ============================================ */
+/* ФИНАЛЬНОЕ РЕШЕНИЕ ДЛЯ ОТСТУПА TELEGRAM */
+/* ============================================ */
+
+/* Принудительный отступ для всего контента */
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Основной контейнер - добавляем большой отступ сверху */
+.app, .admin-container {
+    padding-top: 55px !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Фиксируем шапку с правильным отступом */
+.header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    background: var(--bg) !important;
+    margin-top: 0 !important;
+    padding-top: 15px !important; /* Внутренний отступ шапки */
+    min-height: 60px !important;
+}
+
+/* Добавляем дополнительный фон для шапки, чтобы контент не просвечивал */
+.header::before {
+    content: '' !important;
+    position: absolute !important;
+    top: -55px !important; /* Растягиваем фон вверх под системные кнопки */
+    left: 0 !important;
+    right: 0 !important;
+    height: 55px !important;
+    background: var(--bg) !important;
+    z-index: -1 !important;
+}
+
+/* Корректируем декоративные элементы в шапке */
+.header .sparkle-1,
+.header .sparkle-2,
+.header .sparkle-3 {
+    top: 25px !important;
+}
+
+.header-ornament-left,
+.header-ornament-right {
+    top: 0 !important;
+    height: calc(100% + 55px) !important;
+}
+
+/* Для модальных окон */
+.modal {
+    padding-top: 55px !important;
+}
+
+.modal-content {
+    margin-top: 0 !important;
+}
+
+/* Для bottom sheet */
+.modal-content.bottom-sheet {
+    margin-top: auto !important;
+    padding-top: 0 !important;
+}
+
+/* Для фиксированной корзины */
+.cart-icon {
+    bottom: 20px !important;
+    z-index: 1000 !important;
+}
+
+/* Для уведомлений */
+.toast-container {
+    z-index: 2000 !important;
+}
+
+/* Если шапка все еще перекрывается, увеличиваем отступ */
+@media (max-width: 480px) {
+    .app, .admin-container {
+        padding-top: 60px !important;
+    }
+    
+    .header::before {
+        height: 60px !important;
+        top: -60px !important;
+    }
+}
