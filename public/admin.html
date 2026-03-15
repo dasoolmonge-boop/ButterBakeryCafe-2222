@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ButterBakeryCafe - Админ панель</title>
 
     <!-- Telegram Web App SDK -->
@@ -21,24 +21,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <body>
-    <!-- Летающие круассанчики на фоне -->
-    <div class="croissants-bg">
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-        <span>🥐</span>
-    </div>
-    
-    <!-- Остальной контент -->
     <div class="admin-container">
         <!-- Заголовок страницы -->
         <div class="page-header">
@@ -104,7 +86,7 @@
                     <div class="form-group">
                         <label for="cakeCategory">Категория *</label>
                         <select id="cakeCategory" required>
-                            <option value="">Выберите категорию</option>
+                            <option value="">Категорию</option>
                         </select>
                     </div>
                 </div>
@@ -171,7 +153,7 @@
         <div id="users-section" class="admin-section">
             <h2 class="section-title">➕ Добавить сотрудника</h2>
 
-            <!-- ИСПРАВЛЕННАЯ ФОРМА ДОБАВЛЕНИЯ СОТРУДНИКА -->
+            <!-- Форма добавления сотрудника -->
             <form id="addUserForm" class="form-container" onsubmit="addUser(event)">
                 <div class="form-grid">
                     <div class="form-group">
@@ -192,7 +174,6 @@
                     <div class="form-group">
                         <label for="userRole">Роль *</label>
                         <select id="userRole" required>
-                            <option value="">Выберите роль</option>
                             <option value="admin">Администратор</option>
                             <option value="courier">Курьер</option>
                         </select>
