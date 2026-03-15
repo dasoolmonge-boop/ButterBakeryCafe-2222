@@ -19,6 +19,12 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const SITE_DOMAIN = process.env.SITE_DOMAIN || 'butterbakerycafe.bothost.ru';
 const ADMIN_ID = process.env.ADMIN_ID ? parseInt(process.env.ADMIN_ID) : 1066867845;
 
+// Настройки автоочистки истории заказов
+const AUTO_CLEANUP_ENABLED = process.env.AUTO_CLEANUP_ENABLED !== 'false'; // По умолчанию true
+const CLEANUP_INTERVAL_HOURS = parseInt(process.env.CLEANUP_INTERVAL_HOURS) || 24; // Проверка каждые 24 часа
+const MAX_ORDER_AGE_DAYS = parseInt(process.env.MAX_ORDER_AGE_DAYS) || 7; // Удалять заказы старше 7 дней
+const CLEANUP_TIME = process.env.CLEANUP_TIME || '03:00'; // Время очистки (3 часа ночи)
+
 // Проверяем наличие обязательных переменных
 if (!BOT_TOKEN) {
     console.error('❌ Ошибка: Не задан BOT_TOKEN в переменных окружения!');
@@ -37,6 +43,9 @@ const DB_FILE = path.join(DATA_DIR, 'db.json');
 
 // Путь к папке для загрузок - теперь тоже в DATA_DIR!
 const UPLOAD_DIR = path.join(DATA_DIR, 'uploads');
+
+// Путь к лог-файлу для очистки истории
+const CLEANUP_LOG_FILE = path.join(DATA_DIR, 'cleanup.log');
 
 // MIME типы для статических файлов
 const mimeTypes = {
@@ -83,13 +92,264 @@ try {
     }
 }
 
+// ============================================
+// ФУНКЦИИ ДЛЯ ЛОГИРОВАНИЯ ОЧИСТКИ
+// ============================================
+
+function logCleanup(message, type = 'info') {
+    const timestamp = new Date().toISOString();
+    const logMessage = `[${timestamp}] [${type.toUpperCase()}] ${message}\n`;
+    
+    console.log(logMessage.trim());
+    
+    try {
+        fs.appendFileSync(CLEANUP_LOG_FILE, logMessage);
+    } catch (error) {
+        console.error('❌ Ошибка записи в лог-файл:', error.message);
+    }
+}
+
+// ============================================
+// ФУНКЦИИ ДЛЯ АВТОМАТИЧЕСКОЙ ОЧИСТКИ ИСТОРИИ
+// ============================================
+
+/**
+ * Очистка старых заказов из истории
+ * @returns {Object} Результат очистки
+ */
+function cleanupOldOrders() {
+    try {
+        const db = readDB();
+        const now = new Date();
+        const maxAgeMs = MAX_ORDER_AGE_DAYS * 24 * 60 * 60 * 1000;
+        
+        // Сохраняем активные заказы (не завершенные и не отмененные) независимо от возраста
+        const activeOrders = db.orders.filter(o => 
+            o.status !== 'delivered' && o.status !== 'cancelled'
+        );
+        
+        // Для истории (доставленные и отмененные) применяем фильтр по дате
+        const recentHistoryOrders = db.orders.filter(o => {
+            if (o.status !== 'delivered' && o.status !== 'cancelled') return false;
+            
+            const orderDate = new Date(o.createdAt);
+            const ageMs = now - orderDate;
+            return ageMs <= maxAgeMs;
+        });
+        
+        // Находим заказы, которые будут удалены (для логирования)
+        const deletedOrders = db.orders.filter(o => {
+            if (o.status !== 'delivered' && o.status !== 'cancelled') return false;
+            
+            const orderDate = new Date(o.createdAt);
+            const ageMs = now - orderDate;
+            return ageMs > maxAgeMs;
+        });
+        
+        // Объединяем активные и недавние исторические заказы
+        const beforeCount = db.orders.length;
+        db.orders = [...activeOrders, ...recentHistoryOrders];
+        const afterCount = db.orders.length;
+        const deletedCount = beforeCount - afterCount;
+        
+        if (deletedCount > 0) {
+            writeDB(db);
+            
+            // Формируем детальную информацию об удаленных заказах
+            const deletedInfo = deletedOrders.map(order => 
+                `#${order.id} (${order.status}) от ${new Date(order.createdAt).toLocaleDateString('ru-RU')} - ${order.name}`
+            ).join('\n  ');
+            
+            logCleanup(`✅ Очистка истории: удалено ${deletedCount} заказов`, 'success');
+            logCleanup(`  Удаленные заказы:\n  ${deletedInfo}`, 'info');
+            
+            // Отправляем уведомление администраторам
+            notifyAdminsAboutCleanup(deletedCount);
+            
+            return {
+                success: true,
+                deletedCount,
+                deletedOrders: deletedOrders.map(o => o.id)
+            };
+        } else {
+            logCleanup(`ℹ️ Очистка истории: нет заказов для удаления`, 'info');
+            return {
+                success: true,
+                deletedCount: 0,
+                deletedOrders: []
+            };
+        }
+    } catch (error) {
+        logCleanup(`❌ Ошибка при очистке истории: ${error.message}`, 'error');
+        console.error('Ошибка очистки истории:', error);
+        return {
+            success: false,
+            error: error.message,
+            deletedCount: 0
+        };
+    }
+}
+
+/**
+ * Уведомление администраторов об очистке истории
+ */
+function notifyAdminsAboutCleanup(deletedCount) {
+    const db = readDB();
+    const admins = db.users.filter(u => u.role === 'admin');
+    
+    const message = `🧹 **Автоматическая очистка истории**\n\n` +
+        `Удалено заказов: **${deletedCount}**\n` +
+        `Заказы старше **${MAX_ORDER_AGE_DAYS}** дней\n` +
+        `Время очистки: ${new Date().toLocaleString('ru-RU')}\n\n` +
+        `_История заказов автоматически очищается для оптимизации работы._`;
+    
+    admins.forEach(admin => {
+        sendTelegramMessage(admin.telegramId, message);
+    });
+}
+
+/**
+ * Запланированная очистка по расписанию
+ */
+function scheduleCleanup() {
+    if (!AUTO_CLEANUP_ENABLED) {
+        logCleanup('⚠️ Автоматическая очистка истории отключена', 'warning');
+        return;
+    }
+    
+    logCleanup(`🕒 Запланирована автоматическая очистка истории каждые ${CLEANUP_INTERVAL_HOURS} часов`, 'info');
+    logCleanup(`   Удаление заказов старше ${MAX_ORDER_AGE_DAYS} дней`, 'info');
+    
+    // Запускаем немедленную проверку при старте
+    setTimeout(() => {
+        logCleanup('🔄 Первоначальная проверка истории...', 'info');
+        cleanupOldOrders();
+    }, 5000); // Через 5 секунд после запуска
+    
+    // Запускаем периодическую проверку
+    setInterval(() => {
+        const now = new Date();
+        const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        
+        // Проверяем, наступило ли время очистки (с погрешностью в 1 час)
+        const [cleanupHour, cleanupMinute] = CLEANUP_TIME.split(':').map(Number);
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        
+        // Запускаем очистку, если текущее время близко к запланированному (в пределах часа)
+        if (currentHour === cleanupHour && currentMinute >= cleanupMinute - 30 && currentMinute <= cleanupMinute + 30) {
+            logCleanup(`🔄 Запуск плановой очистки истории в ${currentTime}...`, 'info');
+            cleanupOldOrders();
+        }
+    }, CLEANUP_INTERVAL_HOURS * 60 * 60 * 1000); // Проверяем каждые N часов
+}
+
+// ============================================
+// API ДЛЯ УПРАВЛЕНИЯ ОЧИСТКОЙ (ТОЛЬКО ДЛЯ АДМИНОВ)
+// ============================================
+
+/**
+ * Ручной запуск очистки истории
+ */
+function manualCleanup(req, res) {
+    if (!isAdminRequest(req)) {
+        res.writeHead(403);
+        res.end(JSON.stringify({ error: 'Доступ запрещен' }));
+        return;
+    }
+    
+    logCleanup('👤 Ручной запуск очистки истории администратором', 'info');
+    const result = cleanupOldOrders();
+    
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(result));
+}
+
+/**
+ * Получение статистики истории заказов
+ */
+function getHistoryStats(req, res) {
+    if (!isAdminRequest(req)) {
+        res.writeHead(403);
+        res.end(JSON.stringify({ error: 'Доступ запрещен' }));
+        return;
+    }
+    
+    const db = readDB();
+    const now = new Date();
+    const maxAgeMs = MAX_ORDER_AGE_DAYS * 24 * 60 * 60 * 1000;
+    
+    const historyOrders = db.orders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
+    const oldHistoryOrders = historyOrders.filter(o => {
+        const orderDate = new Date(o.createdAt);
+        return (now - orderDate) > maxAgeMs;
+    });
+    
+    const stats = {
+        totalOrders: db.orders.length,
+        historyOrders: historyOrders.length,
+        oldHistoryOrders: oldHistoryOrders.length,
+        maxAgeDays: MAX_ORDER_AGE_DAYS,
+        nextCleanupTime: CLEANUP_TIME,
+        autoCleanupEnabled: AUTO_CLEANUP_ENABLED,
+        oldestOrder: historyOrders.length > 0 ? 
+            new Date(Math.min(...historyOrders.map(o => new Date(o.createdAt)))).toISOString() : null
+    };
+    
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(stats));
+}
+
+/**
+ * Изменение настроек очистки (только для админов)
+ */
+function updateCleanupSettings(req, res) {
+    if (!isAdminRequest(req)) {
+        res.writeHead(403);
+        res.end(JSON.stringify({ error: 'Доступ запрещен' }));
+        return;
+    }
+    
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+        try {
+            const settings = JSON.parse(body);
+            
+            // Обновляем настройки (временно, для текущего сеанса)
+            if (settings.maxAgeDays) {
+                MAX_ORDER_AGE_DAYS = settings.maxAgeDays;
+            }
+            if (settings.cleanupTime) {
+                CLEANUP_TIME = settings.cleanupTime;
+            }
+            if (settings.enabled !== undefined) {
+                AUTO_CLEANUP_ENABLED = settings.enabled;
+            }
+            
+            logCleanup(`⚙️ Настройки очистки обновлены: ${JSON.stringify(settings)}`, 'info');
+            
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+                success: true,
+                maxAgeDays: MAX_ORDER_AGE_DAYS,
+                cleanupTime: CLEANUP_TIME,
+                enabled: AUTO_CLEANUP_ENABLED
+            }));
+        } catch (error) {
+            res.writeHead(400);
+            res.end(JSON.stringify({ error: 'Invalid JSON' }));
+        }
+    });
+}
+
 // Инициализация базы данных
 function initDB() {
     console.log(`\n📂 Проверка базы данных: ${DB_FILE}`);
-    
+
     if (!fs.existsSync(DB_FILE)) {
         console.log('🆕 База данных не найдена. Создание новой...');
-        
+
         const initialData = {
             categories: [
                 { id: 1, name: "Классические", description: "Традиционные рецепты" },
@@ -140,12 +400,13 @@ function initDB() {
                 }
             ],
             orders: [],
+            cleanupLog: [], // Лог очисток
             nextCakeId: 4,
             nextOrderId: 1,
             nextCategoryId: 3,
             nextUserId: 2
         };
-        
+
         try {
             fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
             console.log(`✅ База данных создана: ${DB_FILE}`);
@@ -154,12 +415,12 @@ function initDB() {
         }
     } else {
         console.log(`📦 База данных найдена: ${DB_FILE}`);
-        
+
         // Проверяем, есть ли администратор в базе
         try {
             const data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
             const adminExists = data.users.some(u => u.telegramId === ADMIN_ID && u.role === 'admin');
-            
+
             if (!adminExists) {
                 console.log('👑 Добавление администратора в существующую базу...');
                 const newAdmin = {
@@ -206,6 +467,11 @@ function writeDB(data) {
 
 // Инициализируем БД при старте
 initDB();
+
+// ============================================
+// ЗАПУСК ПЛАНОВОЙ ОЧИСТКИ
+// ============================================
+scheduleCleanup();
 
 // Вспомогательная функция для отправки сообщений в Telegram
 function sendTelegramMessage(chatId, text, parseMode = 'Markdown') {
@@ -424,6 +690,50 @@ const server = http.createServer((req, res) => {
         // В реальном проекте здесь должна быть проверка подписи Telegram
         return true; // Для теста разрешаем все
     };
+
+    // ============================================
+    // API ДЛЯ УПРАВЛЕНИЯ ОЧИСТКОЙ ИСТОРИИ
+    // ============================================
+
+    // Ручной запуск очистки истории
+    if (pathname === '/api/admin/cleanup' && req.method === 'POST') {
+        manualCleanup(req, res);
+        return;
+    }
+
+    // Получение статистики истории
+    if (pathname === '/api/admin/cleanup/stats' && req.method === 'GET') {
+        getHistoryStats(req, res);
+        return;
+    }
+
+    // Обновление настроек очистки
+    if (pathname === '/api/admin/cleanup/settings' && req.method === 'PUT') {
+        updateCleanupSettings(req, res);
+        return;
+    }
+
+    // Получение лога очисток
+    if (pathname === '/api/admin/cleanup/log' && req.method === 'GET') {
+        if (!isAdminRequest(req)) {
+            res.writeHead(403);
+            res.end(JSON.stringify({ error: 'Доступ запрещен' }));
+            return;
+        }
+
+        try {
+            const logContent = fs.readFileSync(CLEANUP_LOG_FILE, 'utf8');
+            const lines = logContent.split('\n').filter(line => line.trim());
+            const lastEntries = lines.slice(-100); // Последние 100 записей
+            
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ log: lastEntries }));
+        } catch (error) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ log: [], message: 'Лог-файл не найден' }));
+        }
+        return;
+    }
 
     // ============================================
     // API ДЛЯ ПОЛЬЗОВАТЕЛЕЙ
@@ -837,7 +1147,7 @@ const server = http.createServer((req, res) => {
             // Извлекаем имя файла из URL
             const filename = path.basename(cake.photo);
             const filePath = path.join(UPLOAD_DIR, filename);
-            
+
             if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
                 console.log(`🗑️ Удален файл: ${filename}`);
@@ -1262,7 +1572,7 @@ const server = http.createServer((req, res) => {
         // Извлекаем имя файла из пути
         const filename = path.basename(pathname);
         filePath = path.join(UPLOAD_DIR, filename);
-    } 
+    }
     else if (pathname === '/') {
         filePath = path.join(__dirname, 'public', 'index.html');
     } else if (pathname === '/admin') {
@@ -1320,5 +1630,11 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log(`💾 Файл базы данных: ${DB_FILE}`);
     console.log(`📸 Загрузки сохраняются в: ${UPLOAD_DIR}`);
     console.log(`🌐 Режим: ${IS_PRODUCTION ? 'PRODUCTION' : 'DEVELOPMENT'}`);
+    console.log(`=============================================`);
+    console.log(`🧹 Автоматическая очистка истории:`);
+    console.log(`   Статус: ${AUTO_CLEANUP_ENABLED ? 'ВКЛЮЧЕНА' : 'ОТКЛЮЧЕНА'}`);
+    console.log(`   Удаление заказов старше: ${MAX_ORDER_AGE_DAYS} дней`);
+    console.log(`   Время очистки: ${CLEANUP_TIME}`);
+    console.log(`   Проверка каждые: ${CLEANUP_INTERVAL_HOURS} ч.`);
     console.log(`=============================================\n`);
 });
