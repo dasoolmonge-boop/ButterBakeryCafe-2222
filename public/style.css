@@ -2820,3 +2820,883 @@ body.fullscreen-mode .modal {
         margin-right: env(safe-area-inset-right);
     }
 }
+/* ============================================ */
+/* ПОЛНАЯ АДАПТИВНОСТЬ ПОД ВСЕ УСТРОЙСТВА */
+/* ============================================ */
+
+/* Адаптация для очень маленьких телефонов (до 320px) */
+@media (max-width: 320px) {
+    :root {
+        --space-xs: 6px;
+        --space-sm: 8px;
+        --space-md: 12px;
+        --space-lg: 16px;
+        --space-xl: 20px;
+    }
+
+    .header-title {
+        font-size: 16px;
+    }
+
+    .header-logo {
+        height: 32px;
+    }
+
+    .admin-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+        height: 30px;
+    }
+
+    .category {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .cake-name {
+        font-size: 14px;
+    }
+
+    .cake-price {
+        font-size: 14px;
+    }
+
+    .cake-weight, .cake-description {
+        font-size: 11px;
+    }
+
+    .add-to-cart {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .cart-icon {
+        width: 48px;
+        height: 48px;
+        bottom: 12px;
+        right: 12px;
+    }
+
+    .cart-icon i {
+        font-size: 20px;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .time-unit {
+        min-width: 45px;
+        height: 45px;
+        font-size: 15px;
+    }
+
+    .selected-time {
+        font-size: 24px;
+        padding: var(--space-sm);
+    }
+
+    .calendar-day {
+        max-width: 35px;
+        font-size: 13px;
+    }
+
+    .admin-tab {
+        padding: 8px 4px !important;
+        font-size: 11px !important;
+    }
+
+    .admin-tab i {
+        font-size: 12px !important;
+    }
+
+    .order-actions select,
+    .order-actions .action-btn {
+        font-size: 12px !important;
+        padding: 6px 10px !important;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .stat-label {
+        font-size: 10px;
+    }
+}
+
+/* Адаптация для маленьких телефонов (321px - 375px) */
+@media (min-width: 321px) and (max-width: 375px) {
+    :root {
+        --space-sm: 10px;
+        --space-md: 14px;
+        --space-lg: 18px;
+    }
+
+    .header-title {
+        font-size: 17px;
+    }
+
+    .header-logo {
+        height: 36px;
+    }
+
+    .admin-btn {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .category {
+        padding: 7px 14px;
+        font-size: 13px;
+    }
+
+    .cake-name {
+        font-size: 15px;
+    }
+
+    .cake-price {
+        font-size: 15px;
+    }
+
+    .time-unit {
+        min-width: 50px;
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .admin-tab {
+        padding: 10px 6px !important;
+        font-size: 12px !important;
+    }
+}
+
+/* Адаптация для средних телефонов (376px - 425px) */
+@media (min-width: 376px) and (max-width: 425px) {
+    .header-title {
+        font-size: 18px;
+    }
+
+    .header-logo {
+        height: 38px;
+    }
+
+    .cake-name {
+        font-size: 16px;
+    }
+
+    .cake-price {
+        font-size: 16px;
+    }
+
+    .admin-tab {
+        font-size: 13px !important;
+    }
+}
+
+/* Адаптация для больших телефонов (426px - 480px) */
+@media (min-width: 426px) and (max-width: 480px) {
+    .header-title {
+        font-size: 19px;
+    }
+
+    .header-logo {
+        height: 40px;
+    }
+
+    .admin-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+
+/* Адаптация для маленьких планшетов (481px - 600px) */
+@media (min-width: 481px) and (max-width: 600px) {
+    .app, .admin-container {
+        max-width: 100%;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .users-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+/* Адаптация для планшетов (601px - 768px) */
+@media (min-width: 601px) and (max-width: 768px) {
+    .app, .admin-container {
+        max-width: 100%;
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .users-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    .header-title {
+        font-size: 20px;
+    }
+
+    .header-logo {
+        height: 42px;
+    }
+
+    .cake-card {
+        border-radius: 18px;
+    }
+
+    .modal-content {
+        width: 500px;
+    }
+}
+
+/* Адаптация для больших планшетов (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .app, .admin-container {
+        max-width: 800px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .users-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    .header-title {
+        font-size: 22px;
+    }
+
+    .header-logo {
+        height: 44px;
+    }
+
+    .admin-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .modal-content {
+        width: 600px;
+    }
+}
+
+/* Адаптация для небольших десктопов (1025px - 1280px) */
+@media (min-width: 1025px) and (max-width: 1280px) {
+    .app, .admin-container {
+        max-width: 900px;
+        padding: var(--space-xl) var(--space-xl) 120px;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .users-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    .modal-content {
+        width: 650px;
+    }
+
+    .cart-panel {
+        max-width: 450px;
+    }
+}
+
+/* Адаптация для средних десктопов (1281px - 1440px) */
+@media (min-width: 1281px) and (max-width: 1440px) {
+    .app, .admin-container {
+        max-width: 1000px;
+        padding: var(--space-xl) var(--space-xl) 120px;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .users-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
+
+    .modal-content {
+        width: 700px;
+    }
+
+    .header-title {
+        font-size: 24px;
+    }
+}
+
+/* Адаптация для больших десктопов (1441px и выше) */
+@media (min-width: 1441px) {
+    .app, .admin-container {
+        max-width: 1200px;
+        padding: var(--space-xl) var(--space-xl) 120px;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 24px;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .users-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
+
+    .modal-content {
+        width: 800px;
+    }
+
+    .header-title {
+        font-size: 26px;
+    }
+
+    .header-logo {
+        height: 48px;
+    }
+
+    .admin-btn {
+        padding: 10px 20px;
+        font-size: 15px;
+        height: 42px;
+    }
+
+    .cake-card:hover {
+        transform: translateY(-6px);
+    }
+}
+
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ РАЗНЫХ ОРИЕНТАЦИЙ */
+/* ============================================ */
+
+/* Альбомная ориентация на телефонах */
+@media (orientation: landscape) and (max-height: 500px) {
+    .app, .admin-container {
+        padding-bottom: 60px;
+    }
+
+    .header {
+        padding: var(--space-sm) 0;
+    }
+
+    .cart-icon {
+        bottom: 10px;
+        right: 10px;
+        width: 44px;
+        height: 44px;
+    }
+
+    .cart-icon i {
+        font-size: 20px;
+    }
+
+    .categories {
+        padding-bottom: 8px;
+    }
+
+    .cakes-grid {
+        gap: 10px;
+    }
+
+    .modal {
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+
+    .modal-content {
+        max-height: 85vh;
+    }
+
+    .bottom-sheet {
+        max-height: 85vh;
+    }
+
+    .time-scroll {
+        padding: 4px 0;
+    }
+
+    .time-unit {
+        min-width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+}
+
+/* Альбомная ориентация на планшетах */
+@media (orientation: landscape) and (min-width: 768px) and (max-width: 1024px) {
+    .cakes-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .users-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+}
+
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ РАЗНЫХ ВЫСОТ ЭКРАНА */
+/* ============================================ */
+
+/* Низкие экраны (до 600px высоты) */
+@media (max-height: 600px) {
+    .app, .admin-container {
+        padding-bottom: 80px;
+    }
+
+    .header {
+        padding: var(--space-sm) 0;
+    }
+
+    .categories {
+        padding-bottom: 8px;
+    }
+
+    .cakes-grid {
+        margin: var(--space-md) 0;
+    }
+
+    .cart-panel {
+        padding-bottom: 10px;
+    }
+
+    .modal-content {
+        max-height: 95vh;
+    }
+
+    .time-picker-content {
+        gap: var(--space-md);
+    }
+
+    .time-unit {
+        min-width: 45px;
+        height: 45px;
+    }
+}
+
+/* Средние экраны (601px - 800px высоты) */
+@media (min-height: 601px) and (max-height: 800px) {
+    .app, .admin-container {
+        padding-bottom: 90px;
+    }
+
+    .cakes-grid {
+        margin: var(--space-lg) 0;
+    }
+}
+
+/* Высокие экраны (801px - 900px высоты) */
+@media (min-height: 801px) and (max-height: 900px) {
+    .app, .admin-container {
+        padding-bottom: 100px;
+    }
+
+    .cakes-grid {
+        gap: 18px;
+    }
+
+    .cake-card {
+        border-radius: 18px;
+    }
+}
+
+/* Очень высокие экраны (901px и выше) */
+@media (min-height: 901px) {
+    .app, .admin-container {
+        padding-bottom: 110px;
+    }
+
+    .cakes-grid {
+        gap: 22px;
+    }
+
+    .cake-card {
+        border-radius: 20px;
+    }
+
+    .cake-info {
+        padding: 16px;
+    }
+
+    .cake-name {
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+
+    .cake-price {
+        font-size: 18px;
+    }
+
+    .cake-description {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .add-to-cart {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+
+    .categories {
+        padding: var(--space-sm) 0 var(--space-lg);
+    }
+
+    .category {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+}
+
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ УСТРОЙСТВ С ВЫСОКОЙ ПЛОТНОСТЬЮ ПИКСЕЛЕЙ */
+/* ============================================ */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .header::before {
+        height: 2px;
+    }
+
+    .header-title-wrapper::before {
+        height: 1.5px;
+    }
+
+    .border-highlight {
+        border-width: 0.5px;
+    }
+}
+
+@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+    .header::before {
+        height: 1.5px;
+    }
+
+    .header-title-wrapper::before {
+        height: 1px;
+    }
+}
+
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ УСТРОЙСТВ С КЛАВИАТУРОЙ */
+/* ============================================ */
+
+@media (hover: hover) and (pointer: fine) {
+    /* Стили для устройств с мышью */
+    .cake-card:hover {
+        transform: translateY(-6px);
+    }
+
+    .admin-tab:hover {
+        transform: translateY(-2px);
+    }
+
+    .category:hover {
+        transform: translateY(-1px);
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    /* Стили для сенсорных устройств */
+    .cake-card:active {
+        transform: scale(0.98);
+    }
+
+    .admin-tab:active {
+        transform: scale(0.95);
+    }
+
+    .category:active {
+        transform: scale(0.95);
+    }
+}
+
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ РЕЖИМА ЭКОНОМИИ ЭНЕРГИИ */
+/* ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .sparkle,
+    .header-confetti i,
+    .hearts-simple * {
+        animation: none !important;
+        opacity: 0.1 !important;
+    }
+}
+
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ ТЕМНОЙ ТЕМЫ (ОПЦИОНАЛЬНО) */
+/* ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    /* Можно добавить поддержку темной темы позже */
+}
+
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ ПЕЧАТИ */
+/* ============================================ */
+
+@media print {
+    .cart-icon,
+    .admin-tabs,
+    .order-actions,
+    .add-to-cart,
+    .cake-actions,
+    .category-actions,
+    .user-shift-toggle,
+    .header-confetti,
+    .sparkle,
+    .header-scroll,
+    .header-scroll-right,
+    .header-decoration,
+    .header-ornament-left,
+    .header-ornament-right {
+        display: none !important;
+    }
+
+    .app, .admin-container {
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    .cake-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    .header {
+        border-bottom: 1px solid #ddd;
+        background: white;
+    }
+
+    .header-title {
+        -webkit-text-fill-color: black;
+        background: none;
+        color: black;
+    }
+
+    .modal {
+        position: static;
+        display: block;
+        background: none;
+        padding: 0;
+    }
+
+    .modal-content {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
+
+/* ============================================ */
+/* ПОДДЕРЖКА СТАРЫХ БРАУЗЕРОВ */
+/* ============================================ */
+
+@supports not (display: grid) {
+    .cakes-grid,
+    .categories-grid,
+    .users-grid,
+    .stats-grid,
+    .admin-tabs {
+        display: flex !important;
+        flex-wrap: wrap;
+    }
+
+    .cake-card,
+    .category-card,
+    .user-card,
+    .stat-card,
+    .admin-tab {
+        margin: 8px;
+        flex: 1 1 auto;
+    }
+}
+
+@supports not (gap: 8px) {
+    .cakes-grid,
+    .categories,
+    .admin-tabs,
+    .form-grid,
+    .order-actions {
+        margin: -4px;
+    }
+
+    .cake-card,
+    .category,
+    .admin-tab,
+    .form-group,
+    .order-actions > * {
+        margin: 4px;
+    }
+}
+
+/* ============================================ */
+/* ОПТИМИЗАЦИЯ ПРОИЗВОДИТЕЛЬНОСТИ */
+/* ============================================ */
+
+@media (max-width: 768px) {
+    /* Отключаем тяжелые анимации на мобильных */
+    .sparkle,
+    .header-confetti i {
+        animation-duration: 4s;
+    }
+
+    .hearts-simple * {
+        animation-duration: 15s;
+    }
+}
+
+/* ============================================ */
+/* АДАПТАЦИЯ ДЛЯ УСТРОЙСТВ С БОЛЬШИМИ ЭКРАНАМИ */
+/* ============================================ */
+
+@media (min-width: 1920px) {
+    .app, .admin-container {
+        max-width: 1400px;
+    }
+
+    .cakes-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .users-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .admin-tabs {
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
+
+    .header-title {
+        font-size: 28px;
+    }
+
+    .header-logo {
+        height: 52px;
+    }
+}
