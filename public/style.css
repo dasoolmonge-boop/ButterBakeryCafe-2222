@@ -41,20 +41,15 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    margin: 0;
-    padding: 0;
 }
 
-/* Контейнеры - УБРАНЫ ОТСТУПЫ */
-.app, 
-.admin-container {
+/* Контейнеры */
+.app, .admin-container {
     max-width: 480px;
     margin: 0 auto;
     min-height: 100vh;
     background-color: var(--bg);
-    padding: 0 !important; /* Убраны все отступы */
-    position: relative;
-    z-index: 1;
+    padding: var(--space-md) var(--space-md) 100px;
 }
 
 /* ============================================ */
@@ -63,7 +58,6 @@ body {
 
 .page-header {
     margin-bottom: var(--space-xl);
-    padding-top: var(--space-md);
 }
 
 .page-header h1 {
@@ -89,54 +83,44 @@ body {
     padding: var(--space-md) 0;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 10;
     margin-bottom: var(--space-lg);
     border-bottom: 1px solid var(--border);
 }
 
 .header-content {
-    display: grid;
-    grid-template-columns: 40px 1fr 40px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    padding: 8px 0;
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    gap: var(--space-sm);
 }
 
+/* Стили для логотипа */
 .header-logo {
     height: 40px;
     width: auto;
     object-fit: contain;
 }
 
+.header-logo.rounded {
+    border-radius: 50%;
+}
+
 .header-title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--text-primary);
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0 4px;
-    position: relative;
-    z-index: 2;
-    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
-    letter-spacing: 0.5px;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    gap: var(--space-md);
 }
 
 .header-icon {
@@ -151,38 +135,7 @@ body {
     transform: scale(1.1);
 }
 
-/* Кнопка админ */
-.admin-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.2s;
-    white-space: nowrap;
-    height: 36px;
-}
-
-.admin-btn:hover {
-    background: var(--surface-hover);
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: translateY(-1px);
-}
-
-.admin-btn i {
-    font-size: 14px;
-    color: var(--accent);
-}
-
-/* Кнопка назад */
+/* Кнопка назад больше не используется, но стили оставим на всякий случай */
 .back-btn {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -204,67 +157,47 @@ body {
 }
 
 /* ============================================ */
-/* КНОПКИ НАВИГАЦИИ */
+/* КНОПКИ НАВИГАЦИИ (PILL BUTTONS) */
 /* ============================================ */
 
 .admin-tabs {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important;
-    margin-bottom: var(--space-xl) !important;
-    padding: 0 !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-xl);
 }
 
 .admin-tab {
-    width: 100% !important;
-    padding: 12px 8px !important;
+    padding: 10px 20px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px !important;
+    border-radius: 100px;
     color: var(--text-secondary);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
+    gap: 8px;
     transition: all 0.2s;
     white-space: nowrap;
-    text-align: center;
 }
 
 .admin-tab i {
     font-size: 16px;
 }
 
-.admin-tab .count {
-    background: var(--surface-hover);
-    padding: 2px 6px;
-    border-radius: 20px;
-    font-size: 11px;
-    margin-left: 4px;
-    color: var(--text-secondary);
-    min-width: 20px;
-    display: inline-block;
-}
-
 .admin-tab:hover {
     background: var(--surface-hover);
     color: var(--text-primary);
     border-color: var(--accent);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .admin-tab.active {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
-}
-
-.admin-tab.active .count {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
 }
 
 /* Категории (для пользовательской части) */
@@ -372,7 +305,6 @@ body {
     font-size: 15px;
     font-family: 'Inter', sans-serif;
     transition: all 0.2s;
-    caret-color: #000000 !important;
 }
 
 .form-group input:hover,
@@ -387,6 +319,12 @@ body {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(190, 114, 62, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
 }
 
 /* ============================================ */
@@ -490,6 +428,7 @@ body {
     pointer-events: none;
 }
 
+/* Кнопки действий на карточках */
 .action-btn {
     width: 100%;
     padding: 10px;
@@ -600,13 +539,7 @@ body {
     color: var(--text-secondary);
 }
 
-.cake-price-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: var(--space-xs);
-}
-
+/* Кнопка добавления в корзину на карточке товара */
 .add-to-cart {
     width: 40px;
     height: 40px;
@@ -629,10 +562,21 @@ body {
     transform: scale(1.1);
 }
 
+.add-to-cart:active {
+    transform: scale(0.95);
+}
+
 .add-to-cart.added {
     background: var(--success);
     color: white;
     border-color: var(--success);
+}
+
+.cake-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--space-xs);
 }
 
 /* Действия на карточке (админка) */
@@ -744,6 +688,10 @@ body {
     justify-content: center;
     transition: all 0.2s;
     font-size: 14px;
+}
+
+.category-action-btn:hover {
+    transform: scale(1.1);
 }
 
 .category-action-btn.edit:hover {
@@ -881,6 +829,55 @@ input:checked + .toggle-slider:before {
 /* ЗАКАЗЫ */
 /* ============================================ */
 
+.orders-tabs {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--space-sm);
+}
+
+.order-tab {
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.order-tab:hover {
+    color: var(--text-primary);
+}
+
+.order-tab.active {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.order-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -9px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.order-tab .count {
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 11px;
+    margin-left: 6px;
+    color: var(--text-secondary);
+}
+
 .orders-grid {
     display: grid;
     gap: var(--space-md);
@@ -999,8 +996,6 @@ input:checked + .toggle-slider:before {
     background: var(--surface);
     color: var(--text-primary);
     border: 1px solid var(--border);
-    height: 48px !important;
-    font-size: 15px !important;
 }
 
 /* ============================================ */
@@ -1116,46 +1111,33 @@ input:checked + .toggle-slider:before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px !important;
-    min-height: 60px !important;
-    background: var(--bg) !important;
-    border-bottom: 1px solid var(--border) !important;
-    position: relative !important;
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--border);
 }
 
 .close-cart {
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 50% !important;
-    border: 1px solid var(--border) !important;
-    background: var(--surface) !important;
-    color: var(--text-primary) !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.2s !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: relative !important;
-    top: 0 !important;
-    right: 0 !important;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
 }
 
 .close-cart:hover {
-    background: var(--surface-hover) !important;
-    color: var(--accent) !important;
-    border-color: var(--accent) !important;
-    transform: scale(1.05) !important;
+    background: var(--surface-hover);
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.05);
 }
 
-.cart-header h2 {
-    font-size: 20px !important;
-    font-weight: 600 !important;
-    color: var(--text-primary) !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1 !important;
+.close-cart i {
+    font-size: 18px;
 }
 
 .cart-items {
@@ -1185,79 +1167,26 @@ input:checked + .toggle-slider:before {
 
 .cart-item-info {
     flex: 1;
-    padding: 4px 0;
 }
 
 .cart-item-name {
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--text-primary);
     margin-bottom: 4px;
 }
 
 .cart-item-price {
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 8px;
-}
-
-.cart-item-quantity {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 8px 0;
-}
-
-.quantity-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    font-size: 12px;
-}
-
-.quantity-btn:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-    transform: scale(1.05);
-}
-
-.quantity-value {
+    color: var(--accent);
+    font-size: 14px;
     font-weight: 600;
-    font-size: 16px;
-    min-width: 24px;
-    text-align: center;
-    color: var(--text-primary);
 }
 
 .cart-item-subtotal {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px dashed var(--border);
-}
-
-.subtotal-label {
     font-size: 13px;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-.subtotal-value {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--accent);
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-top: 2px;
 }
 
 .remove-item {
@@ -1279,6 +1208,10 @@ input:checked + .toggle-slider:before {
     color: white;
     border-color: var(--error);
     transform: scale(1.05);
+}
+
+.remove-item i {
+    font-size: 14px;
 }
 
 .cart-footer {
@@ -1323,6 +1256,19 @@ input:checked + .toggle-slider:before {
     background: var(--accent-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(190, 114, 62, 0.2);
+}
+
+.checkout-btn:active {
+    transform: translateY(0);
+}
+
+.checkout-btn i {
+    font-size: 18px;
+}
+
+.checkout-btn:disabled {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 /* ============================================ */
@@ -1409,6 +1355,10 @@ input:checked + .toggle-slider:before {
     transform: scale(1.05);
 }
 
+.close-modal i {
+    font-size: 18px;
+}
+
 /* ============================================ */
 /* ФОРМА ЗАКАЗА */
 /* ============================================ */
@@ -1436,6 +1386,10 @@ input:checked + .toggle-slider:before {
     font-size: 14px;
     color: var(--text-secondary);
     border-bottom: 1px dashed var(--border);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
 }
 
 .summary-total {
@@ -1472,6 +1426,15 @@ input:checked + .toggle-slider:before {
     background: var(--accent-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(190, 114, 62, 0.2);
+}
+
+.submit-order:active {
+    transform: translateY(0);
+}
+
+.submit-order:disabled {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 /* ============================================ */
@@ -1675,13 +1638,24 @@ input:checked + .toggle-slider:before {
     border: 1px solid var(--border);
 }
 
+.time-btn.reset:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
 .time-btn.confirm {
     background: var(--accent);
     color: white;
 }
 
+.time-btn.confirm:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(190, 114, 62, 0.3);
+}
+
 /* ============================================ */
-/* КАЛЕНДАРЬ */
+/* УЛУЧШЕННЫЙ КАЛЕНДАРЬ */
 /* ============================================ */
 
 .bottom-sheet {
@@ -1697,6 +1671,15 @@ input:checked + .toggle-slider:before {
     animation: slideUp 0.3s ease;
     max-height: 80vh;
     overflow-y: auto;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
 
 .date-picker-content {
@@ -1722,6 +1705,11 @@ input:checked + .toggle-slider:before {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+}
+
+.month-nav:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
 }
 
 .current-month {
@@ -1809,9 +1797,20 @@ input:checked + .toggle-slider:before {
     border: 1px solid var(--border);
 }
 
+.date-btn.reset:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
 .date-btn.confirm {
     background: var(--accent);
     color: white;
+}
+
+.date-btn.confirm:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(190, 114, 62, 0.3);
 }
 
 /* ============================================ */
@@ -1834,7 +1833,16 @@ input:checked + .toggle-slider:before {
     font-size: 15px;
     cursor: pointer;
     transition: all 0.2s;
-    caret-color: #000000 !important;
+}
+
+.input-with-icon input:hover {
+    border-color: var(--accent);
+}
+
+.input-with-icon input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(190, 114, 62, 0.1);
 }
 
 .input-with-icon i {
@@ -1848,18 +1856,474 @@ input:checked + .toggle-slider:before {
     transition: color 0.2s;
 }
 
-/* ============================================ */
-/* АНИМАЦИИ */
-/* ============================================ */
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); background-color: var(--accent); color: white; }
-    100% { transform: scale(1); }
+.input-with-icon input:hover + i,
+.input-with-icon input:focus + i {
+    color: var(--accent);
 }
 
 /* ============================================ */
-/* ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ШАПКИ */
+/* СЧЕТЧИК НА КАРТОЧКЕ ТОВАРА */
+/* ============================================ */
+
+.cart-counter {
+    position: relative;
+    display: inline-block;
+}
+
+.counter-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--surface);
+    z-index: 2;
+}
+
+.add-to-cart.has-items {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+    opacity: 0.9;
+}
+
+.add-to-cart.has-items:hover {
+    background: var(--success);
+    opacity: 1;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 480px) {
+    .app, .admin-container {
+        padding: var(--space-sm) var(--space-sm) 90px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+
+    .cakes-grid {
+        gap: var(--space-sm);
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-icon {
+        bottom: 16px;
+        right: 16px;
+        width: 52px;
+        height: 52px;
+    }
+
+    .admin-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: var(--space-xs);
+    }
+
+    .cart-item {
+        padding: var(--space-xs);
+    }
+
+    .cart-item-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    /* Адаптивность для Time Picker */
+    .time-unit {
+        min-width: 50px;
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .selected-time {
+        font-size: 28px;
+    }
+}
+/* ============================================ */
+/* УЛУЧШЕННЫЕ КНОПКИ И СЕЛЕКТЫ (ТОЛЬКО НУЖНЫЕ ЭЛЕМЕНТЫ) */
+/* ============================================ */
+
+/* Увеличиваем селекты выбора категории */
+#cakeCategory,
+#editCakeCategory {
+    height: 52px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+}
+
+/* Увеличиваем селекты выбора роли */
+#userRole,
+#editUserRole {
+    height: 52px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+}
+
+/* Увеличиваем селект выбора курьера в заказах */
+.order-actions select {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 10px 16px !important;
+    min-width: 180px !important;
+}
+
+/* Увеличиваем кнопку "Назначить курьера" */
+.order-actions .action-btn[style*="background: var(--accent)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Увеличиваем кнопку "Отменить" рядом с назначением курьера */
+.order-actions .action-btn[style*="color: var(--error)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Увеличиваем кнопки "Доставлен" и "Отменить" в статусе assigned */
+.order-actions .action-btn[style*="background: var(--success)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Увеличиваем сообщение "Нет курьеров на смене" для единообразия */
+.order-actions div[style*="color: var(--text-secondary)"] {
+    height: 48px !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 16px !important;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    #cakeCategory,
+    #editCakeCategory,
+    #userRole,
+    #editUserRole,
+    .order-actions select,
+    .order-actions .action-btn,
+    .order-actions div[style*="color: var(--text-secondary)"] {
+        height: 56px !important;
+        font-size: 16px !important;
+    }
+
+    .order-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .order-actions select,
+    .order-actions .action-btn,
+    .order-actions div[style*="color: var(--text-secondary)"] {
+        width: 100% !important;
+    }
+}
+/* ============================================ */
+/* УЛУЧШЕННЫЕ ВКЛАДКИ АДМИН-ПАНЕЛИ (2 СТОЛБИКА) */
+/* ============================================ */
+
+/* Контейнер вкладок - теперь сетка 2x3 */
+.admin-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* Два столбика равной ширины */
+    gap: 10px !important;
+    margin-bottom: var(--space-xl) !important;
+    padding: 0 !important;
+    overflow: visible !important; /* Убираем скролл */
+    flex-wrap: nowrap !important; /* Отключаем перенос */
+}
+
+/* Стили для каждой вкладки */
+.admin-tab {
+    width: 100% !important; /* На всю ширину ячейки */
+    padding: 12px 8px !important; /* Немного увеличил отступы */
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px !important; /* Чуть меньше скругление для компактности */
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Уменьшаем отступы на очень маленьких экранах */
+@media (max-width: 360px) {
+    .admin-tab {
+        padding: 10px 4px !important;
+        font-size: 13px !important;
+    }
+
+    .admin-tab i {
+        font-size: 14px !important;
+    }
+}
+
+/* Стили для счетчиков на вкладках */
+.admin-tab .count {
+    background: var(--surface-hover);
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-size: 11px;
+    margin-left: 4px;
+    color: var(--text-secondary);
+    min-width: 20px;
+    display: inline-block;
+}
+
+/* Активная вкладка */
+.admin-tab.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.admin-tab.active .count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* Эффект при наведении */
+.admin-tab:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* Иконки во вкладках */
+.admin-tab i {
+    font-size: 16px;
+}
+
+/* Адаптивность для совсем маленьких экранов */
+@media (max-width: 320px) {
+    .admin-tabs {
+        gap: 6px !important;
+    }
+
+    .admin-tab {
+        padding: 8px 2px !important;
+        font-size: 12px !important;
+    }
+}
+/* ============================================ */
+/* СТИЛИ ДЛЯ КУРСОРА - ЧЕРНЫЙ ЦВЕТ */
+/* ============================================ */
+
+/* Для всех полей ввода */
+input,
+textarea,
+select {
+    caret-color: #000000 !important; /* Черный курсор */
+}
+
+/* Для полей с иконками */
+.input-with-icon input {
+    caret-color: #000000 !important;
+}
+
+/* Для полей в админ-панели */
+.admin-container input,
+.admin-container textarea,
+.admin-container select {
+    caret-color: #000000 !important;
+}
+
+/* Для полей в формах */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    caret-color: #000000 !important;
+}
+
+/* Для поиска и других полей */
+.header-right .header-icon {
+    /* это не поле ввода, тут курсор не меняем */
+}
+
+/* Для модальных окон */
+.modal input,
+.modal textarea,
+.modal select {
+    caret-color: #000000 !important;
+}
+/* ============================================ */
+/* УЛУЧШЕННАЯ ШАПКА С ЦЕНТРИРОВАННЫМ ЗАГОЛОВКОМ */
+/* ============================================ */
+
+.header-content {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px; /* Три колонки: логотип, заголовок, кнопка */
+    align-items: center;
+    gap: 8px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Стили для кнопки админ */
+.admin-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    height: 36px;
+}
+
+.admin-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.admin-btn i {
+    font-size: 14px;
+    color: var(--accent);
+}
+
+.admin-btn:hover i {
+    color: var(--accent-hover);
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 380px) {
+    .header-content {
+        grid-template-columns: 36px 1fr 36px;
+        gap: 4px;
+    }
+
+    .header-title {
+        font-size: 16px;
+    }
+
+    .admin-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+        height: 32px;
+    }
+
+    .admin-btn i {
+        font-size: 12px;
+    }
+}
+/* ============================================ */
+/* ПРОСТЫЕ ЛЕТАЮЩИЕ СЕРДЕЧКИ (ТОЛЬКО CSS) */
+/* ============================================ */
+
+.hearts-simple {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.hearts-simple::before,
+.hearts-simple::after,
+.hearts-simple .heart1,
+.hearts-simple .heart2,
+.hearts-simple .heart3,
+.hearts-simple .heart4,
+.hearts-simple .heart5 {
+    content: '❤️';
+    position: absolute;
+    font-size: 10px;
+    color: rgba(255, 200, 220, 0.5);
+    animation: floatSimple 10s linear infinite;
+    opacity: 0;
+}
+
+.hearts-simple::before { left: 10%; animation-delay: 0s; }
+.hearts-simple::after { left: 30%; animation-delay: 2s; }
+.hearts-simple .heart1 { left: 50%; animation-delay: 4s; }
+.hearts-simple .heart2 { left: 70%; animation-delay: 6s; }
+.hearts-simple .heart3 { left: 90%; animation-delay: 8s; }
+.hearts-simple .heart4 { left: 20%; animation-delay: 1s; }
+.hearts-simple .heart5 { left: 80%; animation-delay: 3s; }
+
+@keyframes floatSimple {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-20vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+/* ============================================ */
+/* ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ДЛЯ ШАПКИ */
 /* ============================================ */
 
 .header {
@@ -1869,6 +2333,7 @@ input:checked + .toggle-slider:before {
     border-bottom: 2px solid rgba(190, 114, 62, 0.2);
 }
 
+/* Декоративные линии */
 .header::before {
     content: '';
     position: absolute;
@@ -1885,6 +2350,7 @@ input:checked + .toggle-slider:before {
     opacity: 0.3;
 }
 
+/* Декоративные точки (конфетти) */
 .header::after {
     content: '';
     position: absolute;
@@ -1903,7 +2369,8 @@ input:checked + .toggle-slider:before {
     z-index: 0;
 }
 
-.header-decoration {
+/* Вторая группа точек слева */
+.header .header-decoration {
     position: absolute;
     bottom: 5px;
     left: 10px;
@@ -1919,7 +2386,8 @@ input:checked + .toggle-slider:before {
     z-index: 0;
 }
 
-.header-scroll {
+/* Вензель / завиток */
+.header .header-scroll {
     position: absolute;
     top: 50%;
     left: 20px;
@@ -1932,7 +2400,7 @@ input:checked + .toggle-slider:before {
     transform: rotate(45deg);
 }
 
-.header-scroll-right {
+.header .header-scroll-right {
     position: absolute;
     top: 50%;
     right: 20px;
@@ -1945,7 +2413,8 @@ input:checked + .toggle-slider:before {
     transform: rotate(45deg);
 }
 
-.sparkle {
+/* Блестящие звездочки */
+.header .sparkle {
     position: absolute;
     color: var(--accent);
     font-size: 10px;
@@ -1960,6 +2429,24 @@ input:checked + .toggle-slider:before {
 @keyframes sparkle {
     0%, 100% { opacity: 0.2; transform: scale(1); }
     50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+/* Ленточка под заголовком */
+.header-title-wrapper {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+}
+
+.header-title {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .header-title-wrapper::before {
@@ -1978,6 +2465,7 @@ input:checked + .toggle-slider:before {
     border-radius: 2px;
 }
 
+/* Орнамент по краям */
 .header-ornament-left,
 .header-ornament-right {
     position: absolute;
@@ -2003,6 +2491,7 @@ input:checked + .toggle-slider:before {
     right: 0;
 }
 
+/* Конфетти (падающие элементы) */
 .header-confetti {
     position: absolute;
     top: 0;
@@ -2044,352 +2533,290 @@ input:checked + .toggle-slider:before {
     }
 }
 
-/* ============================================ */
-/* ДОЖДЬ ИЗ КРУАССАНЧИКОВ ПО ВСЕЙ ПЛОЩАДИ */
-/* ============================================ */
+/* Обновленные стили для контента шапки */
+.header-content {
+    position: relative;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+}
 
-.croissants-bg {
-    position: fixed;
+/* Затемнение для лучшей читаемости */
+.header::after {
+    content: '';
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.8) 0%, transparent 50%);
     pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-}
-
-.croissants-bg span {
-    position: absolute;
-    display: block;
-    pointer-events: none;
-    opacity: 0.2;
-    font-size: 20px;
-    animation: rain 8s linear infinite;
-    top: -10%;
-}
-
-/* Распределяем по всей ширине экрана от 0% до 100% */
-.croissants-bg span:nth-child(1) { left: 2%; animation-delay: 0s; animation-duration: 7s; }
-.croissants-bg span:nth-child(2) { left: 8%; animation-delay: 1.2s; animation-duration: 8.5s; }
-.croissants-bg span:nth-child(3) { left: 14%; animation-delay: 2.8s; animation-duration: 6.5s; }
-.croissants-bg span:nth-child(4) { left: 20%; animation-delay: 0.7s; animation-duration: 9.2s; }
-.croissants-bg span:nth-child(5) { left: 26%; animation-delay: 3.5s; animation-duration: 7.8s; }
-.croissants-bg span:nth-child(6) { left: 32%; animation-delay: 1.9s; animation-duration: 8.2s; }
-.croissants-bg span:nth-child(7) { left: 38%; animation-delay: 4.2s; animation-duration: 6.8s; }
-.croissants-bg span:nth-child(8) { left: 44%; animation-delay: 2.3s; animation-duration: 9.5s; }
-.croissants-bg span:nth-child(9) { left: 50%; animation-delay: 5.1s; animation-duration: 7.2s; }
-.croissants-bg span:nth-child(10) { left: 56%; animation-delay: 0.9s; animation-duration: 8.8s; }
-.croissants-bg span:nth-child(11) { left: 62%; animation-delay: 3.8s; animation-duration: 6.2s; }
-.croissants-bg span:nth-child(12) { left: 68%; animation-delay: 1.5s; animation-duration: 9.8s; }
-.croissants-bg span:nth-child(13) { left: 74%; animation-delay: 4.8s; animation-duration: 7.5s; }
-.croissants-bg span:nth-child(14) { left: 80%; animation-delay: 2.6s; animation-duration: 8.3s; }
-.croissants-bg span:nth-child(15) { left: 86%; animation-delay: 5.5s; animation-duration: 6.3s; }
-.croissants-bg span:nth-child(16) { left: 92%; animation-delay: 0.4s; animation-duration: 9.3s; }
-.croissants-bg span:nth-child(17) { left: 96%; animation-delay: 3.2s; animation-duration: 7.7s; }
-.croissants-bg span:nth-child(18) { left: 4%; animation-delay: 1.7s; animation-duration: 8.7s; }
-.croissants-bg span:nth-child(19) { left: 10%; animation-delay: 4.5s; animation-duration: 6.7s; }
-.croissants-bg span:nth-child(20) { left: 16%; animation-delay: 2.1s; animation-duration: 9.1s; }
-.croissants-bg span:nth-child(21) { left: 22%; animation-delay: 5.8s; animation-duration: 7.1s; }
-.croissants-bg span:nth-child(22) { left: 28%; animation-delay: 0.2s; animation-duration: 8.4s; }
-.croissants-bg span:nth-child(23) { left: 34%; animation-delay: 3.3s; animation-duration: 6.4s; }
-.croissants-bg span:nth-child(24) { left: 40%; animation-delay: 1.3s; animation-duration: 9.4s; }
-.croissants-bg span:nth-child(25) { left: 46%; animation-delay: 4.7s; animation-duration: 7.4s; }
-.croissants-bg span:nth-child(26) { left: 52%; animation-delay: 2.4s; animation-duration: 8.6s; }
-.croissants-bg span:nth-child(27) { left: 58%; animation-delay: 5.2s; animation-duration: 6.6s; }
-.croissants-bg span:nth-child(28) { left: 64%; animation-delay: 0.6s; animation-duration: 9.6s; }
-.croissants-bg span:nth-child(29) { left: 70%; animation-delay: 3.6s; animation-duration: 7.6s; }
-.croissants-bg span:nth-child(30) { left: 76%; animation-delay: 1.8s; animation-duration: 8.9s; }
-.croissants-bg span:nth-child(31) { left: 82%; animation-delay: 4.9s; animation-duration: 6.9s; }
-.croissants-bg span:nth-child(32) { left: 88%; animation-delay: 2.7s; animation-duration: 9.7s; }
-.croissants-bg span:nth-child(33) { left: 94%; animation-delay: 5.6s; animation-duration: 7.9s; }
-.croissants-bg span:nth-child(34) { left: 98%; animation-delay: 1.1s; animation-duration: 8.1s; }
-.croissants-bg span:nth-child(35) { left: 6%; animation-delay: 4.1s; animation-duration: 6.1s; }
-.croissants-bg span:nth-child(36) { left: 12%; animation-delay: 2.9s; animation-duration: 9.9s; }
-
-/* Анимация падения */
-@keyframes rain {
-    0% {
-        transform: translateY(-10vh) rotate(0deg);
-        opacity: 0.15;
-    }
-    20% {
-        opacity: 0.25;
-    }
-    80% {
-        opacity: 0.25;
-    }
-    100% {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0.1;
-    }
-}
-
-/* Разные размеры для разнообразия */
-.croissants-bg span:nth-child(odd) {
-    font-size: 24px;
-}
-
-.croissants-bg span:nth-child(even) {
-    font-size: 18px;
-}
-
-.croissants-bg span:nth-child(3n) {
-    font-size: 28px;
-}
-
-.croissants-bg span:nth-child(5n) {
-    font-size: 16px;
-}
-
-.croissants-bg span:nth-child(7n) {
-    font-size: 22px;
-}
-
-/* Для мобильных устройств - меньше круассанчиков */
-@media screen and (max-width: 768px) {
-    .croissants-bg span:nth-child(n+25) {
-        display: none;
-    }
-    
-    .croissants-bg span {
-        font-size: 18px;
-        opacity: 0.15;
-    }
-}
-
-/* Для планшетов */
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-    .croissants-bg span:nth-child(n+30) {
-        display: none;
-    }
-}
-
-/* ============================================ */
-/* АДАПТАЦИЯ ДЛЯ РАЗНЫХ ЭКРАНОВ */
-/* ============================================ */
-
-@media screen and (max-width: 480px) {
-    .app, .admin-container {
-        max-width: 100%;
-    }
-    
-    .cart-header {
-        padding: 12px 16px !important;
-        min-height: 55px !important;
-    }
-    
-    .close-cart {
-        width: 36px !important;
-        height: 36px !important;
-    }
-    
-    .cart-header h2 {
-        font-size: 18px !important;
-    }
-    
-    .croissants-bg span:nth-child(n+15) {
-        display: none;
-    }
-    
-    .croissants-bg span {
-        font-size: 16px;
-    }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-    .app, .admin-container {
-        max-width: 90%;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-    
-    .cakes-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .admin-tabs {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-    
-    .cart-header {
-        padding: 18px 24px !important;
-        min-height: 65px !important;
-    }
-    
-    .close-cart {
-        width: 44px !important;
-        height: 44px !important;
-    }
-    
-    .croissants-bg span:nth-child(n+18) {
-        display: none;
-    }
-}
-
-@media screen and (min-width: 1025px) {
-    .app, .admin-container {
-        max-width: 1200px;
-        padding-left: 30px;
-        padding-right: 30px;
-    }
-    
-    .cakes-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 25px;
-    }
-    
-    .admin-tabs {
-        grid-template-columns: repeat(6, 1fr) !important;
-    }
-    
-    .cart-header {
-        padding: 20px 25px !important;
-        min-height: 70px !important;
-    }
-    
-    .close-cart {
-        width: 45px !important;
-        height: 45px !important;
-    }
-    
-    .close-cart:hover {
-        background: var(--accent) !important;
-        color: white !important;
-        border-color: var(--accent) !important;
-        transform: scale(1.05) !important;
-    }
-}
-
-@media screen and (min-width: 1441px) {
-    .app, .admin-container {
-        max-width: 1400px;
-    }
-    
-    .cakes-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
-
-/* Горизонтальная ориентация */
-@media screen and (orientation: landscape) and (max-height: 600px) {
-    .header {
-        min-height: 50px !important;
-    }
-    
-    .cakes-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-/* Для всех полей ввода */
-input, textarea, select {
-    caret-color: #000000 !important;
+    z-index: 1;
 }
 /* ============================================ */
-/* УВЕДОМЛЕНИЯ - ПОДНЯТЫ ВЫШЕ */
+/* СТИЛИ ДЛЯ КНОПОК + И - В КОРЗИНЕ */
 /* ============================================ */
 
-.toast-container {
-    position: fixed;
-    bottom: 80px !important; /* Подняли выше (было 20px) */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3000;
-    width: 90%;
-    max-width: 400px;
-    pointer-events: none; /* Чтобы уведомления не мешали нажимать на кнопки */
-}
-
-.toast {
-    background: var(--surface);
-    color: var(--text-primary);
-    padding: 14px 20px; /* Немного увеличил отступы */
-    border-radius: 100px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Более заметная тень */
+.cart-item-quantity {
     display: flex;
     align-items: center;
-    gap: 12px;
-    animation: slideUpToast 0.3s ease;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
-    font-size: 15px;
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 12px;
+}
+
+.quantity-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
+.quantity-value {
+    font-weight: 600;
+    font-size: 16px;
+    min-width: 24px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.cart-item-subtotal {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 4px;
+}
+
+.cart-item-info {
+    flex: 1;
+    padding: 4px 0;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .quantity-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .quantity-value {
+        font-size: 18px;
+        min-width: 30px;
+    }
+}
+/* ============================================ */
+/* СТИЛИ ДЛЯ НАДПИСИ ИТОГО В КАРТОЧКЕ ТОВАРА */
+/* ============================================ */
+
+.cart-item-subtotal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+}
+
+.subtotal-label {
+    font-size: 13px;
+    color: var(--text-secondary);
     font-weight: 500;
-    margin-bottom: 10px;
-    pointer-events: auto; /* Само уведомление можно нажать если нужно */
-    backdrop-filter: blur(8px); /* Эффект стекла */
-    background: rgba(255, 255, 255, 0.95);
 }
 
-.toast.success {
-    border-left-color: var(--success);
+.subtotal-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
 }
 
-.toast.error {
-    border-left-color: var(--error);
+/* Обновленные стили для существующих элементов */
+.cart-item-info {
+    flex: 1;
+    padding: 4px 0;
 }
 
-.toast i {
-    font-size: 20px;
+.cart-item-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
 }
 
-/* Анимация появления */
-@keyframes slideUpToast {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+.cart-item-price {
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.cart-item-price::before {
+    content: "Цена: ";
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .cart-item-subtotal {
+        margin-top: 6px;
+        padding-top: 6px;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
-/* Для мобильных устройств */
-@media screen and (max-width: 480px) {
-    .toast-container {
-        bottom: 70px !important; /* Чуть ниже на мобильных, но всё равно выше корзины */
+    .subtotal-label {
+        font-size: 12px;
     }
-    
-    .toast {
-        padding: 12px 16px;
+
+    .subtotal-value {
         font-size: 14px;
     }
 }
 
-/* Для планшетов */
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-    .toast-container {
-        bottom: 90px !important;
+/* ============================================ */
+/* СТИЛИ ДЛЯ РАЗНЫХ РЕЖИМОВ ОТОБРАЖЕНИЯ TELEGRAM */
+/* ============================================ */
+
+/* Компактный режим (обычный) */
+body.compact-mode .app,
+body.compact-mode .admin-container {
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+body.compact-mode .header {
+    top: env(safe-area-inset-top, 0);
+}
+
+body.compact-mode .cart-icon {
+    bottom: calc(20px + env(safe-area-inset-bottom, 0));
+}
+
+/* Полноэкранный режим */
+body.fullscreen-mode .app,
+body.fullscreen-mode .admin-container {
+    padding-top: calc(var(--space-md) + env(safe-area-inset-top, 0));
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 30px));
+}
+
+body.fullscreen-mode .header {
+    position: sticky;
+    top: env(safe-area-inset-top, 0);
+    z-index: 100;
+    background: var(--bg);
+    backdrop-filter: blur(10px);
+    margin-top: 0;
+}
+
+body.fullscreen-mode .cart-icon {
+    bottom: calc(30px + env(safe-area-inset-bottom, 0));
+    right: 30px;
+    width: 64px;
+    height: 64px;
+}
+
+body.fullscreen-mode .cart-icon i {
+    font-size: 28px;
+}
+
+body.fullscreen-mode .cart-panel {
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+body.fullscreen-mode .modal-content {
+    margin-top: env(safe-area-inset-top, 0);
+    margin-bottom: env(safe-area-inset-bottom, 0);
+    max-height: calc(90vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+}
+
+body.fullscreen-mode .bottom-sheet {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* Увеличенные отступы для модальных окон в полноэкранном режиме */
+body.fullscreen-mode .modal {
+    padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px);
+}
+
+/* Более крупные элементы в полноэкранном режиме */
+@media (min-height: 800px) {
+    body.fullscreen-mode .cake-card {
+        transform: scale(1.02);
+    }
+
+    body.fullscreen-mode .cake-image {
+        aspect-ratio: 1;
+    }
+
+    body.fullscreen-mode .categories {
+        padding: var(--space-sm) 0 var(--space-lg);
+    }
+
+    body.fullscreen-mode .category {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+
+    body.fullscreen-mode .admin-tabs {
+        margin-top: var(--space-md);
+    }
+
+    body.fullscreen-mode .submit-btn,
+    body.fullscreen-mode .checkout-btn,
+    body.fullscreen-mode .action-btn {
+        padding: 16px 24px;
+        font-size: 17px;
     }
 }
 
-/* Для ПК */
-@media screen and (min-width: 1025px) {
-    .toast-container {
-        bottom: 100px !important;
+/* Адаптация для очень высоких экранов */
+@media (min-height: 900px) {
+    body.fullscreen-mode .cakes-grid {
+        gap: var(--space-lg);
+    }
+
+    body.fullscreen-mode .app,
+    body.fullscreen-mode .admin-container {
+        padding-bottom: 120px;
     }
 }
 
-/* Если несколько уведомлений одновременно */
-.toast:not(:first-child) {
-    margin-top: 8px;
-}
-
-/* Для случая, когда корзина открыта - поднимаем еще выше */
-.cart-panel.open ~ .toast-container {
-    bottom: 100px !important;
-}
-
-/* Адаптация под разные размеры экранов */
-@media screen and (min-height: 800px) {
-    .toast-container {
-        bottom: 100px !important;
+/* Safe area insets для современных устройств */
+@supports (padding: max(0px)) {
+    body.fullscreen-mode .app,
+    body.fullscreen-mode .admin-container {
+        padding-left: max(var(--space-md), env(safe-area-inset-left));
+        padding-right: max(var(--space-md), env(safe-area-inset-right));
     }
-}
 
-@media screen and (max-height: 600px) {
-    .toast-container {
-        bottom: 60px !important;
+    body.fullscreen-mode .cart-panel {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+
+    body.fullscreen-mode .modal .modal-content {
+        margin-left: env(safe-area-inset-left);
+        margin-right: env(safe-area-inset-right);
     }
 }
