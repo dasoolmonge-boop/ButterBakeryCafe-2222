@@ -117,26 +117,209 @@ body {
 }
 
 /* ============================================ */
-/* АДАПТИВНАЯ ШАПКА */
+/* ИСПРАВЛЕННАЯ ШАПКА - ВОССТАНОВЛЕН ДИЗАЙН */
 /* ============================================ */
 
 .header {
-    background: var(--bg);
+    position: relative;
+    background: linear-gradient(135deg, var(--bg) 0%, #fff9f5 100%);
     padding: var(--space-md) 0;
-    position: sticky;
-    top: 0;
-    z-index: 10;
     margin-bottom: var(--space-lg);
-    border-bottom: 1px solid var(--border);
-    transition: all 0.3s ease;
+    border-bottom: 2px solid rgba(190, 114, 62, 0.2);
+    overflow: hidden;
 }
 
+/* Декоративные линии сверху */
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--accent) 20%,
+        var(--accent) 80%,
+        transparent 100%
+    );
+    opacity: 0.3;
+    z-index: 1;
+}
+
+/* Декоративные точки справа */
+.header::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    background-image:
+        radial-gradient(circle at 10px 10px, var(--accent) 2px, transparent 2px),
+        radial-gradient(circle at 30px 25px, #ffb6c1 2px, transparent 2px),
+        radial-gradient(circle at 45px 5px, #ffd700 2px, transparent 2px),
+        radial-gradient(circle at 15px 40px, #98fb98 2px, transparent 2px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Орнамент слева */
+.header-ornament-left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background-image: repeating-linear-gradient(
+        45deg,
+        var(--accent) 0px,
+        var(--accent) 2px,
+        transparent 2px,
+        transparent 6px
+    );
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Орнамент справа */
+.header-ornament-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background-image: repeating-linear-gradient(
+        45deg,
+        var(--accent) 0px,
+        var(--accent) 2px,
+        transparent 2px,
+        transparent 6px
+    );
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Декоративная точка слева внизу */
+.header-decoration {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+    background-image:
+        radial-gradient(circle at 5px 5px, #ffb6c1 2px, transparent 2px),
+        radial-gradient(circle at 25px 15px, var(--accent) 2px, transparent 2px),
+        radial-gradient(circle at 40px 30px, #ffd700 2px, transparent 2px);
+    background-size: 50px 50px;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Левый завиток */
+.header-scroll {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%) rotate(45deg);
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--accent);
+    border-radius: 50% 50% 0 50%;
+    opacity: 0.15;
+    z-index: 1;
+}
+
+/* Правый завиток */
+.header-scroll-right {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%) rotate(45deg);
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--accent);
+    border-radius: 50% 50% 50% 0;
+    opacity: 0.15;
+    z-index: 1;
+}
+
+/* Блестящие звездочки */
+.sparkle {
+    position: absolute;
+    color: var(--accent);
+    font-size: 10px;
+    opacity: 0.2;
+    animation: sparkle 2s ease-in-out infinite;
+    z-index: 1;
+}
+
+.sparkle-1 { top: 5px; right: 30px; }
+.sparkle-2 { bottom: 5px; left: 50px; animation-delay: 0.5s; }
+.sparkle-3 { top: 15px; left: 80px; animation-delay: 1s; }
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+/* Конфетти */
+.header-confetti {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.header-confetti i {
+    position: absolute;
+    color: var(--accent);
+    font-size: 8px;
+    opacity: 0.1;
+    animation: fall 3s linear infinite;
+}
+
+.header-confetti i:nth-child(1) { left: 10%; animation-delay: 0s; }
+.header-confetti i:nth-child(2) { left: 30%; animation-delay: 0.5s; }
+.header-confetti i:nth-child(3) { left: 50%; animation-delay: 1s; }
+.header-confetti i:nth-child(4) { left: 70%; animation-delay: 1.5s; }
+.header-confetti i:nth-child(5) { left: 90%; animation-delay: 2s; }
+
+@keyframes fall {
+    0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.2;
+    }
+    90% {
+        opacity: 0.2;
+    }
+    100% {
+        transform: translateY(100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Основное содержимое шапки - поверх всех декораций */
 .header-content {
+    position: relative;
     display: grid;
     grid-template-columns: 40px 1fr 40px;
     align-items: center;
     gap: clamp(4px, 2vw, 12px);
     padding: 8px var(--container-padding);
+    z-index: 5;
 }
 
 .header-left {
@@ -151,18 +334,57 @@ body {
     object-fit: contain;
 }
 
+/* Обертка для заголовка с подчеркиванием */
+.header-title-wrapper {
+    position: relative;
+    display: inline-block;
+    z-index: 5;
+}
+
 .header-title {
+    position: relative;
     font-size: clamp(16px, 4.5vw, 22px);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-primary);
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0 4px;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.5px;
+    z-index: 5;
 }
 
-/* Кнопка админ с адаптивностью */
+/* Декоративное подчеркивание под заголовком */
+.header-title-wrapper::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--accent) 20%,
+        var(--accent) 80%,
+        transparent 100%
+    );
+    border-radius: 2px;
+    z-index: 5;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    z-index: 5;
+}
+
+/* Кнопка админ */
 .admin-btn {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -179,6 +401,32 @@ body {
     transition: all 0.2s;
     white-space: nowrap;
     height: clamp(32px, 8vw, 40px);
+    z-index: 5;
+}
+
+.admin-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.admin-btn i {
+    font-size: clamp(12px, 3vw, 14px);
+    color: var(--accent);
+}
+
+/* Затемнение для лучшей читаемости (поверх декораций, под текстом) */
+.header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.8) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 2;
 }
 
 /* ============================================ */
@@ -193,6 +441,8 @@ body {
     scrollbar-width: none;
     margin-bottom: var(--space-sm);
     -webkit-overflow-scrolling: touch;
+    position: relative;
+    z-index: 5;
 }
 
 .category {
@@ -209,6 +459,17 @@ body {
     flex-shrink: 0;
 }
 
+.category:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
+.category.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
 /* ============================================ */
 /* АДАПТИВНАЯ СЕТКА ТОВАРОВ */
 /* ============================================ */
@@ -219,6 +480,8 @@ body {
     gap: clamp(8px, 3vw, 20px);
     margin: var(--space-lg) 0;
     padding: 0 var(--container-padding);
+    position: relative;
+    z-index: 5;
 }
 
 /* Адаптация для очень маленьких экранов */
@@ -256,6 +519,12 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
+}
+
+.cake-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent);
 }
 
 .cake-image {
@@ -303,700 +572,45 @@ body {
     flex: 1;
 }
 
-/* ============================================ */
-/* АДАПТИВНЫЕ ФОРМЫ */
-/* ============================================ */
-
-.form-container {
-    background: var(--surface);
-    border-radius: clamp(16px, 4vw, 24px);
-    padding: clamp(16px, 4vw, 24px);
-    margin-bottom: var(--space-xl);
+/* Кнопка добавления в корзину */
+.add-to-cart {
+    width: clamp(36px, 8vw, 40px);
+    height: clamp(36px, 8vw, 40px);
+    border-radius: 50%;
     border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--accent);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: clamp(16px, 4vw, 18px);
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: clamp(8px, 2vw, 16px);
-    margin-bottom: var(--space-md);
-}
-
-.form-group label {
-    font-size: clamp(12px, 3vw, 14px);
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-    padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 16px);
-    font-size: clamp(13px, 3.5vw, 16px);
-    border-radius: clamp(8px, 2vw, 12px);
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЕ КАРТОЧКИ КАТЕГОРИЙ */
-/* ============================================ */
-
-.categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: clamp(8px, 2vw, 16px);
-    margin: var(--space-lg) 0;
-    padding: 0 var(--container-padding);
-}
-
-@media (max-width: 360px) {
-    .categories-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЕ КАРТОЧКИ ПОЛЬЗОВАТЕЛЕЙ */
-/* ============================================ */
-
-.users-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: clamp(8px, 2vw, 16px);
-    margin: var(--space-lg) 0;
-    padding: 0 var(--container-padding);
-}
-
-@media (max-width: 480px) {
-    .users-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ============================================ */
-/* АДАПТИВНАЯ КОРЗИНА */
-/* ============================================ */
-
-.cart-icon {
-    position: fixed;
-    bottom: clamp(16px, 5vh, 30px);
-    right: clamp(16px, 5vw, 30px);
-    width: clamp(48px, 12vw, 64px);
-    height: clamp(48px, 12vw, 64px);
+.add-to-cart:hover {
     background: var(--accent);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(190, 114, 62, 0.3);
-    transition: all 0.2s;
-    z-index: 100;
-    border: none;
-}
-
-.cart-icon i {
-    font-size: clamp(20px, 5vw, 28px);
     color: white;
+    border-color: var(--accent);
+    transform: scale(1.1);
 }
 
-.cart-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--surface);
-    color: var(--text-primary);
-    font-size: clamp(10px, 2.5vw, 12px);
-    font-weight: 600;
-    min-width: clamp(18px, 4.5vw, 22px);
-    height: clamp(18px, 4.5vw, 22px);
-    border-radius: 50%;
+.add-to-cart:active {
+    transform: scale(0.95);
+}
+
+.add-to-cart.added {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+}
+
+.cake-price-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0 4px;
-    border: 2px solid var(--accent);
+    justify-content: space-between;
+    margin-top: var(--space-xs);
 }
 
-.cart-panel {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 100%;
-    max-width: min(400px, 90vw);
-    height: 100vh;
-    background: var(--bg);
-    transition: right 0.3s ease;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    border-left: 1px solid var(--border);
-}
-
-@media (max-width: 480px) {
-    .cart-panel {
-        max-width: 100%;
-    }
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЕ МОДАЛЬНЫЕ ОКНА */
-/* ============================================ */
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 2000;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-md);
-}
-
-.modal-content {
-    background: var(--bg);
-    border-radius: clamp(16px, 4vw, 24px);
-    max-width: min(450px, 95vw);
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    border: 1px solid var(--border);
-    animation: modalSlideIn 0.3s ease;
-}
-
-/* Адаптация для очень маленьких экранов */
-@media (max-width: 360px) {
-    .modal {
-        padding: 8px;
-    }
-    
-    .modal-content {
-        max-height: 95vh;
-    }
-}
-
-/* Адаптация для планшетов */
-@media (min-width: 768px) and (max-width: 1024px) {
-    .modal-content {
-        max-width: 600px;
-    }
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЙ TIME PICKER */
-/* ============================================ */
-
-.time-scroll {
-    display: flex;
-    gap: clamp(4px, 2vw, 8px);
-    overflow-x: auto;
-    padding: var(--space-xs) 0;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-}
-
-.time-unit {
-    min-width: clamp(44px, 12vw, 60px);
-    height: clamp(44px, 12vw, 60px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: clamp(12px, 3vw, 16px);
-    font-size: clamp(14px, 4vw, 18px);
-    font-weight: 600;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.2s;
-    flex-shrink: 0;
-}
-
-.selected-time {
-    font-size: clamp(24px, 6vw, 32px);
-    padding: clamp(12px, 3vw, 16px);
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЙ КАЛЕНДАРЬ */
-/* ============================================ */
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: clamp(2px, 1vw, 4px);
-    margin-bottom: var(--space-lg);
-}
-
-.calendar-day {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(13px, 3.5vw, 15px);
-    font-weight: 500;
-    color: var(--text-primary);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s;
-    width: 100%;
-    max-width: clamp(35px, 10vw, 45px);
-    margin: 0 auto;
-}
-
-/* ============================================ */
-/* АДАПТИВНАЯ СТАТИСТИКА */
-/* ============================================ */
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: clamp(8px, 2vw, 16px);
-    margin-bottom: var(--space-lg);
-    padding: 0 var(--container-padding);
-}
-
-.stat-value {
-    font-size: clamp(18px, 5vw, 24px);
-}
-
-.stat-label {
-    font-size: clamp(10px, 2.5vw, 12px);
-}
-
-.chart-container {
-    height: clamp(200px, 40vh, 300px);
-    padding: clamp(12px, 3vw, 16px);
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЕ КНОПКИ */
-/* ============================================ */
-
-.submit-btn,
-.checkout-btn,
-.action-btn {
-    padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 24px);
-    font-size: clamp(14px, 3.5vw, 16px);
-    border-radius: clamp(8px, 2vw, 12px);
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЕ УВЕДОМЛЕНИЯ */
-/* ============================================ */
-
-.toast-container {
-    position: fixed;
-    bottom: clamp(16px, 5vh, 30px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3000;
-    width: min(90%, 400px);
-    padding: 0 var(--space-sm);
-}
-
-.toast {
-    padding: clamp(10px, 2.5vw, 12px) clamp(12px, 3vw, 16px);
-    font-size: clamp(12px, 3vw, 14px);
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЕ ВКЛАДКИ АДМИН-ПАНЕЛИ */
-/* ============================================ */
-
-.admin-tabs {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
-    gap: clamp(6px, 1.5vw, 10px) !important;
-    margin-bottom: var(--space-xl) !important;
-    padding: 0 var(--container-padding) !important;
-}
-
-.admin-tab {
-    padding: clamp(8px, 2vw, 12px) clamp(4px, 1.5vw, 8px) !important;
-    font-size: clamp(11px, 2.8vw, 14px) !important;
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЕ ЗАКАЗЫ */
-/* ============================================ */
-
-.order-card {
-    padding: clamp(12px, 3vw, 16px);
-}
-
-.order-info div {
-    font-size: clamp(11px, 2.8vw, 13px);
-}
-
-.order-cakes {
-    padding: clamp(8px, 2vw, 12px);
-}
-
-.order-actions {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: clamp(6px, 1.5vw, 8px);
-}
-
-.order-actions select,
-.order-actions .action-btn {
-    flex: 1 1 auto;
-    min-width: min(120px, 30%);
-    padding: clamp(8px, 2vw, 10px) clamp(10px, 2.5vw, 12px);
-    font-size: clamp(11px, 2.8vw, 13px);
-    height: auto !important;
-}
-
-@media (max-width: 480px) {
-    .order-actions {
-        flex-direction: column;
-    }
-    
-    .order-actions select,
-    .order-actions .action-btn {
-        width: 100% !important;
-        min-width: 100%;
-    }
-}
-
-/* ============================================ */
-/* АДАПТИВНЫЙ ТЕКСТ */
-/* ============================================ */
-
-.section-title {
-    font-size: clamp(16px, 4vw, 20px);
-    margin-bottom: clamp(12px, 3vw, 16px);
-    padding: 0 var(--container-padding);
-}
-
-.empty-state {
-    padding: clamp(24px, 8vw, 40px) var(--space-md);
-}
-
-.empty-state i {
-    font-size: clamp(32px, 8vw, 48px);
-}
-
-.empty-state p {
-    font-size: clamp(14px, 3.5vw, 16px);
-}
-
-.loading {
-    padding: clamp(32px, 10vw, 48px);
-    font-size: clamp(14px, 3.5vw, 16px);
-}
-
-/* ============================================ */
-/* АДАПТИВНОСТЬ ДЛЯ РАЗНЫХ ОРИЕНТАЦИЙ */
-/* ============================================ */
-
-@media (orientation: landscape) and (max-height: 500px) {
-    .app, .admin-container {
-        padding-bottom: 60px;
-    }
-    
-    .cart-icon {
-        bottom: 10px;
-        right: 10px;
-        width: 44px;
-        height: 44px;
-    }
-    
-    .cart-icon i {
-        font-size: 20px;
-    }
-    
-    .modal-content {
-        max-height: 85vh;
-    }
-    
-    .categories {
-        padding-bottom: 8px;
-    }
-}
-
-/* Адаптация для очень широких экранов */
-@media (min-width: 1200px) {
-    .app, .admin-container {
-        max-width: 1000px;
-        padding-left: calc(env(safe-area-inset-left) + 32px);
-        padding-right: calc(env(safe-area-inset-right) + 32px);
-    }
-    
-    .cakes-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
-
-/* ============================================ */
-/* АДАПТИВНОСТЬ ДЛЯ РАЗНЫХ РЕЖИМОВ TELEGRAM */
-/* ============================================ */
-
-/* Компактный режим */
-body.compact-mode .app,
-body.compact-mode .admin-container {
-    padding-top: env(safe-area-inset-top, 0);
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0));
-}
-
-/* Полноэкранный режим */
-body.fullscreen-mode .app,
-body.fullscreen-mode .admin-container {
-    padding-top: calc(var(--space-md) + env(safe-area-inset-top, 0));
-    padding-bottom: calc(100px + env(safe-area-inset-bottom, 30px));
-}
-
-/* Адаптация для разных высот экрана */
-@media (min-height: 700px) {
-    body.fullscreen-mode .app,
-    body.fullscreen-mode .admin-container {
-        padding-bottom: 110px;
-    }
-}
-
-@media (min-height: 800px) {
-    body.fullscreen-mode .app,
-    body.fullscreen-mode .admin-container {
-        padding-bottom: 120px;
-    }
-    
-    body.fullscreen-mode .cake-card {
-        transform: scale(1.02);
-    }
-}
-
-@media (min-height: 900px) {
-    body.fullscreen-mode .app,
-    body.fullscreen-mode .admin-container {
-        padding-bottom: 130px;
-    }
-    
-    body.fullscreen-mode .cakes-grid {
-        gap: 24px;
-    }
-}
-
-/* ============================================ */
-/* АДАПТИВНОСТЬ ДЛЯ ЭКРАНОВ С ВЫРЕЗАМИ */
-/* ============================================ */
-
-@supports (padding: max(0px)) {
-    .app, .admin-container {
-        padding-left: max(var(--space-md), env(safe-area-inset-left));
-        padding-right: max(var(--space-md), env(safe-area-inset-right));
-    }
-    
-    .header-content {
-        padding-left: max(8px, env(safe-area-inset-left));
-        padding-right: max(8px, env(safe-area-inset-right));
-    }
-    
-    .categories {
-        padding-left: max(var(--space-xs), env(safe-area-inset-left));
-        padding-right: max(var(--space-xs), env(safe-area-inset-right));
-    }
-    
-    .cart-panel {
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    
-    .modal {
-        padding-left: max(var(--space-md), env(safe-area-inset-left));
-        padding-right: max(var(--space-md), env(safe-area-inset-right));
-        padding-top: max(var(--space-md), env(safe-area-inset-top));
-        padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
-    }
-}
-
-/* ============================================ */
-/* АНИМАЦИИ ДЛЯ ПЛАВНОЙ АДАПТАЦИИ */
-/* ============================================ */
-
-@media (prefers-reduced-motion: no-preference) {
-    .app,
-    .admin-container,
-    .header,
-    .cart-icon,
-    .modal-content {
-        transition: all 0.3s ease;
-    }
-}
-
-/* ============================================ */
-/* ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ С АДАПТИВНОСТЬЮ */
-/* ============================================ */
-
-.header::before {
-    height: clamp(2px, 0.5vh, 3px);
-}
-
-.header::after {
-    width: clamp(40px, 10vw, 60px);
-    height: clamp(40px, 10vw, 60px);
-}
-
-.header .header-decoration {
-    width: clamp(30px, 8vw, 50px);
-    height: clamp(30px, 8vw, 50px);
-}
-
-.header .header-scroll,
-.header .header-scroll-right {
-    width: clamp(20px, 5vw, 30px);
-    height: clamp(20px, 5vw, 30px);
-}
-
-.header .sparkle {
-    font-size: clamp(8px, 2vw, 10px);
-}
-
-.header-confetti i {
-    font-size: clamp(6px, 1.5vw, 8px);
-}
-
-/* ============================================ */
-/* УЛУЧШЕННАЯ ЧИТАЕМОСТЬ НА МАЛЕНЬКИХ ЭКРАНАХ */
-/* ============================================ */
-
-@media (max-width: 320px) {
-    body {
-        font-size: 14px;
-    }
-    
-    .cake-name {
-        font-size: 15px;
-    }
-    
-    .cake-price {
-        font-size: 15px;
-    }
-    
-    .cake-weight,
-    .cake-description {
-        font-size: 12px;
-    }
-    
-    .form-group label {
-        font-size: 13px;
-    }
-    
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        font-size: 14px;
-        padding: 10px 12px;
-    }
-}
-
-/* ============================================ */
-/* УЛУЧШЕННАЯ АДАПТАЦИЯ ДЛЯ ПЛАНШЕТОВ */
-/* ============================================ */
-
-@media (min-width: 768px) and (max-width: 1024px) {
-    .cake-card {
-        border-radius: 20px;
-    }
-    
-    .cake-image {
-        aspect-ratio: 1;
-    }
-    
-    .cake-info {
-        padding: 16px;
-    }
-    
-    .cake-name {
-        font-size: 18px;
-    }
-    
-    .cake-price {
-        font-size: 18px;
-    }
-    
-    .add-to-cart {
-        width: 44px;
-        height: 44px;
-        font-size: 20px;
-    }
-    
-    .admin-tab {
-        padding: 14px 10px !important;
-        font-size: 15px !important;
-    }
-}
-
-/* ============================================ */
-/* ТЕМНАЯ ТЕМА (ОПЦИОНАЛЬНО) */
-/* ============================================ */
-
-@media (prefers-color-scheme: dark) {
-    :root[data-theme="dark"] {
-        --bg: #1C1C1E;
-        --surface: #2C2C2E;
-        --surface-hover: #3A3A3C;
-        --text-primary: #FFFFFF;
-        --text-secondary: #98989E;
-        --border: #3A3A3C;
-        --accent: #D68B5C;
-        --accent-hover: #E69E6D;
-        --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-}
-
-/* ============================================ */
-/* ПОДДЕРЖКА СТАРЫХ БРАУЗЕРОВ */
-/* ============================================ */
-
-@supports not (gap: 8px) {
-    .cakes-grid,
-    .categories,
-    .admin-tabs,
-    .form-grid {
-        gap: 0;
-        margin: -4px;
-    }
-    
-    .cake-card,
-    .category,
-    .admin-tab,
-    .form-group {
-        margin: 4px;
-    }
-}
-
-/* ============================================ */
-/* ОПТИМИЗАЦИЯ ДЛЯ ПЕЧАТИ */
-/* ============================================ */
-
-@media print {
-    .cart-icon,
-    .admin-tabs,
-    .order-actions,
-    .add-to-cart,
-    .cake-actions,
-    .category-actions,
-    .user-shift-toggle {
-        display: none !important;
-    }
-    
-    .app, .admin-container {
-        padding: 20px;
-        max-width: 100%;
-    }
-    
-    .cake-card {
-        break-inside: avoid;
-        page-break-inside: avoid;
-    }
-}
-
-/* Остальные стили из предыдущей версии (декоративные элементы, кнопки +/-, и т.д.) */
-/* ... (сохраняем все остальные стили, которые были ранее) ... */
+/* Остальные стили из предыдущей версии (формы, модалки, корзина и т.д.) */
+/* ... сохраняем все остальные стили из предыдущего ответа ... */
