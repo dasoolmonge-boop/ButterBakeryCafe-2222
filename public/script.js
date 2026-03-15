@@ -15,6 +15,19 @@ let cakes = [];
 let categories = [];
 let user = tg.initDataUnsafe.user || {};
 
+// Определяем, открыто ли приложение в полноэкранном режиме
+const isFullScreen = tg.isExpanded || window.innerHeight > 700;
+
+// Устанавливаем класс для body в зависимости от режима
+document.body.classList.add(isFullScreen ? 'fullscreen-mode' : 'compact-mode');
+
+// Обработка изменения размера окна
+window.addEventListener('resize', () => {
+    const newIsFullScreen = window.innerHeight > 700;
+    document.body.classList.toggle('fullscreen-mode', newIsFullScreen);
+    document.body.classList.toggle('compact-mode', !newIsFullScreen);
+});
+
 // Регистрация пользователя при загрузке
 async function registerUser() {
     if (!user.id) return;
